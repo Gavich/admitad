@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Admitad_Setup>
+            <active>true</active>
+            <codePool>local</codePool>
+        </Admitad_Setup>
+    </modules>
+</config>

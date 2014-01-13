@@ -9,6 +9,7 @@
 magicento.phpstorm.meta.php
 nbproject/
 
+.htaccess
 app/etc/local.xml
 media/*
 var/*

@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Admitad_Setup>
+            <version>0.1.0</version>
+        </Admitad_Setup>
+    </modules>
+    <global>
+        <resources>
+            <admitad_setup_setup>
+                <setup>
+                    <module>Admitad_Setup</module>
+                </setup>
+            </admitad_setup_setup>
+        </resources>
+    </global>
+</config>

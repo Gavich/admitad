@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <TC_AdmitadImport>
+            <version>0.1.0</version>
+        </TC_AdmitadImport>
+    </modules>
+    <global>
+        <models>
+            <tc_admitadimport>
+                <class>TC_AdmitadImport_Model</class>
+            </tc_admitadimport>
+        </models>
+        <helpers>
+            <tc_admitadimport>
+                <class>TC_AdmitadImport_Helper</class>
+            </tc_admitadimport>
+        </helpers>
+        <resources>
+            <tc_admitadimport_setup>
+                <setup>
+                    <module>TC_AdmitadImport</module>
+                </setup>
+            </tc_admitadimport_setup>
+        </resources>
+    </global>
+</config>
