@@ -1,0 +1,16 @@
+# IDE settings
+.project
+.metadata/
+.settings/
+.buildpath
+.classpath
+.idea/
+*.iml
+magicento.phpstorm.meta.php
+nbproject/
+
+app/etc/local.xml
+media/*
+var/*
+google*.html
+downloader/.cache/*
