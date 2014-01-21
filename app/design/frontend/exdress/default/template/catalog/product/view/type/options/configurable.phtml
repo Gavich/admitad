@@ -1,0 +1,118 @@
+<?php
+/**
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2010 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+
+<?php
+$_product    = $this->getProduct();
+$_attributes = Mage::helper('core')->decorateArray($this->getAllowAttributes());
+?>
+<?php if ($_product->isSaleable() && count($_attributes)):?>
+
+<dl>
+<?php foreach($_attributes as $_attribute): ?>
+    <?php /*dt><label class="required"><?php echo $_attribute->getLabel() ?><em>*</em></label></dt*/ ?>
+    <dd<?php if ($_attribute->decoratedIsLast){?> class="last"<?php }?>>
+        <div class="input-box">
+            <?php if ($_attribute->getLabel() == $this->__('Цвет')): ?>
+                <span><?php echo $this->__('Цвет'); ?></span><br />
+            <?php elseif ($_attribute->getLabel() == $this->__('Размер')): ?>
+                <span><?php echo $this->__('Размер'); ?></span><br />
+            <?php endif; ?>
+            <select name="super_attribute[<?php echo $_attribute->getAttributeId() ?>]" id="attribute<?php echo $_attribute->getAttributeId() ?>" class="required-entry super-attribute-select">
+                <option><?php echo $this->__('Choose an Option...') ?></option>
+            </select>
+        </div>
+    </dd>
+<?php endforeach; ?>
+</dl>
+
+<script type="text/javascript">
+//<![CDATA[
+    var spConfig = new Product.Config(<?php echo $this->getJsonConfig() ?>);
+    var skuConfig = <?php echo $this->getSKUJsonConfig() ?>;
+    var option;
+
+    jQuery(document).ready(function(){
+        var attributes = jQuery('div#product-options-wrapper select');
+
+        var pickFirst = function(el, index){
+            jQuery(el).find('option:not(:disabled):not([value=""]):first').attr('selected','selected');
+            var optionIndex = jQuery(el).attr('selectedIndex');
+            spConfig.settings[index].selectedIndex = optionIndex;
+            var obj = spConfig.settings[index];
+            fireEvent(obj,'change');
+        }
+        attributes.change(function(){
+            var current = jQuery(this);
+            option = current.find('option:selected');
+            if (option.attr('image') && option.attr('thumb')){
+                jQuery('p.product-image a img').attr('src',option.attr('thumb'));
+                jQuery('p.product-image a:first').attr('href',option.attr('image'));
+                jQuery('.cloud-zoom').CloudZoom();
+            } else {
+                jQuery('div.product-view div.more-views ul li a:first').trigger('click');
+            }
+
+            /**
+             * Preselect options
+             */
+            var currentId = jQuery(current).attr('id');
+            var haveNext = false;
+            attributes.each(function(index, el){
+                if (haveNext){
+                    pickFirst(el, index)
+                }
+                if (jQuery(el).attr('id') == currentId){
+                    haveNext = true;
+                }
+            });
+
+            checkQuantity();
+        });
+
+        pickFirst(spConfig.settings[0], 0);
+    })
+
+    Product.Config.prototype.getIdOfSelectedProduct = function()
+    {
+        var existingProducts = new Object();
+        for(var i=0; i < spConfig.settings.length; i++){
+            var selected = spConfig.settings[i].options[this.settings[i].selectedIndex];
+            if(selected.config){
+                for(var n=0; n < selected.config.products.length; n++){
+                    var usedAsKey = 'key'+selected.config.products[n];
+                    if(existingProducts[usedAsKey] == undefined){
+                        existingProducts[usedAsKey] = 1;
+                    } else {
+                        existingProducts[usedAsKey] = existingProducts[usedAsKey]+1;
+                    }
+                }
+            }
+        }
+        for (var keyValue in existingProducts){
+            for ( var keyValueInner in existingProducts){
+                if(parseInt(existingProducts[keyValueInner]) < parseInt(existingProducts[keyValue])){
+                    delete existingProducts[keyValueInner];
+                }
+            }
+        }
+        var sizeOfExistingProducts = 0;
+        var currentSimpleProductId = "";
+        for (var keyValue in existingProducts){
+            currentSimpleProductId = keyValue;
+            sizeOfExistingProducts=sizeOfExistingProducts+1
+        }
+        if(sizeOfExistingProducts==1){
+            return currentSimpleProductId.substr(3);
+        }
+
+        return false;
+    }
+//]]>
+</script>
+<?php endif;?>

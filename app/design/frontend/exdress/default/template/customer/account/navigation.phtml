@@ -1,0 +1,74 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2010 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+// @TODO FIXME
+?>
+<div class="block block-account">
+    <div class="block-title">
+        <strong><span><?php // echo $this->__('my account navigation'); ?>НАВИГАЦИЯ ПО АККАУНТУ</span></strong>
+    </div>
+    <div class="block-content">
+        <ul>
+            <?php $_links = $this->getLinks(); ?>
+            <?php $_links2 = array();?>
+            <?php
+               foreach ($_links as $_link) {
+            	if ($_link['name']=='account') $_links2[0] = $_link;
+            	if ($_link['name']=='orders') $_links2[1] = $_link;
+            	if ($_link['name']=='account_edit') $_links2[2] = $_link;
+            	if ($_link['name']=='address_book') $_links2[13] = $_link;
+            	if ($_link['name']=='billing_agreements') $_links2[4] = $_link;
+            	//if ($_link['name']=='recurring_profiles') $_links2[5] = $_link;
+            	if ($_link['name']=='reviews') $_links2[6] = $_link;
+            	if ($_link['name']=='tags') $_links2[7] = $_link;
+            	if ($_link['name']=='wishlist') $_links2[3] = $_link;
+            	//if ($_link['name']=='OAuth Customer Tokens') $_links2[9] = $_link;
+            	if ($_link['name']=='newsletter') $_links2[4] = $_link;
+            	if ($_link['name']=='downloadable_products') $_links2[11] = $_link;
+            	//if ($_link['name']=='OAuth Customer Tokens') $_links2[8] = $_link;
+            }
+            ?>
+            <?php $_index = 1; ?>
+            <?php $_count = count($_links2); ?>
+            <?php // foreach ($_links as $_link): ?>
+            <?php for ($i=0;$i<=$_count;$i++):?>
+            <?php // print_r($_links2[$i]['name']);?>
+                <?php if (($i!=8)&&($i!=5)&&($i!=10)&&($i!=9)): ?>
+                <?php if (($_links2[$i]['name']=='account')||($_links2[$i]['name']=='account_edit')||
+                ($_links2[$i]['name']=='orders')||($_links2[$i]['name']=='reviews')||($_links2[$i]['name']=='tags')||
+                ($_links2[$i]['name']=='wishlist')||($_links2[$i]['name']=='newsletter')||($_links2[$i]['name']==' downloadable_products')):?>
+                <?php $_last = ($_index++ >= $_count); ?>
+                <?php if ($this->isActive($_links2[$i])): ?>
+                    <li <?php if (($_links2[$i]['name']=='account')||($_links2[$i]['name']=='account_edit')||($_links2[$i]['name']=='orders')):?>style="font-size:15px;"<?php endif;?> class="current<?php echo ($_last ? ' last' : '') ?>"><strong><?php echo $_links2[$i]->getLabel() ?></strong></li>
+                <?php else: ?>
+                    <li <?php if (($_links2[$i]['name']=='account')||($_links2[$i]['name']=='account_edit')||($_links2[$i]['name']=='orders')):?>style="font-size:15px;"<?php endif;?> <?php echo ($_last ? ' class="last"' : '') ?>><a href="<?php echo $_links2[$i]->getUrl() ?>"><?php echo $_links2[$i]->getLabel() ?></a></li>
+                <?php endif; ?>
+                <?php  endif;?>
+                <?php endif;?>
+            <?php // endforeach; ?>
+            <?php endfor;?>
+        </ul>
+    </div>
+</div>

@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Medusa for Magento 1.7.0.0
+ * Design and Development by creative-d2 design&development (http://www.creative-d2.de)
+ * Distributed by ThemeForest (http://themeforest.net)
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @author     Ömer Bildirici jun.
+ * @package    medusa_default
+ * @copyright  Copyright 2012 Ömer Bildirici jun. (http://www.creative-d2.de)
+ * @license    All rights reserved.
+ * @version    1.1
+ */
+-->
+<config>
+    <modules>
+        <CDD_FlyoutMenu>
+            <version>0.0.1</version>
+        </CDD_FlyoutMenu>
+    </modules>
+    <!-- <frontend>
+        <routers>
+            <FlyoutMenu>
+                <use>standard</use>
+                <args>
+                    <module>CDD_FlyoutMenu</module>
+                    <frontName>FlyoutMenu</frontName>
+                </args>
+            </FlyoutMenu>
+        </routers>
+        <layout>
+            <updates>
+                <catalogmenu>
+                    <file>catalogmenu.xml</file>
+                </catalogmenu>
+            </updates>
+        </layout>
+    </frontend>-->
+     <admin>
+        <routers>
+            <FlyoutMenu>
+                <use>admin</use>
+                <args>
+                    <module>CDD_FlyoutMenu</module>
+                    <frontName>FlyoutMenu</frontName>
+                </args>
+            </FlyoutMenu>
+        </routers>
+    </admin>
+   
+    <global>
+        <models>
+            <FlyoutMenu>
+                <class>CDD_FlyoutMenu_Model</class>
+            </FlyoutMenu>
+        </models>
+        <blocks>
+            <FlyoutMenu>
+                <class>CDD_FlyoutMenu_Block</class>
+            </FlyoutMenu>
+        </blocks>
+        <helpers>
+            <FlyoutMenu>
+                <class>CDD_FlyoutMenu_Helper</class>
+            </FlyoutMenu>
+        </helpers>
+    </global>
+</config>

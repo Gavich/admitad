@@ -1,0 +1,23 @@
+<div class="page-title category-title">
+    <?php if($this->IsRssCatalogEnable() && $this->IsTopCategory()): ?>
+        <a href="<?php echo $this->getRssLink() ?>" class="link-rss"><?php echo $this->__('Subscribe to RSS Feed') ?></a>
+    <?php endif; ?>
+    <h1><?php echo $this->getChildHtml('meta_title') ?></h1>
+    <div class="cls_hide-options">
+          <div id="div_hide_option" onclick="clickHideOption()" >
+              <?php echo $this->__('Hide') ?>
+          </div>
+        <a onclick="clickHideOption()" id="id_page_arrow" href="#" class="page_arrow" title="">&nbsp</a>
+    </div>
+</div>
+
+
+<?php if($this->isContentMode()): ?>
+    <?php echo $this->getCmsBlockHtml() ?>
+<?php elseif($this->isMixedMode()): ?>
+    <?php echo $this->getCmsBlockHtml() ?>
+    <?php echo $this->getProductListHtml() ?>
+<?php else: ?>
+    <?php echo $this->getProductListHtml() ?>
+<?php endif; ?>
+<div class="layout-seo-fixer clearfix"></div>

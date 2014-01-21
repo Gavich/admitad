@@ -1,0 +1,28 @@
+<?php
+/**
+ * Magento
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2010 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php if ($this->getReviewsCount()): ?>
+    <div class="ratings" style="width:85px">
+        <?php if ($this->getRatingSummary()):?>
+            <div class="rating-box">
+                <div class="rating" style="width:<?php echo $this->getRatingSummary() ?>%"></div>
+            </div>
+        <?php endif;?>
+        <?php /*
+        <p class="rating-links">
+            <a class="count-review" href="#tab-box-reviews"><?php echo $this->__($this->getReviewsCount()) ?></a>
+            <?php //<span class="separator">|</span> ?>
+            <a class="add-review" href="#tab-box-reviews"><?php echo $this->__('Add Your Review') ?></a>
+            <?php //<span class="separator">|</span> ?>
+        </p> */?>
+    </div>
+<?php elseif ($this->getDisplayIfEmpty()): ?>
+    <?php /*<p class="no-rating"><a href="#tab-box-reviews"><?php echo $this->__('Be the first to review this product') ?></a></p>*/ ?>
+<?php endif; ?>

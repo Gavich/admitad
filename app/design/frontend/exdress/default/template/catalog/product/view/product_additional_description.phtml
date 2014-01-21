@@ -1,0 +1,51 @@
+<div class="product-description-seo box-additional product-collateral ">
+    <?php $_product = Mage::registry('current_product'); ?>
+    <?php if ($_additional = $this->getLayout()->getBlock('product.attributes')->toHtml()): ?>
+        <div class="std">
+            <?php echo $_additional; ?>
+        </div>
+        <div class="clearfix"></div>
+    <?php endif; ?>
+</div>
+<script type="text/javascript">
+    jQuery(function () {
+        var fixerBlock = jQuery('.layout-seo-fixer'),
+            textBlock = jQuery('.product-description-seo');
+
+        var fixHeight = function () {
+            textBlock.css({
+                'text-indent': 0,
+                'top':         fixerBlock.offset().top
+            });
+
+            fixerBlock.css({
+                'height': textBlock.get(0).clientHeight
+            });
+        };
+
+        fixHeight();
+        if (textBlock.find('img').length) {
+            textBlock.find('img').load(fixHeight);
+        }
+
+        jQuery('#tabs').tabs({
+            show: function (event, ui) {
+                if (ui.panel.id !== 'tab-box-additional') {
+                    if (textBlock.is(':visible')) {
+                        textBlock.hide();
+                    }
+                } else {
+                    textBlock.show();
+                }
+            }
+        });
+
+        var existCallback = Varnish.callBacks['cms_mainmenu'] || false;
+        Varnish.addCallBack('cms_mainmenu', function () {
+            if (false !== existCallback) {
+                existCallback();
+            }
+            fixHeight();
+        });
+    });
+</script>

@@ -1,0 +1,55 @@
+<?php
+/**
+ * Magento
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2010 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ *
+ * Product media data template
+ * @see Mage_Catalog_Block_Product_View_Media
+ */
+?>
+<?php
+    $_product = $this->getProduct();
+    $_helper = $this->helper('catalog/output');
+?>
+<p class="product-image">
+    <a href='<?php echo $this->helper('catalog/image')->init($_product, 'image')->resize(476, 720);?>' class='cloud-zoom' id='zoom1' rel="adjustX:45, adjustY:-12, tint: '#000',tintOpacity:0.5 ,smoothMove:5">
+        <img src="<?php echo $this->helper('catalog/image')->init($_product, 'image')->resize(238, 360);?>" alt="" title="<?php echo $this->stripTags($_product->getName(), null, true) ?>" />
+    </a>
+</p>
+
+<?php if (count($this->getGalleryImages()) > 0): ?>
+<div class="more-views">
+    <div class="hint"><?php echo $this->__('+&nbsp;Rollover Image to zoom in') ?></div>
+    <h2><?php echo $this->__('Фотографии товара '); ?><?php echo Mage::registry('product')->getName(); ?></h2>
+    <ul>
+    <?php
+        $galleryImages = '';
+        foreach ($this->getGalleryImages() as $_image){
+            $galleryImage =
+        '<li>'.
+            '<a href="'. $this->helper('catalog/image')->init($_product, 'image', $_image->getFile())->resize(476,720).'"'.
+               ' class="cloud-zoom-gallery"'.
+               ' title="'. $this->htmlEscape($_image->getLabel()) .'"'.
+               ' rel="useZoom: \'zoom1\', smallImage: \''. $this->helper('catalog/image')->init($_product, 'image', $_image->getFile())->resize(238, 360).'\'"'.
+            '>'.
+                '<img src="'. $this->helper('catalog/image')->init($_product, 'thumbnail', $_image->getFile())->resize(53, 80) .'" alt="'. $this->htmlEscape($_image->getLabel()) .'" />'.
+            '</a>'.
+        '</li>';
+
+            /**
+             * Main image should always be the first one
+             */
+            if ($_image->getFile() == $_product->getimage())
+                $galleryImages = $galleryImage . $galleryImages;
+            else
+                $galleryImages .= $galleryImage;
+        }
+        echo $galleryImages;
+    ?>
+    </ul>
+</div>
+<?php endif; ?>

@@ -1,0 +1,459 @@
+/**
+ * Medusa for Magento 1.7.0.0
+ * Design and Development by creative-d2 design&development (http://www.creative-d2.de)
+ * Distributed by ThemeForest (http://themeforest.net)
+ *
+ * DISCLAIMER
+ *
+ * @package    medusa_default
+ * @version    1.1
+ */
+/**************** Flyout Menu Bar */
+
+.menu-box{
+    float:left;
+    padding: 15px 0 10px;
+    position:relative !important;
+    background: #fff;
+    width: 100%;
+}
+#cms_mainmenu{
+    text-align: center;
+}
+#cms_mainmenu .menu-loader{
+    padding: 17px 0;
+}
+.menu{
+    font-size:12px;
+    list-style:none;
+    width:960px;
+}
+.menu li{
+    float:left;
+    text-align:center;
+    position:relative;
+    padding:5px 5px 1px;
+    color:#FFF;
+    height:20px;
+}
+.menu li div li{
+    height:auto;
+}
+.menu li:hover{
+    z-index:2;
+    cursor:pointer;
+}
+.menu li small{
+    color:#F5F5F5;
+    display:block;
+    font-size:12px;
+    text-transform:lowercase;
+}
+.menu li a{
+    /*padding-top:2px;*/
+    color:#FAFAFA;
+    outline:0 none;
+    font-size:14px;
+    text-transform:uppercase;
+    text-decoration:none;
+    display:block;
+    font-weight:bold;
+}
+.menu li:hover a{
+    color:#FFF !important;
+}
+.menu li div span{
+    color:#FFF;
+    cursor:default;
+    font-size:14px;
+    letter-spacing:0.5px;
+    font-weight:bold;
+    text-transform:uppercase;
+}
+.menu li div a{
+    font-weight:normal;
+    text-transform:none;
+}
+.menu li.sales div span{color:#E7160F;}
+.menu li div span.subtitle{padding-left:8px;}
+.menu li .drop{padding-right:21px;}
+.menu li.home{
+    background:url("../images/cdd_btnhome.png") no-repeat scroll 20px 10px transparent;
+    border-right:1px solid #FFC24F;
+    display:inline-block;
+    padding-left:20px;
+    padding-right:20px;
+    width:30px;
+}
+.menu li.home:hover{background:url("../images/cdd_btnhome.png") no-repeat scroll 20px 10px #888;}
+/*.menu li.sales{background:#FF8A00;}*/
+.menu li.sales:hover{background:#E7160F;}
+/*.menu li.sales a{color:#FFFFFF;}*/
+.menu li.sales a:hover{color:#FFFFFF;}
+.menu li.sales ul li a:hover{color:#E7160F;}
+.menu li.support:hover{background:#888;}
+.menu li.support{
+    padding-right:20px;
+    padding-left:29px;
+}
+/*.menu li.support a{color:#FFFFFF;}*/
+.menu li.support a:hover{color:#FFFFFF;}
+.menu li.support ul li a:hover{color:#FF8A00;}
+.menu li:hover .drop{
+    padding-right:21px;
+    background:none;
+}
+.menu li:hover div a{
+    color:#666;
+    font-size:12px;
+    padding:0 0 0 8px;
+}
+/* Right aligned menu item */
+.menu .right{
+    border:none;
+    float:right;
+    right:0;
+    margin-right:0;
+}
+.menu .support{
+    border:medium none !important;
+    float:right;
+    margin-right:0;
+    right:0;
+}
+/**************** Flyout Menu */
+/* Left & right aligned common styles */
+.menu .dropdown_1columns,
+.menu .dropdown_2columns,
+.menu .dropdown_3columns,
+.menu .dropdown_4columns,
+.menu .dropdown_5columns{
+    margin:4px auto;
+    left:-999em;
+    position:absolute;
+    background:#FFFFFF;
+    -moz-box-shadow:0 3px 6px -3px #999;
+    -webkit-box-shadow:0 3px 6px -3px #999;
+    box-shadow:0 3px 6px -3px #999;
+    padding:10px;
+    text-align:left;
+    cursor:default;
+}
+.menu .dropdown_1columns_sales,
+.menu .dropdown_2columns_sales,
+.menu .dropdown_3columns_sales,
+.menu .dropdown_4columns_sales,
+.menu .dropdown_5columns_sales{
+    margin:4px auto;
+    left:-999em;
+    position:absolute;
+    background:#FFFFFF;
+    -moz-box-shadow:0 3px 6px -3px #999;
+    -webkit-box-shadow:0 3px 6px -3px #999;
+    box-shadow:0 3px 6px -3px #999;
+    padding:10px;
+    text-align:left;
+    cursor:default;
+}
+.menu .dropdown_1columns_support{
+    background:#FFFFFF;
+    border:10px solid #888;
+    padding:10px;
+    margin:4px auto;
+    position:absolute;
+    left:-999em;
+    text-align:left;
+    -moz-box-shadow:0 3px 6px -3px #999;
+    -webkit-box-shadow:0 3px 6px -3px #999;
+    box-shadow:0 3px 6px -3px #999;
+    cursor:default;
+}
+/*.level1{
+    border-bottom:1px dashed #DDDDDD;
+}*/
+/* Drop Downs Sizes */
+.menu .dropdown_1columns_sales{width:169px;}
+.menu .dropdown_2columns_sales{width:368px;}
+.menu .dropdown_3columns_sales{width:500px;}
+.menu .dropdown_4columns_sales{width:670px;}
+.menu .dropdown_5columns_sales{width:920px; /*765px;*/}
+.menu .dropdown_1columns_support{width:176px;}
+
+/* Showing Drop Down on Mouse Hover - Left aligned */
+.menu li:hover .dropdown_1columns_sales,
+.menu li:hover .dropdown_2columns_sales,
+.menu li:hover .dropdown_3columns_sales,
+.menu li:hover .dropdown_4columns_sales,
+.menu li:hover .dropdown_5columns_sales{
+    left:0;top:43px;
+}
+.menu li:hover .dropdown_1columns_support{
+    left:0;top:43px;
+}
+/* Drop Downs Sizes */
+.menu .dropdown_1columns{width:169px;}
+.menu .dropdown_2columns{width:368px;}
+.menu .dropdown_3columns{width:500px;}
+.menu .dropdown_4columns{width:670px;}
+.menu .dropdown_5columns{width:940px; /*765px;*/}
+
+/* Showing Drop Down on Mouse Hover - Left aligned */
+.menu li:hover .dropdown_1columns,
+.menu li:hover .dropdown_2columns,
+.menu li:hover .dropdown_3columns,
+.menu li:hover .dropdown_4columns,
+.menu li:hover .dropdown_5columns{
+    left:0;top:43px;
+}
+/* Showing Drop Down on Mouse Hover - Right aligned */
+.menu li .align_right{}
+.menu li:hover .align_right{
+    left:auto;
+    right:0;
+    top:43px;
+}
+.menu li .align_right_support{}
+.menu li:hover .align_right_support{
+    left:auto;
+    right:0;
+    top:43px;
+}
+/* Columns Sizes */
+.menu .col_1, .menu .col_2, .menu .col_3, .menu .col_4, .menu .col_5{
+    display:inline;
+    float:left;
+    position:relative;
+    min-height:60px;
+    padding:0 15px 0 0;
+}
+.menu .col_1_support{
+    display:inline;
+    float:left;
+    position:relative;
+    min-height:60px;
+    padding:0 15px 0 0;
+}
+.menu .col_1_support{width:177px;}
+.menu .col_1{width:169px;}
+.menu .col_2{width:368px;}
+.menu .col_3{width:500px;}
+.menu .col_4{width:670px;}
+.menu .col_5{width:920px;}
+
+/* IMPORTANT */
+/* Use the firstcolumn class for the items that stick to the left edge of the dropdown */
+.menu .firstcolumn{
+    margin-left:0; /* Clearing margin & left */
+    clear:left;
+    border-right:medium none;
+}
+/**************** Flyout Menu Content */
+.menu p, .menu ul, .menu li, .menu h2, .menu h3{
+    font-family:Arial,Helvetica,sans-serif;
+    font-size:14px;
+    line-height:18px;
+    text-align:left;
+}
+.menu li.right{
+    font-size:14px;
+    font-family:Arial, Helvetica, sans-serif;
+    line-height:21px;
+    text-align:right;
+}
+.menu .col_1_support ul{
+    font-size:14px;
+    font-family:Arial, Helvetica, sans-serif;
+    line-height:21px;
+    text-align:left;
+}
+.menu .col_1_support li.divider{
+    background:url("../images/cdd_hr.gif") repeat-x scroll left top transparent;
+}
+.menu .col_1_support li.divider{
+    height:1px;
+    margin:10px 0;
+}
+.menu p{
+    color:#999999;
+    font-size:12px;
+    line-height:18px;
+    margin-bottom:10px;
+}
+.menu .strong{
+    font-weight:bold;
+}
+.menu .italic{
+    font-style:italic;
+}
+.menu h2{
+    font-family:Arial, Helvetica, sans-serif;
+    font-weight:400;
+    letter-spacing:-1px;
+    font-size:21px;
+    line-height:21px;
+    margin-top:7px;
+    margin-bottom:14px;
+    padding-bottom:14px;
+}
+.menu h3{
+    font-family:Arial, Helvetica, sans-serif;
+    font-weight:bold;
+    font-size:14px;
+    line-height:21px;
+    margin-top:7px;
+    margin-bottom:14px;
+    padding-bottom:7px;
+}
+.menu .pusher{
+    /* Use this pucher if you want to give more vertical spacing between your rows of content */
+    margin-top:18px;
+}
+/* Images styles */
+.menu .imgshadow_light{
+    /* Better style on light background */
+    background:#FFFFFF;
+    padding:4px;
+    border:1px solid #999999;
+    margin-top:5px;
+}
+.menu .img_left{
+    /* Image sticks to the left */
+    width:auto;
+    float:left;
+    margin:2px 15px 15px 0;
+}
+.menu .img_right{
+    /* Image sticks to the right */
+    width:auto;
+    float:right;
+    margin:2px 0 15px 15px;
+}
+/* Standard lists styles */
+.menu li ul{
+    list-style:none;
+    padding:0;
+    margin:0 0 12px 0;
+}
+.menu li ul li{
+    font-size:12px;
+    line-height:16px;
+    position:relative;
+    padding:0;
+    margin:0;
+    float:left;
+    text-align:left;
+    width:169px;
+}
+.menu li ul li:hover{
+    background:none;
+    padding:0;
+    margin:0;
+}
+/* 2-Levels Flyout */
+.menu .levels{
+    list-style:none;
+    margin:0;
+    padding:0;
+    width:auto;
+}
+.menu .levels li li,
+.menu .levels li li:hover{
+    width:150px;
+    padding:0 12px 0 12px;
+    margin:0 0 0 1px;
+}
+.menu .levels ul{
+    /* First level Flyout */
+    position:absolute;
+    z-index:500;
+    top:-23px;
+    left:100%;
+    display:none;
+    width:180px;
+    background:#FFFFFF;
+    margin:15px 0 0 0;
+    padding:6px 0 6px 0;
+}
+.menu .levels ul ul{
+    top:-6px;
+    left:100%;
+    width:180px;
+    margin:-1px 0 0 0;
+}
+.menu li.position-right-li{
+    position:static;
+}
+.menu li div.spacer{
+    position:relative;
+    z-index:110;
+    height: 35px;
+    width:100%;
+    margin:0px 0 0 -5px;
+    padding:0 5px 0;
+}
+.menu li:hover div.position-right{
+    position:absolute;
+    right:0;
+    left:auto;
+    top:60px;
+}
+.menu .levels li:hover{
+    cursor:pointer;
+    z-index:100;
+}
+.menu .levels li:hover ul ul,
+.menu .levels li li:hover ul ul{
+    display:none;
+}
+.menu .levels li:hover ul,
+.menu .levels li li:hover ul{
+    display:block;
+}
+.menu form{
+    margin:0 0 12px 0;
+    padding:0;
+}
+/* Labels & fieldsets stylings */
+.menu fieldset{
+    margin:0;
+    border:none;
+}
+.menu form p{
+    margin:10px 0;
+    overflow:hidden;
+    width:270px;
+}
+.menu label{
+    float:left;
+    display:block;
+    text-align:left;
+    width:50px;
+}
+.menu input,
+.menu textarea{
+    margin:0;
+    width:170px;
+    float:right;
+    color:#FFFFFF;
+    background-color:#FFC24F;
+    border:1px solid #FF8A00;
+    padding:3px 5px 3px 5px;
+}
+.menu textarea{
+    height:100px;
+    overflow:auto;
+}
+.menu textarea:hover{
+    background:#666;
+}
+/* Buttons stylings */
+.menu button{
+    float:right;
+    width:80px;
+    margin:0;
+    margin-right:30px;
+    border:none;
+    padding:2px 7px 2px 7px;
+    color:#FFFFFF;
+    background-color:#FF8A00;
+}

@@ -1,0 +1,67 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2010 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php $isCatalogPage = $this->isCatalogPage();?>
+
+<?php if($crumbs && is_array($crumbs)): ?>
+    <div class="breadcrumbs">
+        <ul>
+            <?php foreach($crumbs as $_crumbName=>$_crumbInfo): ?>
+                <li class="<?php echo $_crumbName ?> <?php if($_crumbInfo['last']){echo 'last';} ?>" itemscope itemtype="http://data-vocabulary.org/Breadcrumb">
+                    <?php if($_crumbInfo['link'] && !$_crumbInfo['last']): ?>
+                        <a itemprop="url" href="<?php echo $_crumbInfo['link'] ?>" title="<?php echo $this->htmlEscape($_crumbInfo['title']) ?>">
+                            <span itemprop="title">
+                                <?php echo $this->htmlEscape($_crumbInfo['label']) ?>
+                            </span>
+                        </a>
+
+                        <?php if ($isCatalogPage && $_crumbInfo['level']): ?>
+                            <?php $siblings = $this->getSiblingCategories($_crumbInfo['level']);?>
+
+                            <ul class="sibling-categories">
+                                <?php foreach($siblings as $category): ?>
+                                    <?php if ($category->getId() != $_crumbInfo['id']): ?>
+                                        <li>
+                                            <a href="<?php echo $category->getUrl() ?>" title="<?php echo $this->htmlEscape($category->getName()) ?>"><?php echo $this->htmlEscape($category->getName()) ?></a>
+                                        </li>
+                                    <?php endif; ?>
+                                <?php endforeach; ?>
+                            </ul>
+                        <?php endif; ?>
+                    <?php elseif($_crumbInfo['last']): ?>
+                        <strong itemprop="title"><?php echo $this->htmlEscape($_crumbInfo['label']) ?></strong>
+                        <link itemprop="url" href="<?php echo $_crumbInfo['link'] ?>"/>
+                    <?php else: ?>
+                        <?php echo $this->htmlEscape($_crumbInfo['label']) ?>
+                    <?php endif; ?>
+                    <?php if(!$_crumbInfo['last']): ?>
+                        <span class="separator">&nbsp;</span>
+                    <?php endif; ?>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+<?php endif; ?>

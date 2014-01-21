@@ -1,0 +1,32 @@
+<?php
+/**
+ * Magento
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2010 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ *
+ * Product additional attributes template
+ * @see Mage_Catalog_Block_Product_View_Attributes
+ */
+?>
+<?php
+    $_helper = $this->helper('catalog/output');
+    $_product = $this->getProduct()
+?>
+<?php if($_additional = $this->getAdditionalData()): ?>
+    <table class="data-table" id="product-attribute-specs-table">
+        <h2><?php echo $this->__('Описание товара'); ?> <?php echo $_product->getName(); ?></h2>
+        <tbody>
+        <?php foreach ($_additional as $_data): ?>
+            <?php if ($_data['value'] == 'N/A') continue ?>
+            <tr>
+                <?php /*<th class="label"><?php echo $this->htmlEscape($this->__($_data['label'])) ?></th>*/ ?>
+                <td class="data"><?php echo $_helper->productAttribute($_product, $_data['value'], $_data['code']) ?></td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+    <script type="text/javascript">decorateTable('product-attribute-specs-table')</script>
+<?php endif;?>
