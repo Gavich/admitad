@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <TC_AdmitadImport>
+            <active>true</active>
+            <codePool>local</codePool>
+            <depends>
+                <Mage_Catalog/>
+            </depends>
+        </TC_AdmitadImport>
+        <TC_Breadcrumbs>
+            <active>true</active>
+            <codePool>local</codePool>
+            <depends>
+                <Mage_Catalog/>
+            </depends>
+        </TC_Breadcrumbs>
+        <TC_Catalog>
+            <active>true</active>
+            <codePool>local</codePool>
+        </TC_Catalog>
+    </modules>
+</config>

@@ -2,9 +2,6 @@
 
 <layout version="0.1.0">
     <default>
-        <reference name="top.menu">
-            <block type="catalog/navigation" name="catalog.topnav" template="catalog/navigation/top.phtml"/>
-        </reference>
         <reference name="left">
             <block type="catalog/product_compare_sidebar" before="cart_sidebar" name="catalog.compare.sidebar" template="catalog/product/compare/sidebar.phtml"/>
         </reference>

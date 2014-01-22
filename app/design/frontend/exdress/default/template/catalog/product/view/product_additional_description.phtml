@@ -39,13 +39,5 @@
                 }
             }
         });
-
-        var existCallback = Varnish.callBacks['cms_mainmenu'] || false;
-        Varnish.addCallBack('cms_mainmenu', function () {
-            if (false !== existCallback) {
-                existCallback();
-            }
-            fixHeight();
-        });
     });
 </script>

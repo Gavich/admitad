@@ -30,56 +30,9 @@
             </div>
 
             <div class="menu-box">
-                <div class="varnish-reload" id="cms_mainmenu" rel="cms_mainmenu">
-                    <img src="<?php echo Mage::getDesign()->getSkinUrl('images/ajax-loader.gif'); ?>" class="menu-loader">
-                </div>
-                <script type="text/javascript">
-                    Varnish.addCallBack('cms_mainmenu', function(){
-                        menuBuild();
-
-                        jQuery('div.header-container div.menu-box ul.menu > li').hover(
-                            function(e) {
-                                jQuery(this).find('.spacer').show();
-
-                                var $color = jQuery(this).find('a:first').attr('data-color');
-                                jQuery(this).css('background', $color);
-                            },
-                            function() {
-                                jQuery(this).find('.spacer').hide();
-                                jQuery(this).css('background', 'none');
-                            }
-                        );
-
-                        jQuery('div.header-container div.menu-box ul.menu > li').each(function() {
-                            var $cur   = jQuery(this),
-                                $link  = $cur.find('a:first'),
-                                $color = $link.attr('data-color'),
-                                $els   = [];
-
-                            if ($cur.position().top == 15) {
-                                var $spacer = jQuery('<div>',{
-                                    class: "spacer",
-                                    style: "display:none"
-                                });
-                                $cur.find('div:first').before($spacer);
-
-                                $els.push($spacer);
-                            }
-
-                            $els.push($cur.find('div:not(.spacer):first'));
-                            $els.each(function(el)  {
-                                jQuery(el).css('background', $color);
-                            });
-
-                            $link.hover(function() {
-                                jQuery(this).parents('li').css('background', $color);
-                            });
-                        })
-                    })
-                </script>
+                <?php echo $this->getChildHtml('topMenu', true) ?>
             </div>
         </div>
     </div>
 </div>
-<?php echo $this->getChildHtml('topMenu') ?>
 <?php echo $this->getChildHtml('delivery_promoter') ?>

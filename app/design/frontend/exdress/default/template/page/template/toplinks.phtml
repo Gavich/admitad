@@ -24,28 +24,6 @@
         $subtotal = $_subtotals["subtotal"]->getValue();
     ?>
     <?php $stringcart ='&nbsp;' . Mage::helper('checkout')->formatPrice($subtotal); ?>
-    <li class="top-cart varnish-reload" id="top_cart_header" rel="top_cart_header"><?php echo $this->__('<a href="%s" class="top-link-cart" id="topcartlink">Shopping Cart %s Item(s) %s </a>', $this->getUrl('checkout/cart'), $_cartQty, $stringcart) ?></li>
+    <li class="top-cart" id="top_cart_header"><?php echo $this->__('<a href="%s" class="top-link-cart" id="topcartlink">Shopping Cart %s Item(s) %s </a>', $this->getUrl('checkout/cart'), $_cartQty, $stringcart) ?></li>
 </ul>
 <?php endif; ?>
-<script type="text/javascript">
-	Varnish.addTemplate('top_cart_header',
-			'<?php echo $this->__('<a %s class="top-link-cart" id="topcartlink">Shopping Cart %s Item(s) %s </a>', '{{href}}', '{{qty}}', '{{subtotal}}') ?>'
-	);
-
-	Varnish.addCallBack('top_cart_header', function(){
-		Varnish.setTopCart({
-					reload_id: 'block-cart'
-				}
-		);
-
-		jQuery('#topcartlink').click(function(e){
-			e.preventDefault();
-			Varnish.getTopCart();
-		});
-	});
-
-	Varnish.addTemplate('login_link',
-			'<a href="{{url}}">{{text}}</a>'
-	);
-</script>
-
