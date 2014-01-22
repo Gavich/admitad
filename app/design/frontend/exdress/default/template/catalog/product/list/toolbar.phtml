@@ -32,18 +32,7 @@
  */
 ?>
 <?php if($this->getCollection()->getSize()): ?>
-<script>
-function clickHideOption()
-{
-    $('id_page_arrow').toggleClassName('hidden_arrow');
-    $('sorter_option').toggleClassName('hidden_click');
-    if($('id_page_arrow').hasClassName('hidden_arrow')){
-        $('div_hide_option').update('<?php echo $this->__('Show');?>');
-    }else{
-        $('div_hide_option').update('<?php echo $this->__('Hide');?>');
-    }
-}
-</script>
+
 <div class="toolbar">
     <?php if( $this->isExpanded() ): ?>
     <div class="sorter" id="sorter_option">
