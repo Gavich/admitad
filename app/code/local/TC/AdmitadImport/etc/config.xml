@@ -23,5 +23,42 @@
                 </setup>
             </tc_admitadimport_setup>
         </resources>
+        <loggers>
+            <tc_admitadimport>
+                <class>TC_AdmitadImport_Logger</class>
+            </tc_admitadimport>
+        </loggers>
     </global>
+    <adminhtml>
+        <translate>
+            <modules>
+                <TC_AdmitadImport>
+                    <files>
+                        <default>TC_AdmitadImport.csv</default>
+                    </files>
+                </TC_AdmitadImport>
+            </modules>
+        </translate>
+    </adminhtml>
+    <crontab>
+        <jobs>
+            <tc_admitadimport_import_job>
+                <run>
+                    <model>tc_admitadimport/observer::import</model>
+                </run>
+            </tc_admitadimport_import_job>
+        </jobs>
+    </crontab>
+    <default>
+        <tc_admitadimport>
+            <schedule>
+                <enabled>0</enabled>
+                <time>03,00,00</time>
+                <frequency>D</frequency>
+            </schedule>
+            <settings>
+                <source></source>
+            </settings>
+        </tc_admitadimport>
+    </default>
 </config>
