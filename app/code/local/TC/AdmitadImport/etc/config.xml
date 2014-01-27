@@ -16,18 +16,21 @@
                 <class>TC_AdmitadImport_Helper</class>
             </tc_admitadimport>
         </helpers>
-        <resources>
-            <tc_admitadimport_setup>
-                <setup>
-                    <module>TC_AdmitadImport</module>
-                </setup>
-            </tc_admitadimport_setup>
-        </resources>
         <loggers>
             <tc_admitadimport>
                 <class>TC_AdmitadImport_Logger</class>
             </tc_admitadimport>
         </loggers>
+        <processors>
+            <tc_admitadimport>
+                <class>TC_AdmitadImport_Processor</class>
+            </tc_admitadimport>
+        </processors>
+        <readers>
+            <tc_admitadimport>
+                <class>TC_AdmitadImport_Reader</class>
+            </tc_admitadimport>
+        </readers>
     </global>
     <adminhtml>
         <translate>

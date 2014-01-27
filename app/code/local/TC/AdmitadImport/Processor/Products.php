@@ -5,7 +5,7 @@
  * @package    TC_AdmitadImport
  * @author     Alexandr Smaga <smagaan@gmail.com>
  */
-interface TC_AdmitadImport_Processor_ProcessorInterface
+class TC_AdmitadImport_Processor_Products extends TC_AdmitadImport_Processor_AbstractProcessor
 {
     /**
      * Performs import
@@ -14,5 +14,8 @@ interface TC_AdmitadImport_Processor_ProcessorInterface
      *
      * @return void
      */
-    public function process(TC_AdmitadImport_Reader_DataInterface $data);
+    public function process(TC_AdmitadImport_Reader_DataInterface $data)
+    {
+        // TODO: Implement process() method.
+    }
 }

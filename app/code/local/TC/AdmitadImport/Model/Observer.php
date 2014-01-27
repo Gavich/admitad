@@ -18,10 +18,17 @@ class TC_AdmitadImport_Model_Observer
         $helper = Mage::helper('tc_admitadimport');
 
         $defaultLogger    = $helper->getDefaultLogger();
-        $importChain      = $helper->getImportProcessorChain();
-        $configuredSource = $helper->getConfiguredSource();
+        $configuredSource = $helper->getSource();
+        $reader           = $helper->getDefaultReader();
 
-        $importChain->setLogger($defaultLogger);
-        $importChain->process($configuredSource);
+        try {
+
+            $importChain = $helper->getImportProcessorChain();
+            $importChain->setLogger($defaultLogger);
+
+            $importChain->process($reader->read($configuredSource));
+        } catch (LogicException $e) {
+            $defaultLogger->log($e->getMessage(), Zend_Log::CRIT);
+        }
     }
 } 

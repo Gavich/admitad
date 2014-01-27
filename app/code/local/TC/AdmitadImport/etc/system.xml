@@ -22,7 +22,7 @@
                         <source translate="label,comment">
                             <label>Source file</label>
                             <frontend_type>text</frontend_type>
-                            <comment>asd</comment>
+                            <comment>Link to remote file or path on server</comment>
                             <sort_order>1</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>0</show_in_website>
