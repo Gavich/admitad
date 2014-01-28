@@ -1,0 +1,25 @@
+<?php
+/**
+ * Magento
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2010 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ *
+ * Shopping cart totals template
+ *
+ * @see Mage_Checkout_Block_Cart_Totals
+ */
+?>
+<h2><?php echo $this->__('order total') ?></h2>
+<table id="shopping-cart-totals-table">
+    <col />
+    <col width="1" />
+    <tfoot>
+        <?php echo $this->renderTotals('footer'); ?>
+    </tfoot>
+    <tbody>
+        <?php echo $this->renderTotals(); ?>
+    </tbody>
+</table>

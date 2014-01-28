@@ -1,0 +1,221 @@
+<?php
+/**
+ * Magento
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2010 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ *
+ * Product view template
+ *
+ * @see Mage_Catalog_Block_Product_View
+ * @see Mage_Review_Block_Product_View
+ */
+?>
+<?php $_helper = $this->helper('catalog/output'); ?>
+<?php $_product = $this->getProduct(); ?>
+<script type="text/javascript">
+    var optionsPrice = new Product.OptionsPrice(<?php echo $this->getJsonConfig() ?>);
+</script>
+<script type="text/javascript">
+    jQuery(function () {
+        jQuery('#tabs').tabs();
+    });
+</script>
+<div class="product-view">
+    <div class="product-name">
+        <?php if($_product->isSaleable()): ?>
+            <?php if( $this->helper('wishlist')->isAllow() || $_compareUrl=$this->helper('catalog/product_compare')->getAddUrl($_product)): ?>
+        <span class="or"><?php //echo $this->__('OR') ?></span>
+            <?php endif; ?>
+        <?php endif; ?>
+
+        <?php echo $this->getChildHtml('addto') ?>
+        <script type="text/javascript" src="//yandex.st/share/share.js"
+                charset="utf-8"></script>
+        <div class="yashare-auto-init" data-yashareL10n="ru"
+             data-yashareType="none" data-yashareQuickServices="yaru,vkontakte,facebook,twitter,odnoklassniki,moimir"
+
+            ></div>
+        <?php if ($this->canEmailToFriend()): ?>
+        <p class="email-friend"><a href="<?php echo $this->helper('catalog/product')->getEmailToFriendUrl($_product) ?>"><?php echo $this->__('Email to a Friend') ?></a></p>
+        <?php endif; ?>
+
+    </div>
+
+    <div class="product-essential">
+        <form action="<?php echo $this->getSubmitUrl($_product) ?>" method="post" id="product_addtocart_form"<?php if($_product->getOptions()): ?> enctype="multipart/form-data"<?php endif; ?>>
+            <div class="no-display">
+                <input type="hidden" name="product" value="<?php echo $_product->getId() ?>" />
+                <input type="hidden" name="related_product" id="related-products-field" value="" />
+            </div>
+            <div class="product-img-box">
+                <?php echo $this->getChildHtml('media') ?>
+            </div>
+            <div class="product-shop">
+                <?php echo $this->getChildHtml('alert_urls') ?>
+                <?php //echo $this->getChildHtml('product_type_data') ?>
+                <?php echo $this->getTierPriceHtml() ?>
+                <?php echo $this->getChildHtml('extrahint') ?>
+                <?php if (!$this->hasOptions()):?>
+                    <div class="simple-price-box">
+                        <?php echo $this->getChildHtml('product_type_data') ?>
+                    </div>
+                    <div class="add-to-box">
+                        <?php if($_product->isSaleable()): ?>
+                            <?php echo $this->getChildHtml('addtocart') ?>
+                        <?php endif; ?>
+                        <?php //echo $this->getChildHtml('addto') ?>
+                    </div>
+                    <?php echo $this->getChildHtml('extra_buttons') ?>
+                <?php endif; ?>
+                <?php echo $this->getChildHtml('other');?>
+                <?php if ($_product->isSaleable() && $this->hasOptions()):?>
+                    <?php echo $this->getChildChildHtml('container1', '', true, true) ?>
+                <?php endif;?>
+<!--                <p class="availability" id="availability-code">-->
+<!--                    --><?php //echo $this->__('Availability code')?><!--: <span></span>-->
+<!--                </p>-->
+            </div>
+
+            <div class="short-description">
+                <?php
+                    $hasBrand = FALSE;
+                    if ($brandFileName = $_product->getBrandLogo()){
+                        $brandFilePath = Mage::getBaseDir('media').DS.'brands'.DS.$brandFileName;
+                        if (is_file($brandFilePath)){
+                            $hasBrand = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA).'brands'.DS.$brandFileName;
+                            $brandFileInfo = pathinfo($brandFilePath);
+                            $brandURL = Mage::Helper('cms/page')->getPageUrl('brand/'.$brandFileInfo['filename']);
+                        }
+                    }
+                ?>
+                <h1>
+                    <?php echo $this->getChildHtml('meta_title') ?>
+                </h1>
+                <div class="rating-wrapper">
+                    <?php echo $this->getReviewsSummaryHtml($_product, false, true) ?>
+                    <?php if (Mage::helper('reviews_summary')->getReviewsCount($this) > 0):?>
+                        <div class="review-summary">(<?php echo Mage::helper('reviews_summary')->getReviewsCount($this); ?>)</div>
+                    <?php endif; ?>
+                </div>
+
+
+                <?php if ($_product->getShortDescription()):?>
+                <div class="std">
+                    <?php echo $_helper->productAttribute($_product, nl2br($_product->getShortDescription()), 'short_description') ?>
+                </div>
+                <?php endif;?>
+
+                <?php if ($_product->getDescrQuality()):?>
+                <div class="std">
+                    <?php echo $_helper->productAttribute($_product, nl2br($_product->getDescrQuality()), 'description_quality') ?>
+                </div>
+                <?php endif;?>
+                    <?php if($hasBrand): ?>
+                        <div class="product-brand-logo">
+                            Бренд (производитель):
+                            <a href="<?php echo ($brandURL) ? $brandURL : 'javascript:return false;' ?>">
+                                <img src="<?php echo $hasBrand ?>" alt="<?php echo $brandFileName ?>" />
+                            </a>
+                        </div>
+                    <?php elseif ($_product->getBrandLogo() != null && $_product->getBrandLogo() != ''):?>
+                        <div class="std">Бренд (производитель): <?php echo $this->escapeHtml($_product->getBrandLogo());?></div>
+                    <?php endif;?>
+                <div class="std">
+                    <?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('services_product')->toHtml() ?>
+                </div>
+            </div>
+
+       
+        <div class="clearer"></div>
+        <?php if ($_product->isSaleable() && $this->hasOptions()):?>
+            <?php echo $this->getChildChildHtml('container2', '', true, true) ?>
+        <?php endif;?>
+    </form>
+	 </div>
+    <script type="text/javascript">
+    //<![CDATA[
+        var productAddToCartForm = new VarienForm('product_addtocart_form');
+        productAddToCartForm.submit = function(button, url){
+            if (this.validator.validate()){
+                var form = this.form;
+                var oldUrl = form.action;
+                if (url) form.action = url;
+                var e = null;
+                try {
+                    this.form.submit();
+                } catch (e) {}
+                this.form.action = oldUrl;
+                if (e) throw e;
+                if (button && button != 'undefined') button.disabled = true;
+            }
+        }.bind(productAddToCartForm);
+
+        productAddToCartForm.submitLight = function(button, url){
+            if(this.validator) {
+                var nv = Validation.methods;
+                delete Validation.methods['required-entry'];
+                delete Validation.methods['validate-one-required'];
+                delete Validation.methods['validate-one-required-by-name'];
+                if (this.validator.validate()) {
+                    if (url) this.form.action = url;
+                    this.form.submit();
+                }
+                Object.extend(Validation.methods, nv);
+            }
+        }.bind(productAddToCartForm);
+    //]]>
+    </script>
+</div>
+
+<div id="tabs" class="product-collateral">
+    <ul>
+        <?php if ($_description = $this->getChildHtml('description')):?>
+        <li><a href="#tab-box-description"><span><?php echo $this->__('Product Info') ?></span></a></li>
+        <?php endif ?>
+
+        <?php if ($_additional = $this->getChildHtml('additional')):?>
+        <li><a href="#tab-box-additional"><span><?php echo $this->__('Additional Info') ?></span></a></li>
+        <?php endif ?>
+
+        <?php if($_product->getDescrBrandtext()): ?>
+        <li><a href="#tab-box-brand"><span><?php echo $this->__('Brand') ?></span></a></li>
+        <?php endif ?>
+
+        <li><a href="#tab-box-reviews"><span><?php echo $this->__('Customer Reviews') ?></span></a></li>
+        <li><a href="#tab-box-tags"><span><?php echo $this->__('Product Tags') ?></span></a></li>
+    </ul>
+
+    <?php if ($_description):?>
+    <div id="tab-box-description" class="box-collateral">
+       <?php echo $_description ?>
+    </div>
+    <?php endif;?>
+
+    <?php if ($_additional):?>
+    <div id="tab-box-additional" class="box-collateral box-additional">
+        <div class="layout-seo-fixer"></div>
+    </div>
+    <?php endif;?>
+
+    <div id="tab-box-reviews" class="box-collateral">
+        <?php echo $this->getChildHtml('product_additional_data_review');?>
+    </div>
+    <div id="tab-box-tags" class="box-collateral">
+        <?php echo $this->getChildHtml('product_additional_data') ?>
+    </div>
+
+    <?php if($_product->getDescrBrandtext()): ?>
+    <div id="tab-box-brand" class="box-collateral">
+        <div class="std">
+            <?php echo $_helper->productAttribute($_product, nl2br($_product->getDescrBrandtext()), 'description_brand') ?>
+        </div>
+    </div>
+    <?php endif ?>
+</div>
+
+<div class="product-view-group">
+    <?php echo $this->getChildHtml('catalog.product.related');?>
+    <?php echo $this->getChildHtml('upsell_products') ?>
+</div>

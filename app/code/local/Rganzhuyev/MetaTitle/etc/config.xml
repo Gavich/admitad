@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Rganzhuyev_MetaTitle>
+            <version>0.1.0</version>
+        </Rganzhuyev_MetaTitle>
+    </modules>
+    <global>
+        <blocks>
+            <meta_title>
+                <class>Rganzhuyev_MetaTitle_Block</class>
+            </meta_title>
+            <page>
+                <rewrite>
+                    <html_head>Rganzhuyev_MetaTitle_Block_MetaTitle</html_head>
+                </rewrite>
+            </page>
+            <customer>
+                <rewrite>
+                    <form_login>Rganzhuyev_MetaTitle_Block_Customer_Form_Login</form_login>
+                </rewrite>
+            </customer>
+        </blocks>
+    </global>
+    <frontend>
+        <layout>
+            <updates>
+                <meta_title>
+                    <file>meta_title.xml</file>
+                </meta_title>
+            </updates>
+        </layout>
+    </frontend>
+</config>

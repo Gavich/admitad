@@ -1,0 +1,126 @@
+<?php
+/**
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2010 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php $_product = $this->getProduct(); ?>
+<?php $buttonTitle = $this->__('Add to Cart'); ?>
+<?php if($_product->isSaleable()): ?>
+    <div class="add-to-cart">
+        <?php if(!$_product->isGrouped()): ?>
+        <label for="qty"><?php //echo $this->__('Quantity:') ?></label>
+        <div class="quantity">
+            <input type="text" name="qty" id="qty" maxlength="12" value="<?php echo $this->getMinimalQty($_product) ?>" title="<?php echo $this->__('Qty') ?>" class="input-text qty" />
+        </div> <!-- /.quantity -->
+        <?php endif; ?>
+
+        <button id="addToCart" type="button" title="<?php echo $buttonTitle ?>" class="button btn-cart" onclick="productAddToCartForm.submit(this)"><span><span><?php echo $buttonTitle ?></span></span></button>
+
+        <?php echo $this->getChildHtml('', true, true) ?>
+    </div>
+<?php endif; ?>
+
+<script type="text/javascript">
+//<![CDATA[
+jQuery("div.quantity").append('<input type="button" value="+" id="add1" class="plus" />').prepend('<input type="button" value="-" id="minus1" class="minus" />');
+jQuery(".plus").click(function(){
+    var currentVal = parseInt(jQuery(this).prev(".qty").val());
+    if (!currentVal || currentVal=="" || currentVal == "NaN") currentVal = 0;
+    jQuery(this).prev(".qty").val(currentVal + 1);
+})
+jQuery(".minus").click(function(){
+    var currentVal = parseInt(jQuery(this).next(".qty").val());
+    if (currentVal == "NaN") currentVal = 0;
+    if (currentVal > 0){
+        jQuery(this).next(".qty").val(currentVal - 1);
+    }
+})
+
+var isConfigurable = <?php echo (int)$_product->isConfigurable() ?>;
+var productId = <?php echo $_product->getId() ?>;
+var extPrices = false;
+var mysku;
+
+var checkQuantity = function(){
+    //load stock data
+    if (extPrices == false) {
+        jQuery.ajax({
+            async: false,
+            type: 'GET',
+            url: '<?php echo Mage::getBaseUrl() ?>getPrice.php',
+            data:{
+                'id': '<?php echo (int)$_product->getId() ?>',
+                'store_id': '<?php echo (int)Mage::app()->getStore()->getId() ?>'
+            }
+        }).done(function(response){
+            extPrices = jQuery.parseJSON(response);
+        });
+    }
+
+    var execOutOfStock = function(){
+        jQuery('button#addToCart').attr('disabled','disabled');
+        jQuery('button#addToCart span span').css('text-decoration','line-through');
+        jQuery('p.availability.in-stock').removeClass('in-stock').addClass('out-of-stock').find('span').html('<?php echo $this->__('Out Of Stock');?>');
+    }
+    var execInStock = function(){
+        jQuery('button#addToCart').attr('disabled','');
+        jQuery('button#addToCart span span').css('text-decoration','none');
+        jQuery('p.availability.out-of-stock').addClass('in-stock').removeClass('out-of-stock').find('span').html('<?php echo $this->__('In Stock');?>');
+    }
+    var execOptionChange = function(){
+        if (extPrices == null) {
+            execOutOfStock();
+            return false;
+        }
+        var mysku;
+
+        if (isConfigurable == 1){
+            var strin='currentProduct = extPrices[skuConfig[spConfig.getIdOfSelectedProduct()]];';
+            mysku=skuConfig[spConfig.getIdOfSelectedProduct()].substr(0,skuConfig[spConfig.getIdOfSelectedProduct()].length-5);
+            currentProduct = extPrices[mysku] || false;
+        } else {
+            mysku='<?php echo $_product->getSKU() ?>'.substr(0,'<?php echo $_product->getSKU() ?>'.length-5);
+            currentProduct = extPrices[mysku] || false;
+        }
+
+        if (currentProduct === false) execOutOfStock();
+        if (typeof currentProduct['availability'] != undefined && currentProduct['availability']) execInStock(); else execOutOfStock();
+        var currentPrice = currentProduct['price'];
+        if (currentProduct['price'] == 'undefined ' || typeof currentProduct['price'] == 'undefined') {
+            currentPrice = 'Нет данных';
+        } else {
+            currentPrice += ' грн.';
+        }
+        jQuery('div.price-box span.price').html(currentPrice);
+//        if (currentProduct['price'] == 'undefined'){
+//            currentProduct['price'] = 'Нет данных'
+//            jQuery('div.price-box span.price').html(currentProduct['price']);
+//        } else {
+//            jQuery('div.price-box span.price').html(currentProduct['price']+' грн.');
+//        }
+
+        if (typeof currentProduct['availabilityCode'] != undefined && currentProduct['availabilityCode']){
+            var message = currentProduct['availabilityCode'];
+            if (typeof currentProduct['availabilityText'] != undefined && currentProduct['availabilityText']){
+                message = currentProduct['availabilityText'];
+            }
+            jQuery('p#availability-code').show().find('span').html(message);
+        }else{
+            jQuery('p#availability-code').hide();
+        }
+    }
+
+    if (productAddToCartForm.validator.validate()){
+        execOptionChange();
+    }
+}
+jQuery(document).ready(function(){
+    if (!isConfigurable) {
+        //checkQuantity();
+    }
+})
+//]]>
+</script>

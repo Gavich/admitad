@@ -1,0 +1,51 @@
+<div class="category-description-seo">
+    <?php
+        $_category = Mage::registry('current_category');
+        $_helper = $this->helper('catalog/output');
+        $_imgHtml = '';
+        if ($_imgUrl = $_category->getImageUrl()) {
+            $_imgHtml =
+                '<p class="category-image">' .
+                '<img src="' . $_imgUrl . '" alt="' . $this->htmlEscape($_category->getName()) . '" ' .
+                'title="' . $this->htmlEscape($_category->getName()) . '" />' .
+                '</p>';
+            $_imgHtml = $_helper->categoryAttribute($_category, $_imgHtml, 'image');
+        }
+    ?>
+    <?php if ($_description = $_category->getDescription()): ?>
+        <div class="category-description std">
+            <?php echo $_helper->categoryAttribute($_category, $_description, 'description') ?>
+        </div>
+    <?php endif; ?>
+    <?php if ($_shortDescription = $_category->getShortDescription()): ?>
+        <div class="category-description std">
+            <?php echo $_helper->categoryAttribute($_category, $_shortDescription, 'short_description') ?>
+        </div>
+    <?php endif; ?>
+
+    <?php if ($_imgUrl): ?>
+        <?php echo $_imgHtml; ?>
+    <?php endif; ?>
+</div>
+<script type="text/javascript">
+    jQuery(function () {
+        var fixerBlock = jQuery('.layout-seo-fixer'),
+            textBlock = jQuery('.category-description-seo');
+
+        var fixHeight = function () {
+            textBlock.css({
+                'text-indent': 0,
+                'top':         fixerBlock.offset().top
+            });
+
+            fixerBlock.css({
+                'height': textBlock.get(0).clientHeight
+            });
+        };
+
+        fixHeight();
+        if (textBlock.find('img').length) {
+            textBlock.find('img').load(fixHeight);
+        }
+    });
+</script>

@@ -1,0 +1,29 @@
+<?php if (Mage::registry('current_category')): ?>
+    <?php $_categories = $this->getCurrentChildCategories() ?>
+    <?php $_count = is_array($_categories) ? count($_categories) : $_categories->count(); ?>
+    <?php if($_count): ?>
+    <div class="block block-layered-nav" style="border-bottom:1px solid #E5E5E5">
+        <div class="block-title">
+            <strong>
+                <span><?php echo $this->__('Categories') ?></span>
+            </strong>
+        </div>
+        <div class="block-content">
+            <dl id="narrow-by-list2">
+                <dt>
+                    <ol>
+                    <?php foreach ($_categories as $_category): ?>
+                        <?php if($_category->getIsActive()): ?>
+                        <li>
+                            <a href="<?php echo $this->getCategoryUrl($_category) ?>"<?php if ($this->isCategoryActive($_category)): ?> class="current"<?php endif; ?>><?php echo $this->htmlEscape($_category->getName()) ?></a> <?php /*(<?php echo $_category->getProductCount() ?>)*/ ?><br/>
+                        </li>
+                        <?php endif; ?>
+                    <?php endforeach ?>
+                    </ol>
+                </dt>
+            </dl>
+            <script type="text/javascript">decorateDataList('narrow-by-list2')</script>
+        </div>
+    </div>
+    <?php endif; ?>
+<?php endif; ?>

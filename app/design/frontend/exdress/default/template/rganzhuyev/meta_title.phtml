@@ -1,0 +1,15 @@
+<?php
+
+$helper   = $this->helper('catalog/output');
+$title    = $this->getTitle();
+$category = Mage::registry('current_category');
+$product  = Mage::registry('current_product');
+if (!$title && $product) {
+    $title = $helper->productAttribute($product, $product->getName(), 'name');
+} elseif (!$title && !$product) {
+    $title = $helper->categoryAttribute($category, $category->getName(), 'name');
+}
+
+echo $title;
+
+

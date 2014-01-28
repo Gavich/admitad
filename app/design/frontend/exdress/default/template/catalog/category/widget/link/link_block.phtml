@@ -1,0 +1,22 @@
+<?php
+    $session = Mage::getSingleton('core/session');
+    if (!$session->getMenuColors()) {
+        $session->setMenuColors(array(
+            "#ff6ff2", "#00d5f2", "#008141", "#0715cd", "#b536da", "#000056", "#005682",
+            "#77003c", "#004182", "#008282", "#ffb100", "#078446", "#4ac925", "#1f9400",
+            "#39e8ec", "#c41a5e", "#5d2892", "#4876b9", "#2b0057",  "#f2a400","#626262"
+        ));
+    }
+
+    $colors = $session->getMenuColors();
+?>
+<span class="widget widget-category-link">
+    <?php $color = array_pop($colors); ?>
+    <a <?php echo $this->getLinkAttributes() ?> data-color="<?php echo $color;?>" style="color:<?php echo $color;?>">
+        <span>
+            <?php echo $this->htmlEscape($this->getAnchorText()) ?>
+        </span>
+    </a>
+</span>
+
+<?php $session->setMenuColors($colors);?>

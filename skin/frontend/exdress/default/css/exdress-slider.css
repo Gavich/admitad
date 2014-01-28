@@ -1,0 +1,437 @@
+/**
+ * Medusa for Magento 1.7.0.0
+ * Design and Development by creative-d2 design&development (http://www.creative-d2.de)
+ * Distributed by ThemeForest (http://themeforest.net)
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @author     �mer Bildirici jun.
+ * @package    medusa_default
+ * @copyright  Copyright 2012 �mer Bildirici jun. (http://www.creative-d2.de)
+ * @license    All rights reserved.
+ * @version    1.0.6
+ */
+
+/**************** Slider */
+.exdress-slider {
+    font-family:Arial,Helvetica,sans-serif;
+    font-size:12px;
+    /*background: url("../images/bg_header.gif") repeat-x scroll 0 0 transparent;*/
+    position:relative;
+    width:960px;
+    height:430px;
+    margin-top: 5px;
+    overflow:hidden;
+}
+.exdress-slider a {
+    outline:none;
+}
+.exdress-slider .screen {
+    position:relative;
+    top:0;
+    left:0;
+    width:960px;
+    height:430px;
+    overflow:hidden;
+}
+.exdress-slider #strip {
+    display:block;
+    position:absolute;
+    top:0;
+    left:0;
+    z-index:0;
+    overflow:hidden;
+}
+.exdress-slider .content-box {
+    display:none;
+    position:absolute;
+    top:0;
+    left:0;
+    overflow:hidden;
+}
+.exdress-slider .main-img {
+    display:none;
+    position:absolute;
+    top:0;
+    left:0;
+    z-index:0;
+    border:0;
+}
+.exdress-slider .preloader {
+    position:absolute;
+    top:50%;
+    left:50%;
+    width:36px;
+    height:36px;
+    margin-top:-18px;
+    margin-left:-18px;
+    -moz-border-radius:2px;
+    -webkit-border-radius:2px;
+    border-radius:2px;
+    background:url("../images/cdd_slider_loader.gif") no-repeat center #000;
+    background:rgba(0,0,0,.7) url("../images/cdd_slider_loader.gif") no-repeat center #000;
+    z-index:4;
+    display:none;
+}
+.exdress-slider #timer {
+    position:absolute;
+    left:0;
+    height:4px;
+    background-color:#FFF;
+    -moz-opacity:.5;
+    filter:alpha(opacity=50);
+    opacity:0.5;
+    z-index:4;
+    visibility:hidden;
+    font-size:0;
+}
+.exdress-slider .desc {
+    float: left;
+    position: absolute;
+    top: 110px !important;
+    left: 0px !important;
+    z-index: 6;
+    overflow: hidden;
+    text-align: left;
+    width: 100% !important;
+    background-color: transparent;
+}
+
+/**************** Slider-Caption START*/
+.exdress-slider .inner-bg {
+    position:relative;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background-color:transparent !important;
+    -moz-opacity:.7;
+    filter:alpha(opacity=70);
+    opacity:.7;
+    z-index:0;
+}
+.exdress-slider .inner-text {
+    position:absolute;
+    top:0;
+    left:0;
+    padding:20px;
+    width:auto;
+    height:auto;
+    font-size: 450%;
+    z-index:1;
+}
+
+.exdress-slider .inner-text .discover-now span span {
+    background: url("../images/cdd_slider_now.png") no-repeat scroll 5px center transparent;
+    border: 1px solid #000;
+    padding: 5px 10px 5px 30px;
+    font-size: 16px;
+    line-height: 110%;
+    color: #000;
+}
+.exdress-slider .inner-text .discover-now span a {
+    color: #3D3C33;
+}
+.exdress-slider .inner-text h1 {
+    font-size: 76px;
+    font-weight: bold;
+}
+.exdress-slider .inner-text h2 {
+    font-size: 60px;
+    text-transform: lowercase;
+}
+.exdress-slider .inner-text h1,
+.exdress-slider .inner-text h2 {
+    color: #000;
+    line-height: 100%;
+}
+.exdress-slider a {
+    outline: none;
+}
+.exdress-slider .inner-text p {
+    margin: 0 0 10px 0;
+}
+p.callout-captionslider {
+    background: #E7160F;
+    margin: 0 !important;
+    padding: 5px;
+    width: 33%;
+    font-size: 14px;
+    font-style: italic;
+    color: #FFF;
+    line-height: 16px;
+}
+.caption-content ul li:first-child {
+    width: 370px;
+}
+.caption-content ul li {
+    width: 590px;
+    float: left;
+}
+.exdress-slider .inner-text  ul li:first-child img {
+    margin-left: 0;
+    float: left;
+}
+.exdress-slider .inner-text  ul li img {
+    margin-left: 10px;
+    vertical-align: baseline;
+    float: right;
+}
+/**************** Slider-Caption END*/
+
+.exdress-slider .c-panel {
+    position:absolute;
+    top:0;
+    z-index:7;
+    visibility:hidden;
+}
+.exdress-slider .outer-hp,
+.exdress-slider .outer-vp {
+    position:absolute;
+    background:#333;
+    background:-moz-linear-gradient(#444, #111);
+    background:-webkit-gradient(linear, 0 top, 0 bottom, from(#444), to(#111));
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#444444', endColorstr='#111111',GradientType=0);
+    border:1px solid #000;
+}
+.exdress-slider .outer-hp {
+    left:0;
+    width:100%;
+    border-left:none;
+    border-right:none;
+}
+.exdress-slider .outer-vp {
+    top:0;
+    height:100%;
+    border-top:none;
+    border-bottom:none;
+}
+.exdress-slider .back-scroll,
+.exdress-slider .fwd-scroll {
+    position:absolute;
+    top:0;
+    left:0;
+    z-index:10;
+    background:url(assets/spacer.png) no-repeat;
+}
+.exdress-slider .thumbnails,
+.exdress-slider .buttons {
+    display:inline;
+    position:relative;
+    float:left;
+    overflow:hidden;
+}
+.exdress-slider .thumbnails ul {
+    position:relative;
+    list-style:none;
+    margin:0;
+    padding:0;
+}
+.exdress-slider .thumbnails ul.inside {
+    position:absolute;
+    top:0;
+    left:0;
+}
+.exdress-slider .thumbnails li,
+.exdress-slider .play-btn,
+.exdress-slider .prev-btn,
+.exdress-slider .next-btn {
+    position:relative;
+    list-style:none;
+    display:inline;
+    float:left;
+    overflow:hidden;
+    width:24px;
+    height:24px;
+    line-height:24px;
+    text-align:center;
+    color:#FFF;
+    background-color:none;
+    border:1px solid #FAFAFA;
+    cursor:pointer;
+    font-weight:bold;
+}
+.exdress-slider .thumbnails li.thumb-over {
+    color:#FFF;
+    background-color:#FF8A00;
+}
+.exdress-slider .thumbnails li.curr-thumb {
+    color:#FFF;
+    background-color:#FF8A00;
+    cursor:default;
+}
+.exdress-slider .thumbnails li.image {
+    background:#000;
+}
+.exdress-slider .thumbnails li.image.curr-thumb,
+.exdress-slider .thumbnails li.image.thumb-over {
+    border-color:#E5E5E5;
+}
+.exdress-slider .thumbnails li.image a {
+    display:block;
+    border:0;
+}
+.exdress-slider .thumbnails li.image img {
+    display:block;
+    border:0;
+    position:absolute;
+    -moz-opacity:.85;
+    filter:alpha(opacity=85);
+    opacity:0.85;
+}
+.exdress-slider .thumbnails li.image.thumb-over img {
+    -moz-opacity:1;
+    filter:alpha(opacity=100);
+    opacity:1;
+}
+.exdress-slider .thumbnails li.image.curr-thumb img {
+    -moz-opacity:1;
+    filter:alpha(opacity=100);
+    opacity:1;
+    cursor:default;
+}
+.exdress-slider .thumbnails li *{
+    display:none;
+}
+.exdress-slider .thumbnails li div {
+    position:relative;
+    color:#FFF;
+    background-color:#none;
+    width:auto;
+    height:auto;
+}
+.exdress-slider .button-over {
+    background-color:#FF8A00 !important;
+}
+.exdress-slider .play-btn{
+    background:url(../images/cdd_slider_play.png) no-repeat center transparent;
+}
+.exdress-slider .play-btn.button-over {
+    background-color: #FF8A00;
+}
+.exdress-slider .pause {
+    background: url(../images/cdd_slider_pause.png) no-repeat center transparent;
+}
+.exdress-slider .pause.button-over {
+    background-color: #FF8A00;
+}
+.exdress-slider .prev-btn {
+    background: url(../images/cdd_slider_prev.png) no-repeat center transparent;
+}
+.exdress-slider .prev-btn.button-over {
+    background-color: #FF8A00;
+}
+.exdress-slider .next-btn {
+    background: url(../images/cdd_slider_next.png) no-repeat center transparent;
+}
+.exdress-slider .next-btn.button-over {
+    background-color: #FF8A00;
+}
+.exdress-slider .up {
+    background:url(../images/up.png) no-repeat center transparent;
+}
+.exdress-slider .up.button-over {
+    background-color: #FF8A00;
+}
+.exdress-slider .down {
+    background:url(../images/down.png) no-repeat center transparent;
+}
+.exdress-slider .down.button-over {
+    background-color: #FF8A00;
+}
+#imgslider-tooltip {
+    position:absolute;
+    top:0;
+    left:0;
+    z-index:99999;
+    display:none;
+}
+#imgslider-tooltip.txt-up {
+    margin-left:-10px;
+    margin-bottom:5px;
+    background:url(../images/vtip.png) no-repeat;
+    background-position:10px bottom;
+    background-position-x:10px;
+    background-position-y:bottom;
+}
+#imgslider-tooltip.txt-down {
+    margin-left:-10px;
+    margin-top:24px;
+    background:url(../images/vtip.png) no-repeat;
+    background-position:10px top;
+    background-position-x:10px;
+    background-position-y:top;
+}
+#imgslider-tooltip.img-up {
+    background:url(../images/vtip.png) center bottom no-repeat;
+}
+#imgslider-tooltip.img-down {
+    background:url(../images/vtip.png) center top no-repeat;
+}
+#imgslider-tooltip.img-right {
+    background:url(../images/htip.png) left center no-repeat;
+}
+#imgslider-tooltip.img-left {
+    background:url(../images/htip.png) right center no-repeat;
+}
+#imgslider-tooltip .tt-txt {
+    font-family:Arial,Helvetica,sans-serif;
+    font-size:12px;
+    color:#FFF;
+    background-color:#000;
+    max-width:300px;
+    padding:4px;
+    -moz-border-radius:2px;
+    -webkit-border-radius:2px;
+    border-radius:2px;
+    margin:8px 0;
+}
+#imgslider-tooltip img {
+    display:none;
+    background-color:#000;
+    padding:3px;
+    margin:8px;
+    -moz-border-radius:2px;
+    -webkit-border-radius:2px;
+    border-radius:2px;
+}
+.exdress-slider .s-prev,
+.exdress-slider .s-next {
+    position:absolute;
+    top:50%;
+    margin-top:-25px;
+    width:30px;
+    height:50px;
+    cursor:pointer;
+    background:url(../images/large_buttons.png) no-repeat;
+    -moz-opacity:.7;
+    filter:alpha(opacity=70);
+    opacity:.7;
+    z-index:8;
+}
+.exdress-slider .s-prev {
+    left:0;
+    background-position:0 0;
+}
+.exdress-slider .s-next {
+    left:100%;
+    margin-left:-30px;
+    background-position:-30px 0;
+}
+.exdress-slider .s-prev.button-over,
+.exdress-slider .s-next.button-over {
+    -moz-opacity:1;
+    filter:alpha(opacity=100);
+    opacity:1;
+    background-color:transparent !important;
+}
+.exdress-slider .block,
+.exdress-slider .vpiece,
+.exdress-slider .hpiece {
+    position:absolute;
+    z-index:2;
+}
