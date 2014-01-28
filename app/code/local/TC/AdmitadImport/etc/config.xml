@@ -31,6 +31,17 @@
                 <class>TC_AdmitadImport_Reader</class>
             </tc_admitadimport>
         </readers>
+        <resources>
+            <admitadimport_setup>
+                <setup>
+                    <module>TC_AdmitadImport</module>
+                    <class>Mage_Eav_Model_Entity_Setup</class>
+                </setup>
+                <connection>
+                    <use>default_setup</use>
+                </connection>
+            </admitadimport_setup>
+        </resources>
     </global>
     <adminhtml>
         <translate>

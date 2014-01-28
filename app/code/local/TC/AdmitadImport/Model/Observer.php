@@ -22,7 +22,6 @@ class TC_AdmitadImport_Model_Observer
         $reader           = $helper->getDefaultReader();
 
         try {
-
             $importChain = $helper->getImportProcessorChain();
             $importChain->setLogger($defaultLogger);
 

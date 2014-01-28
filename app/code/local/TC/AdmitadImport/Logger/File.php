@@ -15,7 +15,7 @@ class TC_AdmitadImport_Logger_File implements TC_AdmitadImport_Logger_LoggerInte
      * @param string $message
      * @param int    $priority
      */
-    public function log($message, $priority)
+    public function log($message, $priority = Zend_Log::INFO)
     {
         Mage::log($message, $priority, self::LOG_FILENAME . '.log');
     }

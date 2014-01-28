@@ -15,5 +15,5 @@ interface TC_AdmitadImport_Logger_LoggerInterface
      *
      * @return void
      */
-    public function log($message, $priority);
+    public function log($message, $priority = Zend_Log::INFO);
 }
