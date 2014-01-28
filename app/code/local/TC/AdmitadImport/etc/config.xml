@@ -9,7 +9,11 @@
         <models>
             <tc_admitadimport>
                 <class>TC_AdmitadImport_Model</class>
+                <resourceModel>tc_admitadimport_resrouce</resourceModel>
             </tc_admitadimport>
+            <tc_admitadimport_resrouce>
+                <class>TC_AdmitadImport_Model_Resource</class>
+            </tc_admitadimport_resrouce>
         </models>
         <helpers>
             <tc_admitadimport>

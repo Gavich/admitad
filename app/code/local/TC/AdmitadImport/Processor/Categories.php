@@ -11,10 +11,7 @@ class TC_AdmitadImport_Processor_Categories extends TC_AdmitadImport_Processor_A
     const ORIGIN_ID_ATTRIBUTE_CODE = 'origin_id';
 
     /** @var array */
-    private $_categories;
-
-    /* @var Mage_Catalog_Model_Resource_Eav_Attribute */
-    private $_originAttribute;
+    private $_categories = array();
 
     /** @var array */
     private $_processed = array();
@@ -31,20 +28,12 @@ class TC_AdmitadImport_Processor_Categories extends TC_AdmitadImport_Processor_A
     {
         $this->_getLogger()->log('Categories import started');
 
-        $originAttributeId      = Mage::getResourceModel('eav/entity_attribute')->getIdByCode(
-            Mage_Catalog_Model_Category::ENTITY, self::ORIGIN_ID_ATTRIBUTE_CODE
-        );
-        $this->_originAttribute = Mage::getModel('catalog/resource_eav_attribute')->load($originAttributeId);
-
-        $this->_categories = $data->getCategories();
-        $this->_idsMap     = $this->_getIdsMap();
+        $error = false;
+        $this->_beforeProcess();
+        // @TODO fetching store from settings if needed
         $defaultStore      = Mage::app()->getWebsite(true)->getDefaultStore();
-
-        /* @var $indexer Mage_Index_Model_Indexer */
-        $indexer   = Mage::getSingleton('index/indexer');
-        $processes = $indexer->getProcessesCollection();
-        $processes->walk('setMode', array(Mage_Index_Model_Process::MODE_MANUAL));
-        $processes->walk('save');
+        $this->_categories = $data->getCategories();
+        $this->_idsMap     = $this->_getResourceUtilityModel()->getCategoriesIdMap();
 
         /* @var $rootCategory Mage_Catalog_Model_Category */
         $rootCategory = Mage::getModel('catalog/category');
@@ -52,20 +41,20 @@ class TC_AdmitadImport_Processor_Categories extends TC_AdmitadImport_Processor_A
         $rootCategory->setData(self::ORIGIN_ID_ATTRIBUTE_CODE, self::ROOT_CATEGORY_ORIGIN_ID);
         $rootCategory->save();
 
+        $this->_processed[] = $rootCategory->getId();
+
         try {
-            $this->processChildren($rootCategory, $defaultStore);
+            $this->_processChildren($rootCategory, $defaultStore);
         } catch (Exception $e) {
             $this->_getLogger()->log($e->getMessage(), Zend_Log::CRIT);
-
-            return;
+            $error = true;
         }
 
-        $this->_getLogger()->log('Creating and updating categories finished. Starting reindex...');
-        $processes->walk('setMode', array(Mage_Index_Model_Process::MODE_REAL_TIME));
-        $processes->walk('save');
-        $processes->walk('reindexAll');
-
-        $this->_getLogger()->log('Reindex finished. SUCCESS!');
+        $this->_afterProcess($data);
+        if (!$error) {
+            $this->_updateVisibility();
+            $this->_getLogger()->log('Categories successfully imported. SUCCESS!');
+        }
     }
 
     /**
@@ -74,7 +63,7 @@ class TC_AdmitadImport_Processor_Categories extends TC_AdmitadImport_Processor_A
      * @param Mage_Catalog_Model_Category $parentCategory
      * @param Mage_Core_Model_Store       $store
      */
-    public function processChildren(Mage_Catalog_Model_Category $parentCategory, $store)
+    protected function _processChildren(Mage_Catalog_Model_Category $parentCategory, $store)
     {
         $originId = $parentCategory->getData(self::ORIGIN_ID_ATTRIBUTE_CODE);
         $children = $this->_getChildren($originId);
@@ -98,7 +87,7 @@ class TC_AdmitadImport_Processor_Categories extends TC_AdmitadImport_Processor_A
             $this->_processed[] = $categoryModel->getId();
 
             // processing children
-            $this->processChildren($categoryModel, $store);
+            $this->_processChildren($categoryModel, $store);
         }
     }
 
@@ -112,7 +101,7 @@ class TC_AdmitadImport_Processor_Categories extends TC_AdmitadImport_Processor_A
      *
      * @return Mage_Catalog_Model_Category
      */
-    private function _createCategory($parentCategory, $name, $originId, $store)
+    protected function _createCategory($parentCategory, $name, $originId, $store)
     {
         $this->_getLogger()->log(sprintf('Creating category: %s', $name));
         $category = Mage::getModel('catalog/category');
@@ -122,7 +111,7 @@ class TC_AdmitadImport_Processor_Categories extends TC_AdmitadImport_Processor_A
         }
         $parentCategoryId = $parentCategory->getId();
         $category
-            ->setData($this->_getDefaultCatData($name, $originId, $parentCategoryId))
+            ->setData($this->_getDefaultCategoryData($name, $originId, $parentCategoryId))
             ->setAttributeSetId($category->getDefaultAttributeSetId())
             ->setStoreId($store->getId())
             ->setPath($parentCategory->getPath())
@@ -142,7 +131,7 @@ class TC_AdmitadImport_Processor_Categories extends TC_AdmitadImport_Processor_A
      *
      * @return Mage_Catalog_Model_Category
      */
-    private function _updateCategory($id, Mage_Catalog_Model_Category $parentCategory, $name)
+    protected function _updateCategory($id, Mage_Catalog_Model_Category $parentCategory, $name)
     {
         $this->_getLogger()->log(sprintf('Updating category: %s', $name));
         $category = Mage::getModel('catalog/category')->load($id);
@@ -184,26 +173,50 @@ class TC_AdmitadImport_Processor_Categories extends TC_AdmitadImport_Processor_A
     }
 
     /**
-     * Returns magento category IDs
-     *
-     * @return int|false
+     * Disable categories that not in imported data
      */
-    private function _getIdsMap()
+    private function _updateVisibility()
     {
-        /* @var $coreResource Mage_Core_Model_Resource */
-        $coreResource   = Mage::getModel('core/resource');
-        $coreConnection = $coreResource->getConnection('core_read');
+        $categoriesToDisable = array_diff(array_values($this->_idsMap), $this->_processed);
 
-        $select = $coreConnection->select();
-        $select->from(array('cc' => $coreResource->getTableName('catalog/category')), array('cc.entity_id'));
-        $select->join(
-            array('a' => $this->_originAttribute->getBackendTable()), 'a.entity_id=cc.entity_id', array('a.value')
-        );
-        $select->where('a.attribute_id =?', $this->_originAttribute->getId());
+        $this->_getResourceUtilityModel()->updateVisibilityAttributeValue($categoriesToDisable, false);
+    }
 
-        $result = $coreConnection->fetchPairs($select);
+    /**
+     * Returns utility model
+     *
+     * @return TC_AdmitadImport_Model_Resource_Category
+     */
+    private function _getResourceUtilityModel()
+    {
+        return Mage::getResourceModel('tc_admitadimport/category');
+    }
 
-        return array_flip($result);
+    /**
+     * Before process preparing
+     */
+    private function _beforeProcess()
+    {
+        /* @var $indexer Mage_Index_Model_Indexer */
+        $indexer   = Mage::getSingleton('index/indexer');
+        $processes = $indexer->getProcessesCollection();
+        $processes->walk('setMode', array(Mage_Index_Model_Process::MODE_MANUAL));
+        $processes->walk('save');
+    }
+
+    /**
+     * After process steps
+     */
+    private function _afterProcess()
+    {
+        /* @var $indexer Mage_Index_Model_Indexer */
+        $indexer   = Mage::getSingleton('index/indexer');
+        $processes = $indexer->getProcessesCollection();
+
+        $this->_getLogger()->log('Creating and updating categories finished. Starting reindex...');
+        $processes->walk('setMode', array(Mage_Index_Model_Process::MODE_REAL_TIME));
+        $processes->walk('save');
+        $processes->walk('reindexAll');
     }
 
     /**
@@ -215,7 +228,7 @@ class TC_AdmitadImport_Processor_Categories extends TC_AdmitadImport_Processor_A
      *
      * @return array
      */
-    private function _getDefaultCatData($name, $originId, $parentId)
+    private function _getDefaultCategoryData($name, $originId, $parentId)
     {
         return array(
             'name'                         => trim($name),
