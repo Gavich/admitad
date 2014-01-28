@@ -9,19 +9,74 @@
         <models>
             <tc_admitadimport>
                 <class>TC_AdmitadImport_Model</class>
+                <resourceModel>tc_admitadimport_resrouce</resourceModel>
             </tc_admitadimport>
+            <tc_admitadimport_resrouce>
+                <class>TC_AdmitadImport_Model_Resource</class>
+            </tc_admitadimport_resrouce>
         </models>
         <helpers>
             <tc_admitadimport>
                 <class>TC_AdmitadImport_Helper</class>
             </tc_admitadimport>
         </helpers>
+        <loggers>
+            <tc_admitadimport>
+                <class>TC_AdmitadImport_Logger</class>
+            </tc_admitadimport>
+        </loggers>
+        <processors>
+            <tc_admitadimport>
+                <class>TC_AdmitadImport_Processor</class>
+            </tc_admitadimport>
+        </processors>
+        <readers>
+            <tc_admitadimport>
+                <class>TC_AdmitadImport_Reader</class>
+            </tc_admitadimport>
+        </readers>
         <resources>
-            <tc_admitadimport_setup>
+            <admitadimport_setup>
                 <setup>
                     <module>TC_AdmitadImport</module>
+                    <class>Mage_Eav_Model_Entity_Setup</class>
                 </setup>
-            </tc_admitadimport_setup>
+                <connection>
+                    <use>default_setup</use>
+                </connection>
+            </admitadimport_setup>
         </resources>
     </global>
+    <adminhtml>
+        <translate>
+            <modules>
+                <TC_AdmitadImport>
+                    <files>
+                        <default>TC_AdmitadImport.csv</default>
+                    </files>
+                </TC_AdmitadImport>
+            </modules>
+        </translate>
+    </adminhtml>
+    <crontab>
+        <jobs>
+            <tc_admitadimport_import_job>
+                <run>
+                    <model>tc_admitadimport/observer::import</model>
+                </run>
+            </tc_admitadimport_import_job>
+        </jobs>
+    </crontab>
+    <default>
+        <tc_admitadimport>
+            <schedule>
+                <enabled>0</enabled>
+                <time>03,00,00</time>
+                <frequency>D</frequency>
+            </schedule>
+            <settings>
+                <source></source>
+            </settings>
+        </tc_admitadimport>
+    </default>
 </config>
