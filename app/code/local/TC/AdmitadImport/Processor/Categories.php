@@ -141,6 +141,7 @@ class TC_AdmitadImport_Processor_Categories extends TC_AdmitadImport_Processor_A
         }
 
         $category->setParentId($parentCategory->getId());
+        $category->setLevel($parentCategory->getLevel() + 1);
         $category->setPath($parentCategory->getPath() . '/');
         //save will not send query to DB if changes not occurred
         $category->save();
@@ -180,6 +181,7 @@ class TC_AdmitadImport_Processor_Categories extends TC_AdmitadImport_Processor_A
         $categoriesToDisable = array_diff(array_values($this->_idsMap), $this->_processed);
 
         $this->_getResourceUtilityModel()->updateVisibilityAttributeValue($categoriesToDisable, false);
+        $this->_getResourceUtilityModel()->updateVisibilityAttributeValue($this->_processed, true);
     }
 
     /**

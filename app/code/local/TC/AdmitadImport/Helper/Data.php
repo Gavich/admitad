@@ -87,8 +87,8 @@ class TC_AdmitadImport_Helper_Data extends Mage_Core_Helper_Abstract
     {
         $registryKey = '_reader/' . $name;
         if (!Mage::registry($registryKey)) {
-            $loggerClass = Mage::getConfig()->getGroupedClassName('reader', $name);
-            Mage::register($registryKey, new $loggerClass);
+            $readerClass = Mage::getConfig()->getGroupedClassName('reader', $name);
+            Mage::register($registryKey, new $readerClass);
         }
 
         return Mage::registry($registryKey);
