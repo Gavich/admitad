@@ -29,7 +29,6 @@ class TC_AdmitadImport_Processor_Categories extends TC_AdmitadImport_Processor_A
         $this->_getLogger()->log('Categories import started');
 
         $error = false;
-        $this->_beforeProcess();
         // @TODO fetching store from settings if needed
         $defaultStore      = Mage::app()->getWebsite(true)->getDefaultStore();
         $this->_categories = $data->getCategories();
@@ -49,8 +48,6 @@ class TC_AdmitadImport_Processor_Categories extends TC_AdmitadImport_Processor_A
             $this->_getLogger()->log($e->getMessage(), Zend_Log::CRIT);
             $error = true;
         }
-
-        $this->_afterProcess($data);
         if (!$error) {
             $this->_updateVisibility();
             $this->_getLogger()->log('Categories successfully imported. SUCCESS!');
@@ -192,33 +189,6 @@ class TC_AdmitadImport_Processor_Categories extends TC_AdmitadImport_Processor_A
     private function _getResourceUtilityModel()
     {
         return Mage::getResourceModel('tc_admitadimport/category');
-    }
-
-    /**
-     * Before process preparing
-     */
-    private function _beforeProcess()
-    {
-        /* @var $indexer Mage_Index_Model_Indexer */
-        $indexer   = Mage::getSingleton('index/indexer');
-        $processes = $indexer->getProcessesCollection();
-        $processes->walk('setMode', array(Mage_Index_Model_Process::MODE_MANUAL));
-        $processes->walk('save');
-    }
-
-    /**
-     * After process steps
-     */
-    private function _afterProcess()
-    {
-        /* @var $indexer Mage_Index_Model_Indexer */
-        $indexer   = Mage::getSingleton('index/indexer');
-        $processes = $indexer->getProcessesCollection();
-
-        $this->_getLogger()->log('Creating and updating categories finished. Starting reindex...');
-        $processes->walk('setMode', array(Mage_Index_Model_Process::MODE_REAL_TIME));
-        $processes->walk('save');
-        $processes->walk('reindexAll');
     }
 
     /**

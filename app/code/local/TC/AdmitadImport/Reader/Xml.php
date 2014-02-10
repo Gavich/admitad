@@ -41,12 +41,24 @@ class TC_AdmitadImport_Reader_Xml implements TC_AdmitadImport_Reader_ReaderInter
                     if (isset($_product['@attributes'])) {
                         unset($_product['@attributes']);
                     }
+
+                    $_product['param'] = [];
+                    $_params           = $productXml->xpath('/offer/param');
+                    if (!empty($_params)) {
+                        foreach ($_params as $_param) {
+                            $_attributes = $_param->attributes();
+                            if (isset($_attributes['name'])) {
+                                $_product['param'][(string)$_attributes['name']] = (string)$_param;
+                            }
+                        }
+                    }
+
                     $_attributes = $productXml->attributes();
                     foreach ($_attributes as $key => $value) {
                         $_product[$key] = (string)$value;
                     }
 
-                    $_products[] = $_product;
+                    $_products[$this->_getProductSKU($_product)] = $_product;
                 }
             }
         }
@@ -54,5 +66,26 @@ class TC_AdmitadImport_Reader_Xml implements TC_AdmitadImport_Reader_ReaderInter
         unset($xml);
 
         return new TC_AdmitadImport_Reader_DataBag($_categories, $_products);
+    }
+
+    /**
+     * Retrieve product SKU from given data
+     *
+     * @param array $product
+     *
+     * @return string
+     * @throws Exception
+     */
+    private function _getProductSKU(array $product)
+    {
+        $skuParts = array_intersect_key($product, array_flip(['id', 'vendorCode']));
+
+        if (empty($skuParts)) {
+            throw new Exception(sprintf(
+                'Could no retrieve SKU for product: %s %s', PHP_EOL, var_export($product, true)
+            ));
+        }
+
+        return preg_replace('#[^a-z0-9_-]{1}#', '-', strtolower(implode('-', $skuParts)));
     }
 }

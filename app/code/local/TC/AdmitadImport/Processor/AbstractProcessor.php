@@ -32,4 +32,31 @@ abstract class TC_AdmitadImport_Processor_AbstractProcessor
     {
         return $this->_logger;
     }
+
+    /**
+     * Before process preparing
+     */
+    protected function _beforeProcess()
+    {
+        /* @var $indexer Mage_Index_Model_Indexer */
+        $indexer   = Mage::getSingleton('index/indexer');
+        $processes = $indexer->getProcessesCollection();
+        $processes->walk('setMode', array(Mage_Index_Model_Process::MODE_MANUAL));
+        $processes->walk('save');
+    }
+
+    /**
+     * After process steps
+     */
+    protected function _afterProcess()
+    {
+        /* @var $indexer Mage_Index_Model_Indexer */
+        $indexer   = Mage::getSingleton('index/indexer');
+        $processes = $indexer->getProcessesCollection();
+
+        $this->_getLogger()->log('Import finished. Starting reindex...');
+        $processes->walk('setMode', array(Mage_Index_Model_Process::MODE_REAL_TIME));
+        $processes->walk('save');
+        $processes->walk('reindexAll');
+    }
 }
