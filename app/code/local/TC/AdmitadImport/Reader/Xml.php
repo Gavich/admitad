@@ -42,7 +42,7 @@ class TC_AdmitadImport_Reader_Xml implements TC_AdmitadImport_Reader_ReaderInter
                         unset($_product['@attributes']);
                     }
 
-                    $_product['param'] = [];
+                    $_product['param'] = array();
                     $_params           = $productXml->xpath('/offer/param');
                     if (!empty($_params)) {
                         foreach ($_params as $_param) {

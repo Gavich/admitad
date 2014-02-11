@@ -52,6 +52,7 @@ class TC_AdmitadImport_Processor_Categories extends TC_AdmitadImport_Processor_A
             $this->_updateVisibility();
             $this->_getLogger()->log('Categories successfully imported. SUCCESS!');
         }
+        $this->_getLogger()->log('Categories import ended');
     }
 
     /**

@@ -8,7 +8,7 @@
 /* @var $this Mage_Eav_Model_Entity_Setup */
 $this->startSetup();
 
-$disableRequiredOption = ['weight', 'short_description'];
+$disableRequiredOption = array('weight', 'short_description');
 foreach ($disableRequiredOption as $attributeCode) {
     $attributeId = Mage::getResourceModel('eav/entity_attribute')->getIdByCode(
         Mage_Catalog_Model_Product::ENTITY, $attributeCode
@@ -17,15 +17,20 @@ foreach ($disableRequiredOption as $attributeCode) {
     $attribute->setIsRequired(false)->save();
 }
 
-$textAttributes = [
-    'model', 'type_prefix', 'brand', 'material', 'collection', 'color', 'season', 'sex', 'age',
+$toRemove = array('manufacturer', 'country_of_manufacture');
+foreach ($toRemove as $attributeCode) {
+    $attribute = $this->removeAttribute(Mage_Catalog_Model_Product::ENTITY, $attributeCode);
+}
+
+$textAttributes = array(
+    'model', 'type_prefix', 'brand', 'material', 'fashion_collection', 'color', 'season', 'sex', 'age',
     'clasp_type', 'heel', 'external_material', 'url', 'platform_height', 'sole_material', 'bootleg_height',
-    'bootleg_width'
-];
+    'bootleg_width', 'manufacturer', 'country_of_manufacture'
+);
 
-$floatAttributes = ['local_delivery_cost'];
+$floatAttributes = array('local_delivery_cost');
 
-$data = [
+$data = array(
     'type'         => 'varchar',
     'label'        => '',
     'input'        => 'text',
@@ -33,10 +38,11 @@ $data = [
     'global'       => Mage_Catalog_Model_Resource_Eav_Attribute::SCOPE_GLOBAL,
     'group'        => 'Parameters',
     'user_defined' => 1
-];
+);
 
-$entityTypeId = Mage::getModel('eav/entity')->setType(Mage_Catalog_Model_Product::ENTITY)->getTypeId();
-$object       = new Varien_Object();
+$defaultAttributeSetId = Mage::getModel('catalog/product')->getDefaultAttributeSetId();
+$entityTypeId          = Mage::getModel('eav/entity')->setType(Mage_Catalog_Model_Product::ENTITY)->getTypeId();
+$object                = new Varien_Object();
 $object->setData($data);
 
 $attributes = array_merge($textAttributes, $floatAttributes);
