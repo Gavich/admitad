@@ -9,7 +9,7 @@ abstract class TC_AdmitadImport_Processor_AbstractProcessor
     implements TC_AdmitadImport_Processor_ProcessorInterface, TC_AdmitadImport_Logger_LoggerAwareInterface
 {
     /** @var TC_AdmitadImport_Logger_LoggerInterface */
-    protected $_logger;
+    private $_logger;
 
     /**
      * Inject the logger

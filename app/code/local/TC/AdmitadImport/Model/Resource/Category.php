@@ -7,6 +7,8 @@
  */
 class TC_AdmitadImport_Model_Resource_Category extends Mage_Catalog_Model_Resource_Category
 {
+    const BATCH_SIZE = 100;
+
     /**
      * Returns categories id map array(ORIGIN_ID => CATEGORY_ID)
      *
@@ -59,7 +61,7 @@ class TC_AdmitadImport_Model_Resource_Category extends Mage_Catalog_Model_Resour
                 // collect data for save
                 $this->_saveAttributeValue($object, $attribute, $value);
                 // save collected data every 1000 rows
-                if ($i % 1000 == 0) {
+                if ($i % self::BATCH_SIZE == 0) {
                     $this->_processAttributeValues();
                 }
             }

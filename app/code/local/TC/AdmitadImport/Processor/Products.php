@@ -7,17 +7,25 @@
  */
 class TC_AdmitadImport_Processor_Products extends TC_AdmitadImport_Processor_AbstractProcessor
 {
+    const CUSTOM_CATEGORY_LEVEL = 2;
+
     /** @var array */
     private $_processedSKUs = array();
 
     /** @var array */
     private $_existSKUs = array();
 
-    /** @var array */
-    private $_defaultProductData = array();
-
     /** @var int */
     private $_attributeSetId;
+
+    /** @var int */
+    private $_websiteId;
+
+    /** @var Mage_Catalog_Model_Resource_Category_Collection */
+    private $_categoryCollection;
+
+    /** @var bool */
+    private $_canIncludeInParentCategory = false;
 
     /**
      * Performs import
@@ -31,12 +39,14 @@ class TC_AdmitadImport_Processor_Products extends TC_AdmitadImport_Processor_Abs
         $this->_beforeProcess();
         $this->_getLogger()->log('Products import started');
 
-        // @TODO fetching store from settings if needed
-        $defaultStore = Mage::app()->getWebsite(true)->getDefaultStore();
-        // @TODO fetching attribute set id if needed
+        // fetching store from settings if needed could be done here
+        $website          = Mage::app()->getWebsite(true);
+        $defaultStore     = $website->getDefaultStore();
+        $this->_websiteId = $website->getId();
+        // fetching attribute set id if needed could be done here
         $this->_attributeSetId = $this->_getResourceUtilityModel()->getEntityType()->getDefaultAttributeSetId();
 
-        $products     = $data->getProducts();
+        $products = $data->getProducts();
 
         // mark existed products as processed
         $this->_processedSKUs = array_keys(array_intersect_key($products, $this->_existSKUs));
@@ -58,13 +68,24 @@ class TC_AdmitadImport_Processor_Products extends TC_AdmitadImport_Processor_Abs
      */
     private function _processProducts(array $products, Mage_Core_Model_Store $store)
     {
-        while ($products) {
+        $processed = 0;
+        foreach ($products as $sku => $product) {
             try {
-                $product = array_pop($products);
+                if (!array_key_exists($sku, $this->_existSKUs)) {
+                    $product = $this->_prepareProduct($product, $store);
 
+                    $product->setData('sku', $sku);
+                    $product->validate();
+                    $product->getResource()->save($product);
 
+                    $this->_getLogger()->log(sprintf('Product with SKU: %s processed', $sku));
+                    $this->_processedSKUs[] = $sku;
+                    $processed++;
+                } else {
+                    $this->_getLogger()->log(sprintf('Product with SKU: %s already exist, skipping..', $sku));
+                }
             } catch (TC_AdmitadImport_Exception_InvalidItemException $e) {
-                $this->_getLogger()->log($e->getMessage(), Zend_Log::ERR);
+                $this->_getLogger()->log(sprintf('%s, Product SKU: %s', $e->getMessage(), $sku), Zend_Log::ERR);
                 continue;
             } catch (Exception $e) {
                 $this->_getLogger()->log($e->getMessage(), Zend_Log::CRIT);
@@ -73,24 +94,107 @@ class TC_AdmitadImport_Processor_Products extends TC_AdmitadImport_Processor_Abs
         }
     }
 
-    protected function _getDefaultProductData()
+    /**
+     * Prepare product model
+     *
+     * @param array                 $data
+     * @param Mage_Core_Model_Store $store
+     *
+     * @return \Mage_Catalog_Model_Product
+     */
+    private function _prepareProduct(array $data, Mage_Core_Model_Store $store)
     {
-        if (is_null($this->_defaultProductData)) {
-            /** @var $websiteCollection Mage_Core_Model_Resource_Website_Collection */
-            $websiteCollection = Mage::getResourceModel('core/website_collection');
-            $this->_defaultProductData = array(
-                "website_ids"      => $websiteCollection->getColumnValues("website_id"),
-                "attribute_set_id" => ,
-                "qty"              => 0,
-                "is_in_stock"      => Mage_CatalogInventory_Model_Stock::STOCK_OUT_OF_STOCK,
-                "weight"           => 0,
-                "price"            => 0,
-                "tax_class_id"     => 0,
-                "status"           => Mage_Catalog_Model_Product_Status::STATUS_ENABLED,
-                "visibility"       => Mage_Catalog_Model_Product_Visibility::VISIBILITY_BOTH,
+        /* @var $catalogProduct Mage_Catalog_Model_Product */
+        $catalogProduct = Mage::getModel('catalog/product');
+        $catalogProduct->setData('type_id', $this->_getProductTypeId());
+        $catalogProduct->setData('ignore_url_key', true);
+        $catalogProduct->setData('is_mass_update', true);
+        $catalogProduct->setData('exclude_url_rewrite', true);
+
+        $this->_prepareCategories($data, $catalogProduct);
+        $this->_preparePrices($data, $catalogProduct);
+        $this->_prepareAttributes($data, $catalogProduct);
+        $this->_prepareMedia($data, $catalogProduct);
+
+        return $catalogProduct;
+    }
+
+    /**
+     * Prepare product categories
+     *
+     * @param array                      $data
+     * @param Mage_Catalog_Model_Product $product
+     *
+     * @throws TC_AdmitadImport_Exception_InvalidItemException
+     */
+    protected function _prepareCategories(array $data, Mage_Catalog_Model_Product $product)
+    {
+        $categoryId = isset($data['categoryId']) ? trim($data['categoryId']) : 0;
+        /** @var Mage_Catalog_Model_Category $category */
+        $category = $this->_getCategoryCollection()->getItemByColumnValue(
+            TC_AdmitadImport_Processor_Categories::ORIGIN_ID_ATTRIBUTE_CODE, $categoryId
+        );
+
+        if (null === $category) {
+            throw new TC_AdmitadImport_Exception_InvalidItemException($data, array('Category not found.'));
+        }
+
+        $categoryIds = array($category->getId());
+        if ($this->_canIncludeInParentCategory) {
+            $pathCategoryIds = $category->getPathIds();
+            $categoryIds     = array_merge($categoryIds, array_slice($pathCategoryIds, self::CUSTOM_CATEGORY_LEVEL));
+        }
+
+        $product->setCategoryIds($categoryIds);
+    }
+
+    private function _preparePrices(array $data, Mage_Catalog_Model_Product $product)
+    {
+    }
+
+    private function _prepareAttributes(array $data, Mage_Catalog_Model_Product $product)
+    {
+        $product->addData($this->_getDefaultProductData());
+    }
+
+    private function _prepareMedia(array $data, Mage_Catalog_Model_Product $product)
+    {
+    }
+
+    /**
+     * Return categories collection
+     *
+     * @return Mage_Catalog_Model_Resource_Category_Collection
+     */
+    private function _getCategoryCollection()
+    {
+        if (is_null($this->_categoryCollection)) {
+            $this->_categoryCollection = Mage::getResourceModel('catalog/category_collection');
+            $this->_categoryCollection->addAttributeToSelect(
+                array('entity_id', 'path', TC_AdmitadImport_Processor_Categories::ORIGIN_ID_ATTRIBUTE_CODE)
             );
         }
-        return $this->_defaultProductData;
+
+        return $this->_categoryCollection;
+    }
+
+    /**
+     * Get default product attributes
+     *
+     * @return array
+     */
+    protected function _getDefaultProductData()
+    {
+        return array(
+            'website_ids'      => array($this->_websiteId),
+            'attribute_set_id' => $this->_attributeSetId,
+            'qty'              => 0,
+            'is_in_stock'      => Mage_CatalogInventory_Model_Stock::STOCK_IN_STOCK,
+            'price'            => 0,
+            'tax_class_id'     => 0,
+            'status'           => Mage_Catalog_Model_Product_Status::STATUS_ENABLED,
+            'visibility'       => Mage_Catalog_Model_Product_Visibility::VISIBILITY_BOTH,
+        );
     }
 
     /**
@@ -106,6 +210,7 @@ class TC_AdmitadImport_Processor_Products extends TC_AdmitadImport_Processor_Abs
      */
     protected function _afterProcess()
     {
+        Mage::dispatchEvent('stock_changed');
     }
 
     /**
@@ -116,5 +221,15 @@ class TC_AdmitadImport_Processor_Products extends TC_AdmitadImport_Processor_Abs
     private function _getResourceUtilityModel()
     {
         return Mage::getResourceModel('tc_admitadimport/product');
+    }
+
+    /**
+     * Returns default product type~
+     *
+     * @return string
+     */
+    private function _getProductTypeId()
+    {
+        return 'simple';
     }
 }

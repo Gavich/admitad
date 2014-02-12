@@ -29,7 +29,7 @@ class TC_AdmitadImport_Processor_Categories extends TC_AdmitadImport_Processor_A
         $this->_getLogger()->log('Categories import started');
 
         $error = false;
-        // @TODO fetching store from settings if needed
+        // fetching store from settings if needed could be done here
         $defaultStore      = Mage::app()->getWebsite(true)->getDefaultStore();
         $this->_categories = $data->getCategories();
         $this->_idsMap     = $this->_getResourceUtilityModel()->getCategoriesIdMap();
@@ -102,18 +102,19 @@ class TC_AdmitadImport_Processor_Categories extends TC_AdmitadImport_Processor_A
     protected function _createCategory($parentCategory, $name, $originId, $store)
     {
         $this->_getLogger()->log(sprintf('Creating category: %s', $name));
+        /* @var $category Mage_Catalog_Model_Category */
         $category = Mage::getModel('catalog/category');
 
         if (!$parentCategory instanceOf Mage_Catalog_Model_Category) {
-            $parentCategory = Mage::getModel('catalog/category')->load($parentCategory);
+            /** @var Mage_Catalog_Model_Category $parentCategory */
+            $parentCategory = Mage::getModel('catalog/category')->load((int)$parentCategory);
         }
         $parentCategoryId = $parentCategory->getId();
-        $category
-            ->setData($this->_getDefaultCategoryData($name, $originId, $parentCategoryId))
-            ->setAttributeSetId($category->getDefaultAttributeSetId())
-            ->setStoreId($store->getId())
-            ->setPath($parentCategory->getPath())
-            ->save();
+        $category->setData($this->_getDefaultCategoryData($name, $originId, $parentCategoryId));
+        $category->setData('attribute_set_id', $category->getDefaultAttributeSetId());
+        $category->setStoreId($store->getId());
+        $category->setData('path', $parentCategory->getData('path'));
+        $category->save();
 
         $this->_getLogger()->log(sprintf('Category created, ID: %d', $category->getId()));
 
@@ -132,15 +133,16 @@ class TC_AdmitadImport_Processor_Categories extends TC_AdmitadImport_Processor_A
     protected function _updateCategory($id, Mage_Catalog_Model_Category $parentCategory, $name)
     {
         $this->_getLogger()->log(sprintf('Updating category: %s', $name));
+        /* @var $category Mage_Catalog_Model_Category */
         $category = Mage::getModel('catalog/category')->load($id);
 
         if ($category->getName() != $name) {
-            $category->setName($name);
+            $category->setData('name', $name);
         }
 
-        $category->setParentId($parentCategory->getId());
-        $category->setLevel($parentCategory->getLevel() + 1);
-        $category->setPath($parentCategory->getPath() . '/');
+        $category->setData('parent_id', $parentCategory->getId());
+        $category->setData('level', $parentCategory->getLevel() + 1);
+        $category->setData('path', $parentCategory->getData('path') . '/');
         //save will not send query to DB if changes not occurred
         $category->save();
 

@@ -20,16 +20,15 @@ class TC_AdmitadImport_Model_System_Config_Backend_Cron extends Mage_Core_Model_
     protected function _afterSave()
     {
         $cronExprString = '';
-        $configModel    = Mage::getModel('core/config_data');
 
-        $isEnabled = (bool)$configModel->load(self::CRON_MODEL_PATH_ENABLED, 'path')->getValue();
+        $isEnabled = (bool)$this->_getConfigDataByPath(self::CRON_MODEL_PATH_ENABLED)->getValue();
         if ($isEnabled) {
-            $time      = explode(',', $configModel->load(self::CRON_MODEL_PATH_TIME, 'path')->getValue());
-            $frequency = $configModel->load(self::CRON_MODEL_PATH_FREQUENCY, 'path')->getValue();
+            $time      = explode(',', (string)$this->_getConfigDataByPath(self::CRON_MODEL_PATH_TIME)->getValue());
+            $frequency = (string)$this->_getConfigDataByPath(self::CRON_MODEL_PATH_FREQUENCY)->getValue();
 
-            if ($frequency == Mage_Adminhtml_Model_System_Config_Source_Cron_Frequency::CRON_WEEKLY) {
+            if ($frequency === Mage_Adminhtml_Model_System_Config_Source_Cron_Frequency::CRON_WEEKLY) {
                 $frequencyInt = 7;
-            } elseif ($frequency == Mage_Adminhtml_Model_System_Config_Source_Cron_Frequency::CRON_MONTHLY) {
+            } elseif ($frequency === Mage_Adminhtml_Model_System_Config_Source_Cron_Frequency::CRON_MONTHLY) {
                 $frequencyInt = 30;
             } else {
                 $frequencyInt = 1; // assume daily
@@ -38,12 +37,26 @@ class TC_AdmitadImport_Model_System_Config_Backend_Cron extends Mage_Core_Model_
             $cronExprString = sprintf('%d %d */%d * *', $time[1], $time[0], $frequencyInt);
         }
 
-        Mage::getModel('core/config_data')
-            ->load(self::CRON_STRING_PATH, 'path')
-            ->setValue($cronExprString)
-            ->setPath(self::CRON_STRING_PATH)
-            ->save();
+        $cronConfigData = $this->_getConfigDataByPath(self::CRON_STRING_PATH);
+        $cronConfigData->setValue($cronExprString);
+        $cronConfigData->setPath(self::CRON_STRING_PATH);
+        $cronConfigData->save();
 
         return parent::_afterSave();
+    }
+
+    /**
+     * Retrieve config data by path
+     *
+     * @param string $path
+     *
+     * @return Mage_Core_Model_Config_Data
+     */
+    private function _getConfigDataByPath($path)
+    {
+        /* @var $configModel Mage_Core_Model_Config_Data */
+        $configModel = Mage::getModel('core/config_data');
+
+        return $configModel->load($path, 'path');
     }
 }

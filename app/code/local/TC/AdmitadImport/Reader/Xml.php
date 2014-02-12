@@ -82,7 +82,7 @@ class TC_AdmitadImport_Reader_Xml implements TC_AdmitadImport_Reader_ReaderInter
 
         if (empty($skuParts)) {
             throw new Exception(sprintf(
-                'Could no retrieve SKU for product: %s %s', PHP_EOL, var_export($product, true)
+                'Could not retrieve SKU for product: %s %s', PHP_EOL, var_export($product, true)
             ));
         }
 
