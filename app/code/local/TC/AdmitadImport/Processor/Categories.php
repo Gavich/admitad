@@ -110,10 +110,13 @@ class TC_AdmitadImport_Processor_Categories extends TC_AdmitadImport_Processor_A
             $parentCategory = Mage::getModel('catalog/category')->load((int)$parentCategory);
         }
         $parentCategoryId = $parentCategory->getId();
-        $category->setData($this->_getDefaultCategoryData($name, $originId, $parentCategoryId));
+        $category->setData($this->_getDefaultCategoryData($parentCategoryId));
+        $category->setData('name', trim($name));
+        $category->setData(self::ORIGIN_ID_ATTRIBUTE_CODE, $originId);
+        $category->setData('parent_id', $parentCategory->getId());
         $category->setData('attribute_set_id', $category->getDefaultAttributeSetId());
-        $category->setStoreId($store->getId());
         $category->setData('path', $parentCategory->getData('path'));
+        $category->setStoreId($store->getId());
         $category->save();
 
         $this->_getLogger()->log(sprintf('Category created, ID: %d', $category->getId()));
@@ -197,23 +200,16 @@ class TC_AdmitadImport_Processor_Categories extends TC_AdmitadImport_Processor_A
     /**
      * Returns array with required category data
      *
-     * @param string $name
-     * @param string $originId
-     * @param int    $parentId
-     *
      * @return array
      */
-    private function _getDefaultCategoryData($name, $originId, $parentId)
+    private function _getDefaultCategoryData()
     {
         return array(
-            'name'                         => trim($name),
-            'is_active'                    => 1,
-            'include_in_menu'              => 1,
-            'is_anchor'                    => 1,
-            'url_key'                      => '',
-            'description'                  => '',
-            'parent_id'                    => $parentId,
-            self::ORIGIN_ID_ATTRIBUTE_CODE => $originId
+            'is_active'       => 1,
+            'include_in_menu' => 1,
+            'is_anchor'       => 1,
+            'url_key'         => '',
+            'description'     => ''
         );
     }
 }

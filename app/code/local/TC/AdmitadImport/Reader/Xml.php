@@ -19,7 +19,7 @@ class TC_AdmitadImport_Reader_Xml implements TC_AdmitadImport_Reader_ReaderInter
     {
         $_products = $_categories = array();
 
-        if (empty ($source)) {
+        if (empty($source)) {
             throw new LogicException('Source does not configured properly');
         }
 
@@ -78,7 +78,7 @@ class TC_AdmitadImport_Reader_Xml implements TC_AdmitadImport_Reader_ReaderInter
      */
     private function _getProductSKU(array $product)
     {
-        $skuParts = array_intersect_key($product, array_flip(['id', 'vendorCode']));
+        $skuParts = array_intersect_key($product, array_flip(array('id', 'vendorCode')));
 
         if (empty($skuParts)) {
             throw new Exception(sprintf(

@@ -20,4 +20,4 @@ interface TC_AdmitadImport_Reader_DataInterface
      * @return array
      */
     public function getProducts();
-} 
+}
