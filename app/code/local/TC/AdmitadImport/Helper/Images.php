@@ -87,6 +87,12 @@ class TC_AdmitadImport_Helper_Images extends Mage_Core_Helper_Abstract
                     );
                     $backendModel->addImagesWithDifferentMediaAttributes($product, $massAdd, $importDir, true, false);
                     $product->getResource()->save($product);
+                } else {
+                    $this->_logger->log(
+                        sprintf(
+                            'Failed to download image, response code: %d', $response->getStatus(), Zend_Log::ERR
+                        )
+                    );
                 }
             } else {
                 $this->_logger->log(
