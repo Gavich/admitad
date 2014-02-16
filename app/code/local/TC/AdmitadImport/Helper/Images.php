@@ -67,32 +67,39 @@ class TC_AdmitadImport_Helper_Images extends Mage_Core_Helper_Abstract
             if (is_string($imageUrl)) {
                 $relativePath = md5($imageUrl) . '.' . pathinfo($imageUrl, PATHINFO_EXTENSION);
                 $path         = $importDir . $relativePath;
-                $response     = $this->_getHttpClient()->setUri($imageUrl)->request();
-                if (200 === $response->getStatus()) {
-                    file_put_contents($path, $response->getBody());
 
-                    $massAdd = array(
-                        array(
-                            'file'           => $relativePath,
-                            'mediaAttribute' => 'thumbnail',
-                        ),
-                        array(
-                            'file'           => $relativePath,
-                            'mediaAttribute' => 'image',
-                        ),
-                        array(
-                            'file'           => $relativePath,
-                            'mediaAttribute' => 'small_image',
-                        ),
-                    );
-                    $backendModel->addImagesWithDifferentMediaAttributes($product, $massAdd, $importDir, true, false);
-                    $product->getResource()->save($product);
-                } else {
-                    $this->_logger->log(
-                        sprintf(
-                            'Failed to download image, response code: %d', $response->getStatus(), Zend_Log::ERR
-                        )
-                    );
+                try {
+                    $response = $this->_getHttpClient()->setUri($imageUrl)->request();
+                    if (200 === $response->getStatus()) {
+                        file_put_contents($path, $response->getBody());
+
+                        $massAdd = array(
+                            array(
+                                'file'           => $relativePath,
+                                'mediaAttribute' => 'thumbnail',
+                            ),
+                            array(
+                                'file'           => $relativePath,
+                                'mediaAttribute' => 'image',
+                            ),
+                            array(
+                                'file'           => $relativePath,
+                                'mediaAttribute' => 'small_image',
+                            ),
+                        );
+                        $backendModel->addImagesWithDifferentMediaAttributes(
+                            $product, $massAdd, $importDir, true, false
+                        );
+                        $product->getResource()->save($product);
+                    } else {
+                        $this->_logger->log(
+                            sprintf(
+                                'Failed to download image, response code: %d', $response->getStatus(), Zend_Log::ERR
+                            )
+                        );
+                    }
+                } catch (Exception $e) {
+                    $this->_logger->log($e->getMessage(), Zend_Log::ERR);
                 }
             } else {
                 $this->_logger->log(
