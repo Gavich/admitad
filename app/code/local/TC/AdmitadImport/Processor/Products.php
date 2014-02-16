@@ -8,6 +8,7 @@
 class TC_AdmitadImport_Processor_Products extends TC_AdmitadImport_Processor_AbstractProcessor
 {
     const CUSTOM_CATEGORY_LEVEL = 2;
+    const BATCH_SIZE            = 200;
 
     /** @var array */
     private $_processedSKUs = array();
@@ -27,6 +28,9 @@ class TC_AdmitadImport_Processor_Products extends TC_AdmitadImport_Processor_Abs
     /** @var bool */
     private $_canIncludeInParentCategory = false;
 
+    /** @var TC_AdmitadImport_Helper_Currency */
+    private $_currencyHelper;
+
     /**
      * Performs import
      *
@@ -45,6 +49,7 @@ class TC_AdmitadImport_Processor_Products extends TC_AdmitadImport_Processor_Abs
         $this->_websiteId = $website->getId();
         // fetching attribute set id if needed could be done here
         $this->_attributeSetId = $this->_getResourceUtilityModel()->getEntityType()->getDefaultAttributeSetId();
+        $this->_currencyHelper->init($data);
 
         $products = $data->getProducts();
 
@@ -68,30 +73,51 @@ class TC_AdmitadImport_Processor_Products extends TC_AdmitadImport_Processor_Abs
      */
     private function _processProducts(array $products, Mage_Core_Model_Store $store)
     {
-        $processed = 0;
+        /* @var $helper TC_AdmitadImport_Helper_Attributes */
+        $helper    = Mage::helper('tc_admitadimport/attributes');
+        $persisted = 0;
+
+        $this->_getResourceUtilityModel()->beginTransaction();
         foreach ($products as $sku => $product) {
             try {
                 if (!array_key_exists($sku, $this->_existSKUs)) {
                     $product = $this->_prepareProduct($product, $store);
 
                     $product->setData('sku', $sku);
+                    $product->setData('name', ucfirst($product->getData('name'))); // enforce first capital letter
                     $product->validate();
                     $product->getResource()->save($product);
+                    $this->_saveStockItem($product);
+                    $helper->processCustomOptions($product);
 
                     $this->_getLogger()->log(sprintf('Product with SKU: %s processed', $sku));
-                    $this->_processedSKUs[] = $sku;
-                    $processed++;
+
+                    $persisted++;
+
+                    if (0 === $persisted % self::BATCH_SIZE) {
+                        $this->_getResourceUtilityModel()->commit();
+                        $this->_getResourceUtilityModel()->beginTransaction();
+                    }
+                    $product->clearInstance();
                 } else {
                     $this->_getLogger()->log(sprintf('Product with SKU: %s already exist, skipping..', $sku));
                 }
+
+                // save sku anyway to process additional actions
+                $this->_processedSKUs[] = $sku;
             } catch (TC_AdmitadImport_Exception_InvalidItemException $e) {
                 $this->_getLogger()->log(sprintf('%s, Product SKU: %s', $e->getMessage(), $sku), Zend_Log::ERR);
                 continue;
             } catch (Exception $e) {
+                $this->_getResourceUtilityModel()->rollBack();
+                $this->_getResourceUtilityModel()->beginTransaction();
+
                 $this->_getLogger()->log($e->getMessage(), Zend_Log::CRIT);
                 throw $e;
             }
         }
+
+        $this->_getResourceUtilityModel()->commit();
     }
 
     /**
@@ -100,7 +126,7 @@ class TC_AdmitadImport_Processor_Products extends TC_AdmitadImport_Processor_Abs
      * @param array                 $data
      * @param Mage_Core_Model_Store $store
      *
-     * @return \Mage_Catalog_Model_Product
+     * @return Mage_Catalog_Model_Product
      */
     private function _prepareProduct(array $data, Mage_Core_Model_Store $store)
     {
@@ -110,11 +136,11 @@ class TC_AdmitadImport_Processor_Products extends TC_AdmitadImport_Processor_Abs
         $catalogProduct->setData('ignore_url_key', true);
         $catalogProduct->setData('is_mass_update', true);
         $catalogProduct->setData('exclude_url_rewrite', true);
+        $catalogProduct->setData('store_id', $store->getId());
 
         $this->_prepareCategories($data, $catalogProduct);
-        $this->_preparePrices($data, $catalogProduct);
         $this->_prepareAttributes($data, $catalogProduct);
-        $this->_prepareMedia($data, $catalogProduct);
+        $this->_preparePrices($data, $catalogProduct);
 
         return $catalogProduct;
     }
@@ -148,17 +174,61 @@ class TC_AdmitadImport_Processor_Products extends TC_AdmitadImport_Processor_Abs
         $product->setCategoryIds($categoryIds);
     }
 
+    /**
+     * Prepare price data
+     *
+     * @param array                      $data
+     * @param Mage_Catalog_Model_Product $product
+     *
+     * @throws TC_AdmitadImport_Exception_InvalidItemException
+     */
     private function _preparePrices(array $data, Mage_Catalog_Model_Product $product)
     {
+        $price    = isset($data['price']) ? $data['price'] : null;
+        $oldprice = isset($data['oldprice']) ? $data['oldprice'] : null;
+        $currency = isset($data['currencyId']) ? $data['currencyId'] : null;
+
+        if (null === $price) {
+            throw new TC_AdmitadImport_Exception_InvalidItemException($data, array('Price not found.'));
+        }
+
+        if (null === $oldprice) {
+            $product->setData('price', $this->_currencyHelper->getConvertedValue($price, $currency));
+        } else {
+            $product->setData('price', $this->_currencyHelper->getConvertedValue($oldprice, $currency));
+            $product->setData('special_price', $this->_currencyHelper->getConvertedValue($price, $currency));
+        }
+
+        $product->setData('tax_class_id', 0);
     }
 
+    /**
+     * Process EAV attributes mapping and set to product
+     *
+     * @param array                      $data
+     * @param Mage_Catalog_Model_Product $product
+     */
     private function _prepareAttributes(array $data, Mage_Catalog_Model_Product $product)
     {
+        /* @var $helper TC_AdmitadImport_Helper_Attributes */
+        $helper = Mage::helper('tc_admitadimport/attributes');
         $product->addData($this->_getDefaultProductData());
+        $product->addData($helper->getMappedValues($data));
     }
 
-    private function _prepareMedia(array $data, Mage_Catalog_Model_Product $product)
+    /**
+     * Prepares and save stock item
+     *
+     * @param Mage_Catalog_Model_Product $product
+     */
+    private function _saveStockItem($product)
     {
+        /* @var $item Mage_CatalogInventory_Model_Stock_Item */
+        $item = Mage::getModel('cataloginventory/stock_item');
+        $item->addData($product->getData('stock_data'));
+        $item->setStockId($item->getStockId());
+        $item->setProduct($product);
+        $item->save();
     }
 
     /**
@@ -188,12 +258,16 @@ class TC_AdmitadImport_Processor_Products extends TC_AdmitadImport_Processor_Abs
         return array(
             'website_ids'      => array($this->_websiteId),
             'attribute_set_id' => $this->_attributeSetId,
-            'qty'              => 0,
-            'is_in_stock'      => Mage_CatalogInventory_Model_Stock::STOCK_IN_STOCK,
             'price'            => 0,
             'tax_class_id'     => 0,
             'status'           => Mage_Catalog_Model_Product_Status::STATUS_ENABLED,
             'visibility'       => Mage_Catalog_Model_Product_Visibility::VISIBILITY_BOTH,
+            'stock_data'       => array(
+                'use_config_manage_stock' => 0,
+                'manage_stock'            => 0,
+                'is_in_stock'             => Mage_CatalogInventory_Model_Stock::STOCK_OUT_OF_STOCK,
+                'qty'                     => 0
+            )
         );
     }
 
@@ -202,7 +276,8 @@ class TC_AdmitadImport_Processor_Products extends TC_AdmitadImport_Processor_Abs
      */
     protected function _beforeProcess()
     {
-        $this->_existSKUs = $this->_getResourceUtilityModel()->getSKUs();
+        $this->_existSKUs      = $this->_getResourceUtilityModel()->getSKUs();
+        $this->_currencyHelper = Mage::helper('tc_admitadimport/currency');
     }
 
     /**
@@ -211,6 +286,7 @@ class TC_AdmitadImport_Processor_Products extends TC_AdmitadImport_Processor_Abs
     protected function _afterProcess()
     {
         Mage::dispatchEvent('stock_changed');
+        // @TODO process visibility changes
     }
 
     /**

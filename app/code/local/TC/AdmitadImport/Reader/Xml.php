@@ -17,7 +17,7 @@ class TC_AdmitadImport_Reader_Xml implements TC_AdmitadImport_Reader_ReaderInter
      */
     public function read($source)
     {
-        $_products = $_categories = array();
+        $_products = $_categories = $_currencies = array();
 
         if (empty($source)) {
             throw new LogicException('Source does not configured properly');
@@ -59,13 +59,17 @@ class TC_AdmitadImport_Reader_Xml implements TC_AdmitadImport_Reader_ReaderInter
                     }
 
                     $_products[$this->_getProductSKU($_product)] = $_product;
+                } elseif ($xml->name === 'currency') {
+                    $currencyXml = new SimpleXMLElement($xml->readOuterXML());
+                    $_attributes = $currencyXml->attributes();
+                    $_currencies[(string)$_attributes['id']] = (float)$_attributes['rate'];
                 }
             }
         }
         $xml->close();
         unset($xml);
 
-        return new TC_AdmitadImport_Reader_DataBag($_categories, $_products);
+        return new TC_AdmitadImport_Reader_DataBag($_categories, $_products, $_currencies);
     }
 
     /**
