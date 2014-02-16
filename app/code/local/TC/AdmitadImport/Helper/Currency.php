@@ -8,7 +8,7 @@
 class TC_AdmitadImport_Helper_Currency extends Mage_Core_Helper_Abstract
 {
     /** @var array */
-    private $_currencyData;
+    private $_currencyData = array();
 
     /**
      * Initialize helper with data

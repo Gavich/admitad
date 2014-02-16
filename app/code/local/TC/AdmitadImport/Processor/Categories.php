@@ -38,7 +38,7 @@ class TC_AdmitadImport_Processor_Categories extends TC_AdmitadImport_Processor_A
         $rootCategory = Mage::getModel('catalog/category');
         $rootCategory->load($defaultStore->getRootCategoryId());
         $rootCategory->setData(self::ORIGIN_ID_ATTRIBUTE_CODE, self::ROOT_CATEGORY_ORIGIN_ID);
-        $rootCategory->save();
+        $rootCategory->getResource()->save($rootCategory);
 
         $this->_processed[] = $rootCategory->getId();
 
@@ -117,7 +117,7 @@ class TC_AdmitadImport_Processor_Categories extends TC_AdmitadImport_Processor_A
         $category->setData('attribute_set_id', $category->getDefaultAttributeSetId());
         $category->setData('path', $parentCategory->getData('path'));
         $category->setStoreId($store->getId());
-        $category->save();
+        $category->getResource()->save($category);
 
         $this->_getLogger()->log(sprintf('Category created, ID: %d', $category->getId()));
 
@@ -147,7 +147,7 @@ class TC_AdmitadImport_Processor_Categories extends TC_AdmitadImport_Processor_A
         $category->setData('level', $parentCategory->getLevel() + 1);
         $category->setData('path', $parentCategory->getData('path') . '/');
         //save will not send query to DB if changes not occurred
-        $category->save();
+        $category->getResource()->save($category);
 
         $this->_getLogger()->log(sprintf('Category has been updated: %s', $name));
 

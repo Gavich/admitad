@@ -49,7 +49,7 @@ $attributes = array_merge($textAttributes, $floatAttributes);
 foreach ($attributes as $attributeCode) {
     $current = clone $object;
     $current->setLabel(
-        ucfirst(trim(strtolower(preg_replace(['/([A-Z])/', '/[_\s]+/'], ['_$1', ' '], $attributeCode))))
+        ucfirst(trim(strtolower(preg_replace(array('/([A-Z])/', '/[_\s]+/'), array('_$1', ' '), $attributeCode))))
     );
 
     if (in_array($attributeCode, $floatAttributes)) {
@@ -61,5 +61,5 @@ foreach ($attributes as $attributeCode) {
     $attributeModel = Mage::getModel('catalog/resource_eav_attribute')->loadByCode(
         Mage_Catalog_Model_Product::ENTITY, $attributeCode
     );
-    $attributeModel->setApplyTo([])->save();
+    $attributeModel->setApplyTo(array())->save();
 }

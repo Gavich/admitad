@@ -64,7 +64,7 @@ class TC_AdmitadImport_Helper_Attributes extends Mage_Core_Helper_Abstract
     public function processCustomOptions(Mage_Catalog_Model_Product $product)
     {
         /* @var $optionModel Mage_Catalog_Model_Product_Option */
-        $optionModel = $product->getOptionInstance();
+        $optionModel = clone $product->getOptionInstance();
         $optionModel->setProduct($product);
 
         foreach ((array)$this->_customOptions as $attributeCode => $config) {
@@ -86,6 +86,8 @@ class TC_AdmitadImport_Helper_Attributes extends Mage_Core_Helper_Abstract
                     }
 
                     foreach ($data as $value) {
+                        $value = trim($value);
+
                         $isExisted = array_filter(
                             $optionConfig['values'],
                             function ($valueConfig) use ($value) {
@@ -125,6 +127,7 @@ class TC_AdmitadImport_Helper_Attributes extends Mage_Core_Helper_Abstract
 
             $optionModel->saveOptions();
         }
+        unset($optionModel);
     }
 
     /**

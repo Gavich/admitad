@@ -74,21 +74,24 @@ class TC_AdmitadImport_Processor_Products extends TC_AdmitadImport_Processor_Abs
     private function _processProducts(array $products, Mage_Core_Model_Store $store)
     {
         /* @var $helper TC_AdmitadImport_Helper_Attributes */
-        $helper    = Mage::helper('tc_admitadimport/attributes');
-        $persisted = 0;
+        $helper = Mage::helper('tc_admitadimport/attributes');
+        /* @var $helperImages TC_AdmitadImport_Helper_Images */
+        $helperImages = Mage::helper('tc_admitadimport/images');
+        $persisted    = 0;
 
         $this->_getResourceUtilityModel()->beginTransaction();
-        foreach ($products as $sku => $product) {
+        foreach ($products as $sku => $productData) {
             try {
                 if (!array_key_exists($sku, $this->_existSKUs)) {
-                    $product = $this->_prepareProduct($product, $store);
+                    $product = $this->_prepareProduct($productData, $store);
 
                     $product->setData('sku', $sku);
                     $product->setData('name', ucfirst($product->getData('name'))); // enforce first capital letter
-                    $product->validate();
+
                     $product->getResource()->save($product);
                     $this->_saveStockItem($product);
                     $helper->processCustomOptions($product);
+                    $helperImages->collectData($product, $productData);
 
                     $this->_getLogger()->log(sprintf('Product with SKU: %s processed', $sku));
 
@@ -228,7 +231,7 @@ class TC_AdmitadImport_Processor_Products extends TC_AdmitadImport_Processor_Abs
         $item->addData($product->getData('stock_data'));
         $item->setStockId($item->getStockId());
         $item->setProduct($product);
-        $item->save();
+        $item->getResource()->save($item);
     }
 
     /**
@@ -285,8 +288,19 @@ class TC_AdmitadImport_Processor_Products extends TC_AdmitadImport_Processor_Abs
      */
     protected function _afterProcess()
     {
+        /* @var $helper TC_AdmitadImport_Helper_Images */
+        $helper = Mage::helper('tc_admitadimport/images');
+        $helper->processImages();
+
+        $toDisable = array_diff(array_keys($this->_existSKUs), $this->_processedSKUs);
+
+        $this->_getResourceUtilityModel()->updateStatusAttributeValue(
+            $toDisable, Mage_Catalog_Model_Product_Status::STATUS_DISABLED
+        );
+        $this->_getResourceUtilityModel()->updateStatusAttributeValue(
+            $this->_processedSKUs, Mage_Catalog_Model_Product_Status::STATUS_ENABLED
+        );
         Mage::dispatchEvent('stock_changed');
-        // @TODO process visibility changes
     }
 
     /**

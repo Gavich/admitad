@@ -57,6 +57,8 @@ abstract class TC_AdmitadImport_Processor_AbstractProcessor
         $this->_getLogger()->log('Import finished. Starting reindex...');
         $processes->walk('setMode', array(Mage_Index_Model_Process::MODE_REAL_TIME));
         $processes->walk('save');
-        $processes->walk('reindexAll');
+
+        Mage::app()->cleanCache();
+        $processes->walk('reindexEverything');
     }
 }
