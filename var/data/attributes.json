@@ -1,0 +1,40 @@
+{
+    "map": {
+        "brand": "Бренд",
+        "country_of_manufacture": "Страна-изготовитель",
+        "material": "Материал",
+        "fashion_collection": "Коллекция",
+        "color": "Цвет",
+        "season": "Сезонность",
+        "sex": "Пол",
+        "age": "Возраст",
+        "clasp_type": "Тип застежки",
+        "external_material": "Внешний материал",
+        "heel": "Высота каблука",
+        "bootleg_height": "Высота голенища",
+        "bootleg_width": "Ширина голенища",
+        "sole_material": "Материал подошвы",
+        "platform_height": "Высота платформы",
+        "model": "model",
+        "type_prefix": "typePrefix",
+        "manufacturer": "vendor",
+        "name": "name",
+        "description": "description",
+        "url": "url",
+        "local_delivery_cost": "local_delivery_cost",
+        "size": "Размер",
+        "sizes": "Размеры"
+    },
+    "custom_options": {
+        "size": {
+            "type": "drop_down",
+            "is_require": true,
+            "title": "Размер"
+        },
+        "sizes": {
+            "type": "drop_down",
+            "is_require": true,
+            "title": "Размер"
+        }
+    }
+}
