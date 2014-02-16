@@ -1,0 +1,8 @@
+commands:
+  N98\Magento\Command\Installer\InstallCommand:
+    installation:
+      defaults:
+        currency:        RUB
+        admin_password:  admin123
+        locale:          ru_RU
+        timezone:        Europe/Moscow
