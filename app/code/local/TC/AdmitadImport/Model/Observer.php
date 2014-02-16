@@ -30,7 +30,7 @@ class TC_AdmitadImport_Model_Observer
             $importChain->setLogger($defaultLogger);
 
             $importChain->process($reader->read($configuredSource));
-        } catch (LogicException $e) {
+        } catch (Exception $e) {
             $defaultLogger->log($e->getMessage(), Zend_Log::CRIT);
         }
     }
