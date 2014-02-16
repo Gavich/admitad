@@ -77,6 +77,7 @@ class TC_AdmitadImport_Processor_Products extends TC_AdmitadImport_Processor_Abs
         $helper = Mage::helper('tc_admitadimport/attributes');
         /* @var $helperImages TC_AdmitadImport_Helper_Images */
         $helperImages = Mage::helper('tc_admitadimport/images');
+        $helperImages->setLogger($this->_getLogger());
         $persisted    = 0;
 
         $this->_getResourceUtilityModel()->beginTransaction();
