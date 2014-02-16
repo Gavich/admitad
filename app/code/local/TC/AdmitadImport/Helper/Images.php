@@ -6,6 +6,7 @@
  * @author     Alexandr Smaga <smagaan@gmail.com>
  */
 class TC_AdmitadImport_Helper_Images extends Mage_Core_Helper_Abstract
+    implements TC_AdmitadImport_Logger_LoggerAwareInterface
 {
     /**
      * @var array [PRODUCT_ID => URL]
@@ -14,6 +15,21 @@ class TC_AdmitadImport_Helper_Images extends Mage_Core_Helper_Abstract
 
     /** @var Zend_Http_Client */
     private $_httpClient;
+
+    /** @var TC_AdmitadImport_Logger_LoggerInterface */
+    private $_logger;
+
+    /**
+     * Inject the logger
+     *
+     * @param TC_AdmitadImport_Logger_LoggerInterface $logger
+     *
+     * @return void
+     */
+    public function setLogger(TC_AdmitadImport_Logger_LoggerInterface $logger)
+    {
+        $this->_logger = $logger;
+    }
 
     /**
      * Collect information for further processing
@@ -44,31 +60,41 @@ class TC_AdmitadImport_Helper_Images extends Mage_Core_Helper_Abstract
         }
 
         foreach ($this->_collectedData as $productId => $imageUrl) {
+            $this->_logger->log(sprintf('Process images for product ID: %d', $productId));
             $product = clone $productModel;
             $product->setId($productId);
 
-            $relativePath = md5($imageUrl) . '.' . pathinfo($imageUrl, PATHINFO_EXTENSION);
-            $path         = $importDir . $relativePath;
-            $response     = $this->_getHttpClient()->setUri($imageUrl)->request();
-            if (200 === $response->getStatus()) {
-                file_put_contents($path, $response->getBody());
+            if (is_string($imageUrl)) {
+                $relativePath = md5($imageUrl) . '.' . pathinfo($imageUrl, PATHINFO_EXTENSION);
+                $path         = $importDir . $relativePath;
+                $response     = $this->_getHttpClient()->setUri($imageUrl)->request();
+                if (200 === $response->getStatus()) {
+                    file_put_contents($path, $response->getBody());
 
-                $massAdd = array(
-                    array(
-                        'file'           => $relativePath,
-                        'mediaAttribute' => 'thumbnail',
-                    ),
-                    array(
-                        'file'           => $relativePath,
-                        'mediaAttribute' => 'image',
-                    ),
-                    array(
-                        'file'           => $relativePath,
-                        'mediaAttribute' => 'small_image',
-                    ),
+                    $massAdd = array(
+                        array(
+                            'file'           => $relativePath,
+                            'mediaAttribute' => 'thumbnail',
+                        ),
+                        array(
+                            'file'           => $relativePath,
+                            'mediaAttribute' => 'image',
+                        ),
+                        array(
+                            'file'           => $relativePath,
+                            'mediaAttribute' => 'small_image',
+                        ),
+                    );
+                    $backendModel->addImagesWithDifferentMediaAttributes($product, $massAdd, $importDir, true, false);
+                    $product->getResource()->save($product);
+                }
+            } else {
+                $this->_logger->log(
+                    sprintf(
+                        'Failed to download image, url contains bad data: %s', var_export($imageUrl, true),
+                        Zend_Log::ERR
+                    )
                 );
-                $backendModel->addImagesWithDifferentMediaAttributes($product, $massAdd, $importDir, true, false);
-                $product->getResource()->save($product);
             }
         }
 

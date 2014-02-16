@@ -14,6 +14,10 @@ class TC_Shell_Import extends Mage_Shell_Abstract
      */
     public function run()
     {
+        ini_set('memory_limit', -1);
+        ini_set('max_execution_time', 0);
+        Mage::setIsDeveloperMode(true);
+
         if ($this->getArg('run')) {
             Mage::getModel('tc_admitadimport/observer')->import();
         } else {
