@@ -82,7 +82,7 @@ class TC_AdmitadImport_Processor_Products extends TC_AdmitadImport_Processor_Abs
         $this->_getResourceUtilityModel()->beginTransaction();
         foreach ($products as $sku => $productData) {
             try {
-                if (!array_key_exists($sku, $this->_existSKUs)) {
+                if (!array_key_exists($sku, $this->_existSKUs) && !in_array($sku, $this->_processedSKUs)) {
                     $product = $this->_prepareProduct($productData, $store);
 
                     $product->setData('sku', $sku);
@@ -288,12 +288,14 @@ class TC_AdmitadImport_Processor_Products extends TC_AdmitadImport_Processor_Abs
      */
     protected function _afterProcess()
     {
+        $this->_getLogger()->log('Image processing started');
         /* @var $helper TC_AdmitadImport_Helper_Images */
         $helper = Mage::helper('tc_admitadimport/images');
         $helper->processImages();
 
         $toDisable = array_diff(array_keys($this->_existSKUs), $this->_processedSKUs);
 
+        $this->_getLogger()->log('Update status process started');
         $this->_getResourceUtilityModel()->updateStatusAttributeValue(
             $toDisable, Mage_Catalog_Model_Product_Status::STATUS_DISABLED
         );
