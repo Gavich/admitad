@@ -29,8 +29,7 @@ class TC_AdmitadImport_Processor_Categories extends TC_AdmitadImport_Processor_A
         $this->_getLogger()->log('Categories import started');
 
         $error = false;
-        $this->_beforeProcess();
-        // @TODO fetching store from settings if needed
+        // fetching store from settings if needed could be done here
         $defaultStore      = Mage::app()->getWebsite(true)->getDefaultStore();
         $this->_categories = $data->getCategories();
         $this->_idsMap     = $this->_getResourceUtilityModel()->getCategoriesIdMap();
@@ -39,7 +38,7 @@ class TC_AdmitadImport_Processor_Categories extends TC_AdmitadImport_Processor_A
         $rootCategory = Mage::getModel('catalog/category');
         $rootCategory->load($defaultStore->getRootCategoryId());
         $rootCategory->setData(self::ORIGIN_ID_ATTRIBUTE_CODE, self::ROOT_CATEGORY_ORIGIN_ID);
-        $rootCategory->save();
+        $rootCategory->getResource()->save($rootCategory);
 
         $this->_processed[] = $rootCategory->getId();
 
@@ -49,12 +48,11 @@ class TC_AdmitadImport_Processor_Categories extends TC_AdmitadImport_Processor_A
             $this->_getLogger()->log($e->getMessage(), Zend_Log::CRIT);
             $error = true;
         }
-
-        $this->_afterProcess($data);
         if (!$error) {
             $this->_updateVisibility();
             $this->_getLogger()->log('Categories successfully imported. SUCCESS!');
         }
+        $this->_getLogger()->log('Categories import ended');
     }
 
     /**
@@ -104,18 +102,22 @@ class TC_AdmitadImport_Processor_Categories extends TC_AdmitadImport_Processor_A
     protected function _createCategory($parentCategory, $name, $originId, $store)
     {
         $this->_getLogger()->log(sprintf('Creating category: %s', $name));
+        /* @var $category Mage_Catalog_Model_Category */
         $category = Mage::getModel('catalog/category');
 
         if (!$parentCategory instanceOf Mage_Catalog_Model_Category) {
-            $parentCategory = Mage::getModel('catalog/category')->load($parentCategory);
+            /** @var Mage_Catalog_Model_Category $parentCategory */
+            $parentCategory = Mage::getModel('catalog/category')->load((int)$parentCategory);
         }
         $parentCategoryId = $parentCategory->getId();
-        $category
-            ->setData($this->_getDefaultCategoryData($name, $originId, $parentCategoryId))
-            ->setAttributeSetId($category->getDefaultAttributeSetId())
-            ->setStoreId($store->getId())
-            ->setPath($parentCategory->getPath())
-            ->save();
+        $category->setData($this->_getDefaultCategoryData($parentCategoryId));
+        $category->setData('name', trim($name));
+        $category->setData(self::ORIGIN_ID_ATTRIBUTE_CODE, $originId);
+        $category->setData('parent_id', $parentCategory->getId());
+        $category->setData('attribute_set_id', $category->getDefaultAttributeSetId());
+        $category->setData('path', $parentCategory->getData('path'));
+        $category->setStoreId($store->getId());
+        $category->getResource()->save($category);
 
         $this->_getLogger()->log(sprintf('Category created, ID: %d', $category->getId()));
 
@@ -134,16 +136,18 @@ class TC_AdmitadImport_Processor_Categories extends TC_AdmitadImport_Processor_A
     protected function _updateCategory($id, Mage_Catalog_Model_Category $parentCategory, $name)
     {
         $this->_getLogger()->log(sprintf('Updating category: %s', $name));
+        /* @var $category Mage_Catalog_Model_Category */
         $category = Mage::getModel('catalog/category')->load($id);
 
         if ($category->getName() != $name) {
-            $category->setName($name);
+            $category->setData('name', $name);
         }
 
-        $category->setParentId($parentCategory->getId());
-        $category->setPath($parentCategory->getPath() . '/');
+        $category->setData('parent_id', $parentCategory->getId());
+        $category->setData('level', $parentCategory->getLevel() + 1);
+        $category->setData('path', $parentCategory->getData('path') . '/');
         //save will not send query to DB if changes not occurred
-        $category->save();
+        $category->getResource()->save($category);
 
         $this->_getLogger()->log(sprintf('Category has been updated: %s', $name));
 
@@ -180,6 +184,7 @@ class TC_AdmitadImport_Processor_Categories extends TC_AdmitadImport_Processor_A
         $categoriesToDisable = array_diff(array_values($this->_idsMap), $this->_processed);
 
         $this->_getResourceUtilityModel()->updateVisibilityAttributeValue($categoriesToDisable, false);
+        $this->_getResourceUtilityModel()->updateVisibilityAttributeValue($this->_processed, true);
     }
 
     /**
@@ -193,52 +198,18 @@ class TC_AdmitadImport_Processor_Categories extends TC_AdmitadImport_Processor_A
     }
 
     /**
-     * Before process preparing
-     */
-    private function _beforeProcess()
-    {
-        /* @var $indexer Mage_Index_Model_Indexer */
-        $indexer   = Mage::getSingleton('index/indexer');
-        $processes = $indexer->getProcessesCollection();
-        $processes->walk('setMode', array(Mage_Index_Model_Process::MODE_MANUAL));
-        $processes->walk('save');
-    }
-
-    /**
-     * After process steps
-     */
-    private function _afterProcess()
-    {
-        /* @var $indexer Mage_Index_Model_Indexer */
-        $indexer   = Mage::getSingleton('index/indexer');
-        $processes = $indexer->getProcessesCollection();
-
-        $this->_getLogger()->log('Creating and updating categories finished. Starting reindex...');
-        $processes->walk('setMode', array(Mage_Index_Model_Process::MODE_REAL_TIME));
-        $processes->walk('save');
-        $processes->walk('reindexAll');
-    }
-
-    /**
      * Returns array with required category data
-     *
-     * @param string $name
-     * @param string $originId
-     * @param int    $parentId
      *
      * @return array
      */
-    private function _getDefaultCategoryData($name, $originId, $parentId)
+    private function _getDefaultCategoryData()
     {
         return array(
-            'name'                         => trim($name),
-            'is_active'                    => 1,
-            'include_in_menu'              => 1,
-            'is_anchor'                    => 1,
-            'url_key'                      => '',
-            'description'                  => '',
-            'parent_id'                    => $parentId,
-            self::ORIGIN_ID_ATTRIBUTE_CODE => $originId
+            'is_active'       => 1,
+            'include_in_menu' => 1,
+            'is_anchor'       => 1,
+            'url_key'         => '',
+            'description'     => ''
         );
     }
 }

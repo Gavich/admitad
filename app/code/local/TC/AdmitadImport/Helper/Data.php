@@ -39,9 +39,8 @@ class TC_AdmitadImport_Helper_Data extends Mage_Core_Helper_Abstract
         /** @var TC_AdmitadImport_Processor_Chain $processor */
         $processor = $this->getProcessorPrototype('tc_admitadimport/chain');
 
-        /**
-         * @TODO add possibility to configure multiple job's chains
-         */
+        // if needed possibility to configure multiple job's chains
+        // load configuration could be processed here
         $processor->addProcessor($this->getProcessorPrototype('tc_admitadimport/categories'));
         $processor->addProcessor($this->getProcessorPrototype('tc_admitadimport/products'));
 
@@ -87,8 +86,8 @@ class TC_AdmitadImport_Helper_Data extends Mage_Core_Helper_Abstract
     {
         $registryKey = '_reader/' . $name;
         if (!Mage::registry($registryKey)) {
-            $loggerClass = Mage::getConfig()->getGroupedClassName('reader', $name);
-            Mage::register($registryKey, new $loggerClass);
+            $readerClass = Mage::getConfig()->getGroupedClassName('reader', $name);
+            Mage::register($registryKey, new $readerClass);
         }
 
         return Mage::registry($registryKey);

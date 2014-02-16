@@ -20,4 +20,11 @@ interface TC_AdmitadImport_Reader_DataInterface
      * @return array
      */
     public function getProducts();
-} 
+
+    /**
+     * Returns array with currencies conversion rate rules
+     *
+     * @return array(CURRENCY_CODE => RATE)
+     */
+    public function getCurrencies();
+}

@@ -17,9 +17,9 @@ class TC_AdmitadImport_Reader_Xml implements TC_AdmitadImport_Reader_ReaderInter
      */
     public function read($source)
     {
-        $_products = $_categories = array();
+        $_products = $_categories = $_currencies = array();
 
-        if (empty ($source)) {
+        if (empty($source)) {
             throw new LogicException('Source does not configured properly');
         }
 
@@ -41,18 +41,55 @@ class TC_AdmitadImport_Reader_Xml implements TC_AdmitadImport_Reader_ReaderInter
                     if (isset($_product['@attributes'])) {
                         unset($_product['@attributes']);
                     }
+
+                    $_product['param'] = array();
+                    $_params           = $productXml->xpath('/offer/param');
+                    if (!empty($_params)) {
+                        foreach ($_params as $_param) {
+                            $_attributes = $_param->attributes();
+                            if (isset($_attributes['name'])) {
+                                $_product['param'][(string)$_attributes['name']] = (string)$_param;
+                            }
+                        }
+                    }
+
                     $_attributes = $productXml->attributes();
                     foreach ($_attributes as $key => $value) {
                         $_product[$key] = (string)$value;
                     }
 
-                    $_products[] = $_product;
+                    $_products[$this->_getProductSKU($_product)] = $_product;
+                } elseif ($xml->name === 'currency') {
+                    $currencyXml = new SimpleXMLElement($xml->readOuterXML());
+                    $_attributes = $currencyXml->attributes();
+                    $_currencies[(string)$_attributes['id']] = (float)$_attributes['rate'];
                 }
             }
         }
         $xml->close();
         unset($xml);
 
-        return new TC_AdmitadImport_Reader_DataBag($_categories, $_products);
+        return new TC_AdmitadImport_Reader_DataBag($_categories, $_products, $_currencies);
+    }
+
+    /**
+     * Retrieve product SKU from given data
+     *
+     * @param array $product
+     *
+     * @return string
+     * @throws Exception
+     */
+    private function _getProductSKU(array $product)
+    {
+        $skuParts = array_intersect_key($product, array_flip(array('id', 'vendorCode')));
+
+        if (empty($skuParts)) {
+            throw new Exception(sprintf(
+                'Could not retrieve SKU for product: %s %s', PHP_EOL, var_export($product, true)
+            ));
+        }
+
+        return preg_replace('#[^a-z0-9_-]{1}#', '-', strtolower(implode('-', $skuParts)));
     }
 }

@@ -29,6 +29,7 @@ class TC_AdmitadImport_Processor_Chain extends TC_AdmitadImport_Processor_Abstra
      */
     public function process(TC_AdmitadImport_Reader_DataInterface $data)
     {
+        $this->_beforeProcess();
         foreach ($this->_processors as $processor) {
             if ($processor instanceof TC_AdmitadImport_Logger_LoggerAwareInterface) {
                 $processor->setLogger($this->_getLogger());
@@ -36,5 +37,6 @@ class TC_AdmitadImport_Processor_Chain extends TC_AdmitadImport_Processor_Abstra
 
             $processor->process($data);
         }
+        $this->_afterProcess();
     }
 }
