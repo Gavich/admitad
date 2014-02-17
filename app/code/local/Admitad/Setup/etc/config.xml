@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <config>
     <modules>
         <Admitad_Setup>
@@ -14,4 +14,15 @@
             </admitad_setup_setup>
         </resources>
     </global>
+    <frontend>
+        <routers>
+            <checkout>
+                <args>
+                    <modules>
+                        <Admitad_Setup before="Mage_Checkout">Admitad_Setup</Admitad_Setup>
+                    </modules>
+                </args>
+            </checkout>
+        </routers>
+    </frontend>
 </config>

@@ -71,7 +71,7 @@
                 <?php endif; ?>
                 <?php echo $this->getChildHtml('other');?>
                 <?php if ($_product->isSaleable() && $this->hasOptions()):?>
-                    <?php echo $this->getChildChildHtml('container1', '', true, true) ?>
+                    <?php echo $this->getChildChildHtml('container2', '', true, true) ?>
                 <?php endif;?>
 <!--                <p class="availability" id="availability-code">-->
 <!--                    --><?php //echo $this->__('Availability code')?><!--: <span></span>-->
@@ -93,13 +93,15 @@
                 <h1>
                     <?php echo $this->getChildHtml('meta_title') ?>
                 </h1>
+                <?php /* @TODO fix this
                 <div class="rating-wrapper">
+
                     <?php echo $this->getReviewsSummaryHtml($_product, false, true) ?>
                     <?php if (Mage::helper('reviews_summary')->getReviewsCount($this) > 0):?>
                         <div class="review-summary">(<?php echo Mage::helper('reviews_summary')->getReviewsCount($this); ?>)</div>
                     <?php endif; ?>
                 </div>
-
+                */ ?>
 
                 <?php if ($_product->getShortDescription()):?>
                 <div class="std">
@@ -130,7 +132,7 @@
        
         <div class="clearer"></div>
         <?php if ($_product->isSaleable() && $this->hasOptions()):?>
-            <?php echo $this->getChildChildHtml('container2', '', true, true) ?>
+            <?php echo $this->getChildChildHtml('container1', '', true, true) ?>
         <?php endif;?>
     </form>
 	 </div>

@@ -19,11 +19,12 @@
             <li<?php if($_link->getIsFirst()||$_link->getIsLast()): ?> class="<?php if($_link->getIsFirst()): ?>first<?php endif; ?><?php if($_link->getIsLast()): ?> last<?php endif; ?>"<?php endif; ?> <?php echo $_link->getLiParams() ?>><?php echo $_link->getBeforeText() ?><a href="<?php echo $_link->getUrl() ?>" title="<?php echo $_link->getTitle() ?>" <?php echo $_link->getAParams() ?>><?php echo $_link->getLabel() ?></a><?php echo $_link->getAfterText() ?></li>
         <?php endif;?>
     <?php endforeach; ?>
-    <?php
+    <?php /**
         $_subtotals = Mage::getSingleton('checkout/cart')->getQuote()->getTotals();
         $subtotal = $_subtotals["subtotal"]->getValue();
     ?>
     <?php $stringcart ='&nbsp;' . Mage::helper('checkout')->formatPrice($subtotal); ?>
     <li class="top-cart" id="top_cart_header"><?php echo $this->__('<a href="%s" class="top-link-cart" id="topcartlink">Shopping Cart %s Item(s) %s </a>', $this->getUrl('checkout/cart'), $_cartQty, $stringcart) ?></li>
+ */ ?>
 </ul>
 <?php endif; ?>

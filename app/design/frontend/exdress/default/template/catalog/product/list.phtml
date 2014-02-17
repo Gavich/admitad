@@ -99,9 +99,9 @@
                                title="<?php echo $this->stripTags($_product->getName(), null, true) ?>"
                                class="product-image"
                             >
-                                <img src="<?php echo $this->helper('catalog/image')->init($_product, 'image')->resize(192, 273); ?>"
+                                <img src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->resize(192, 273); ?>"
                                      width="192" height="273"
-                                     alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'image'), null, true) ?>"
+                                     alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>"
                                 />
                             </a>
 
