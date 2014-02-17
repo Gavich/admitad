@@ -59,12 +59,17 @@ class TC_AdmitadImport_Helper_Images extends Mage_Core_Helper_Abstract
             mkdir($importDir, 0777);
         }
 
-        foreach ($this->_collectedData as $productId => $imageUrl) {
+        foreach ($this->_collectedData as $productId => $imageUrls) {
             $this->_logger->log(sprintf('Process images for product ID: %d', $productId));
             $product = clone $productModel;
             $product->setId($productId);
 
-            if (is_string($imageUrl)) {
+            if (!is_array($imageUrls)) {
+                $imageUrls = array($imageUrls);
+            }
+
+            $massAdd = array();
+            foreach ($imageUrls as $imageUrl) {
                 $relativePath = md5($imageUrl) . '.' . pathinfo($imageUrl, PATHINFO_EXTENSION);
                 $path         = $importDir . $relativePath;
 
@@ -73,24 +78,26 @@ class TC_AdmitadImport_Helper_Images extends Mage_Core_Helper_Abstract
                     if (200 === $response->getStatus()) {
                         file_put_contents($path, $response->getBody());
 
-                        $massAdd = array(
-                            array(
+                        if (empty($massAdd)) {
+                            // first image is main
+                            $massAdd[] = array(
                                 'file'           => $relativePath,
                                 'mediaAttribute' => 'thumbnail',
-                            ),
-                            array(
+                            );
+                            $massAdd[] = array(
                                 'file'           => $relativePath,
                                 'mediaAttribute' => 'image',
-                            ),
-                            array(
+                            );
+                            $massAdd[] = array(
                                 'file'           => $relativePath,
                                 'mediaAttribute' => 'small_image',
-                            ),
-                        );
-                        $backendModel->addImagesWithDifferentMediaAttributes(
-                            $product, $massAdd, $importDir, true, false
-                        );
-                        $product->getResource()->save($product);
+                            );
+                        } else {
+                            $massAdd[] = array(
+                                'file'           => $relativePath,
+                                'mediaAttribute' => null
+                            );
+                        }
                     } else {
                         $this->_logger->log(
                             sprintf(
@@ -101,13 +108,13 @@ class TC_AdmitadImport_Helper_Images extends Mage_Core_Helper_Abstract
                 } catch (Exception $e) {
                     $this->_logger->log($e->getMessage(), Zend_Log::ERR);
                 }
-            } else {
-                $this->_logger->log(
-                    sprintf(
-                        'Failed to download image, url contains bad data: %s', var_export($imageUrl, true),
-                        Zend_Log::ERR
-                    )
+            }
+
+            if (!empty($massAdd)) {
+                $backendModel->addImagesWithDifferentMediaAttributes(
+                    $product, $massAdd, $importDir, true, false
                 );
+                $product->getResource()->save($product);
             }
         }
 

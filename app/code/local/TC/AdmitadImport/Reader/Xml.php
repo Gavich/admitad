@@ -90,6 +90,6 @@ class TC_AdmitadImport_Reader_Xml implements TC_AdmitadImport_Reader_ReaderInter
             ));
         }
 
-        return preg_replace('#[^a-z0-9_-]{1}#', '-', strtolower(implode('-', $skuParts)));
+        return trim(preg_replace('#[^a-z0-9_-]{1}#', '-', strtolower(implode('-', $skuParts))), '-');
     }
 }
