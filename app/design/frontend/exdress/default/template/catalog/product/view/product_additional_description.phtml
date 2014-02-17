@@ -12,6 +12,10 @@
         var fixerBlock = jQuery('.layout-seo-fixer'),
             textBlock = jQuery('.product-description-seo');
 
+        if (!fixerBlock.length || !textBlock.length) {
+            return;
+        }
+
         var fixHeight = function () {
             textBlock.css({
                 'text-indent': 0,
