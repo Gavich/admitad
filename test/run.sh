@@ -39,7 +39,7 @@ ${PHAR} --root-dir="${MAGENTO_ROOT}" install --installationFolder="${MAGENTO_ROO
 
 ${PHAR} cache:clean
 
-# @TODO run tests here
+phpunit -v -c ${scriptDir}/phpunit.xml
 
 # Remove files and database
 ${PHAR} uninstall --force
