@@ -13,16 +13,38 @@
                 </setup>
             </admitad_setup_setup>
         </resources>
+        <helpers>
+            <admitad_setup>
+                <class>Admitad_Setup_Helper</class>
+            </admitad_setup>
+            <catalog>
+                <rewrite>
+                    <product_compare>Admitad_Setup_Helper_Catalog_Product_Compare</product_compare>
+                </rewrite>
+            </catalog>
+            <checkout>
+                <rewrite>
+                    <cart>Admitad_Setup_Helper_Checkout_Cart</cart>
+                </rewrite>
+            </checkout>
+        </helpers>
     </global>
     <frontend>
         <routers>
             <checkout>
                 <args>
                     <modules>
-                        <Admitad_Setup before="Mage_Checkout">Admitad_Setup</Admitad_Setup>
+                        <Admitad_Setup before="Mage_Checkout">Admitad_Setup_Checkout</Admitad_Setup>
                     </modules>
                 </args>
             </checkout>
+            <wishlist>
+                <args>
+                    <modules>
+                        <admitad_setup before="Mage_Wishlist">Admitad_Setup_Wishlist</admitad_setup>
+                    </modules>
+                </args>
+            </wishlist>
         </routers>
     </frontend>
 </config>

@@ -18,9 +18,7 @@
         <?php endif; ?>
 
         <button id="addToCart" type="button" title="<?php echo $buttonTitle ?>" class="button btn-cart"
-               <?php /** onclick="productAddToCartForm.submit(this)"**/?>
-               onclick="location.href='<?php echo $_product->getUrl() ?>'"
-               ><span><span><?php echo $buttonTitle ?></span></span>
+               onclick="productAddToCartForm.submit(this)"><span><span><?php echo $buttonTitle ?></span></span>
         </button>
 
         <?php echo $this->getChildHtml('', true, true) ?>

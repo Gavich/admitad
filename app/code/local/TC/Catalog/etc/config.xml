@@ -6,16 +6,6 @@
         </TC_Catalog>
     </modules>
     <global>
-        <helpers>
-            <tccatalog>
-                <class>TC_Catalog_Helper</class>
-            </tccatalog>
-            <catalog>
-                <rewrite>
-                    <data>TC_Catalog_Helper_Data</data>
-                </rewrite>
-            </catalog>
-        </helpers>
         <blocks>
             <tccatalog>
                 <class>TC_Catalog_Block</class>
@@ -33,12 +23,4 @@
             </catalog_controller_category_init_after>
         </events>
     </global>
-    <default>
-        <catalog>
-            <frontend>
-                <color_is_enabled>1</color_is_enabled>
-                <color_attribute_code>dim1</color_attribute_code>
-            </frontend>
-        </catalog>
-    </default>
 </config>
