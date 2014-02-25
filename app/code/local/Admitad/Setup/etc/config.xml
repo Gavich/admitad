@@ -34,15 +34,14 @@
             <checkout>
                 <args>
                     <modules>
-                        <Admitad_Setup before="Mage_Checkout">Admitad_Setup</Admitad_Setup>
+                        <Admitad_Setup before="Mage_Checkout">Admitad_Setup_Checkout</Admitad_Setup>
                     </modules>
                 </args>
             </checkout>
             <wishlist>
                 <args>
                     <modules>
-                        <admitad_setup before="Mage_Wishlist">Admitad_Setup</admitad_setup>
-                        <admitad_setup before="Mage_Wishlist">Admitad_Setup</admitad_setup>
+                        <admitad_setup before="Mage_Wishlist">Admitad_Setup_Wishlist</admitad_setup>
                     </modules>
                 </args>
             </wishlist>

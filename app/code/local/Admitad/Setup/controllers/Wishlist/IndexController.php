@@ -1,7 +1,7 @@
 <?php
 require_once rtrim(Mage::getModuleDir('controllers', 'Mage_Wishlist'), DS) . DS . 'IndexController.php';
 
-class Admitad_Setup_IndexController extends Mage_Wishlist_IndexController
+class Admitad_Setup_Wishlist_IndexController extends Mage_Wishlist_IndexController
 {
     /**
      * Add wishlist item to shopping cart and remove from wishlist
