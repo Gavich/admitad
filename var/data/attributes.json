@@ -20,7 +20,7 @@
         "manufacturer": "vendor",
         "name": "name",
         "description": "description",
-        "url": "url",
+        "ad_redirect_url": "url",
         "local_delivery_cost": "local_delivery_cost",
         "size": "Размер",
         "sizes": "Размеры"

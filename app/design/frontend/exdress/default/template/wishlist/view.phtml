@@ -99,9 +99,9 @@
             <script type="text/javascript">decorateTable('wishlist-table')</script>
             <div class="buttons-set buttons-set2">
                 <button type="submit" onclick="this.name='save_and_share'" title="<?php echo $this->__('Share Wishlist') ?>" class="button btn-share"><span><span><?php echo $this->__('Share Wishlist') ?></span></span></button>
-                <?php if($this->isSaleable()):?>
+                <?php /** /if($this->isSaleable()):?>
                     <button type="button" title="<?php echo $this->__('Add All to Cart') ?>" onclick="addAllWItemsToCart()" class="button btn-add"><span><span><?php echo $this->__('Add All to Cart') ?></span></span></button>
-                <?php endif;?>
+                <?php endif; **/ ?>
                 <button type="submit" title="<?php echo $this->__('Update Wishlist') ?>" onclick="this.name='do'" class="button btn-update"><span><span><?php echo $this->__('Update Wishlist') ?></span></span></button>
             </div>
         </fieldset>

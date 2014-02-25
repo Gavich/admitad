@@ -24,7 +24,7 @@ foreach ($toRemove as $attributeCode) {
 
 $textAttributes = array(
     'model', 'type_prefix', 'brand', 'material', 'fashion_collection', 'color', 'season', 'sex', 'age',
-    'clasp_type', 'heel', 'external_material', 'url', 'platform_height', 'sole_material', 'bootleg_height',
+    'clasp_type', 'heel', 'external_material', 'ad_redirect_url', 'platform_height', 'sole_material', 'bootleg_height',
     'bootleg_width', 'manufacturer', 'country_of_manufacture'
 );
 
