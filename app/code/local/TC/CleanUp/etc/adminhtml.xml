@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<config>
+    <acl>
+        <resources>
+            <admin>
+                <children>
+                    <system>
+                        <children>
+                            <tools>
+                                <children>
+                                    <cleanup_catalog translate="title" module="tc_cleanup">
+                                        <title>Catalog Clean Up</title>
+                                    </cleanup_catalog>
+                                </children>
+                            </tools>
+                        </children>
+                    </system>
+                </children>
+            </admin>
+        </resources>
+    </acl>
+    <menu>
+        <system>
+            <children>
+                <tools>
+                    <children>
+                        <cleanup_catalog translate="title" module="tc_cleanup">
+                            <title>Catalog Clean Up</title>
+                            <action>adminhtml/cleanup_catalog</action>
+                        </cleanup_catalog>
+                    </children>
+                </tools>
+            </children>
+        </system>
+    </menu>
+</config>

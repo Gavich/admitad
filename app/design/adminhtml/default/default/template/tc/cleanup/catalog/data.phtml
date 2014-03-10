@@ -1,0 +1,25 @@
+<?php /* @var $this TC_CleanUp_Block_Adminhtml_Catalog_Data */ ?>
+<?php $count = $this->getDisabledProductsCount(); ?>
+<?php echo sprintf('<b>%s:</b> %d', $this->__('Disabled products'), $count); ?>
+
+<?php if ($count): ?>
+    <br/>
+    <b><?php echo $this->__('Actions'); ?>:</b>
+    <ul>
+        <li><a href="<?php echo $this->getDisabledProductsGridUrl(); ?>"><?php echo $this->__('Review'); ?></a></li>
+        <li><a href="<?php echo $this->getRemoveDisabledProductsUrl(); ?>"><?php echo $this->__('Remove'); ?></a></li>
+    </ul>
+<?php endif; ?>
+
+<br/>
+<?php $count = $this->getDisabledCategoriesCount(); ?>
+<?php echo sprintf('<b>%s:</b> %d', $this->__('Disabled categories'), $count); ?>
+
+<?php if ($count): ?>
+    <br/>
+    <b><?php echo $this->__('Actions'); ?>:</b>
+    <ul>
+        <li><a href="<?php echo $this->getCategoriesViewUrl(); ?>"><?php echo $this->__('Review'); ?></a></li>
+        <li><a href="<?php echo $this->getRemoveDisabledCategoriesUrl(); ?>"><?php echo $this->__('Remove'); ?></a></li>
+    </ul>
+<?php endif; ?>
