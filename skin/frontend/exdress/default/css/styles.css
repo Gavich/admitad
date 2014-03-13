@@ -2646,6 +2646,11 @@ tr.summary-details-excluded{
 .block-layered-nav dt:first-child{
 	padding-top:10px;
 }
+
+.block-layered-nav .block-content #narrow-by-list2 li{
+	border-bottom: 1px dashed #C0C0C0;
+	padding-top: 3px;
+}
 .col-right #tabs div.product-wrapper p{
 	margin:2px 0;
 	display:block;

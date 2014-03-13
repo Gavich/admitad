@@ -49,9 +49,9 @@ Default layout, loads most of the pages
 
     <default>
         <!-- Mage_Customer -->
-        <reference name="top.links">
+        <!--<reference name="top.links">
             <action method="addLink" translate="label title" module="customer"><label>My Account</label><url helper="customer/getAccountUrl"/><title>My Account</title><prepare/><urlParams/><position>50</position></action>
-        </reference>
+        </reference>-->
     </default>
 
 <!--
@@ -77,7 +77,7 @@ Load this update on every page when customer is logged out
     <customer_logged_out>
         <!---<reference name="right">
             <block type="customer/form_login" name="customer_form_mini_login" before="-" template="customer/form/mini.login.phtml"/>
-        </reference>-->
+        </reference>
         <reference name="top.links">
             <action method="addLink" translate="label title" module="customer"><label>Login or Register</label><url helper="customer/getLoginUrl"/><title>Login or Register</title><prepare/><urlParams/><position>10</position>
                 <aParams>
@@ -87,11 +87,11 @@ Load this update on every page when customer is logged out
                 </aParams>
             </action>
         </reference>
-        <remove name="wishlist_sidebar"></remove>
-        <remove name="reorder"></remove>
         <reference name="right">
             <block type="customer/form_login" name="mini_login" before="catalog.compare.sidebar" template="customer/form/mini.login.phtml" />
-        </reference>
+        </reference>-->
+        <remove name="reorder" />
+        <remove name="wishlist_sidebar" />
     </customer_logged_out>
 
 <!--
