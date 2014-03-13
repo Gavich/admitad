@@ -100,7 +100,6 @@ class TC_CleanUp_Model_Resource_Cleanup extends Mage_Core_Model_Resource
         exec(sprintf('sort %s -o %s', $usedImagesFileName, $usedImagesFileName), $output);
         $this->_checkExecution($output);
 
-
         exec(sprintf('comm -23 %s %s > %s', $allImagesFileName, $usedImagesFileName, $diffFilename), $output);
         $this->_checkExecution($output);
 

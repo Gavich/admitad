@@ -63,7 +63,7 @@
 
         <reference name="left" >
             <block type="catalog/navigation" name="catalog.leftnav.subcategories" before="-" template="catalog/navigation/left.phtml"/>
-            <block type="customer/form_login" name="mini_login" before="catalog.compare.sidebar" template="customer/form/mini.login.phtml" />
+            <!--<block type="customer/form_login" name="mini_login" before="catalog.compare.sidebar" template="customer/form/mini.login.phtml" />-->
         </reference>
         <reference name="content">
             <block type="cms/block" name="vertical_banner">
