@@ -22,5 +22,12 @@
                 </observers>
             </catalog_controller_category_init_after>
         </events>
+        <helpers>
+            <catalog>
+                <rewrite>
+                    <data>TC_Catalog_Helper_Catalog_Data</data>
+                </rewrite>
+            </catalog>
+        </helpers>
     </global>
 </config>
