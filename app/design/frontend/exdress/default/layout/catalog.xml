@@ -47,6 +47,22 @@
                     <action method="addColumnCountLayoutDepend"><layout>two_columns_right</layout><count>3</count></action>
                     <action method="addColumnCountLayoutDepend"><layout>three_columns</layout><count>2</count></action>
                     <action method="setToolbarBlockName"><name>product_list_toolbar</name></action>
+
+                    <action method="addPriceBlockType">
+                        <type>simple</type>
+                        <block>catalog/product_price</block>
+                        <template>catalog/product/list/price.phtml</template>
+                    </action>
+                    <action method="addPriceBlockType">
+                        <type>grouped</type>
+                        <block>catalog/product_price</block>
+                        <template>catalog/product/list/price.phtml</template>
+                    </action>
+                    <action method="addPriceBlockType">
+                        <type>configurable</type>
+                        <block>catalog/product_price</block>
+                        <template>catalog/product/list/price.phtml</template>
+                    </action>
                 </block>
             </block>
             <block type="tccatalog/robots" name="catalog.robots" />
@@ -81,6 +97,27 @@
                     <action method="addColumnCountLayoutDepend"><layout>two_columns_right</layout><count>3</count></action>
                     <action method="addColumnCountLayoutDepend"><layout>three_columns</layout><count>2</count></action>
                     <action method="setToolbarBlockName"><name>product_list_toolbar</name></action>
+
+                    <action method="addPriceBlockType">
+                        <type>simple</type>
+                        <block>catalog/product_price</block>
+                        <template>catalog/product/list/price.phtml</template>
+                    </action>
+                    <action method="addPriceBlockType">
+                        <type>grouped</type>
+                        <block>catalog/product_price</block>
+                        <template>catalog/product/list/price.phtml</template>
+                    </action>
+                    <action method="addPriceBlockType">
+                        <type>configurable</type>
+                        <block>catalog/product_price</block>
+                        <template>catalog/product/list/price.phtml</template>
+                    </action>
+                    <action method="addPriceBlockType">
+                        <type>bundle</type>
+                        <block>catalog/product_price</block>
+                        <template>catalog/product/list/price.phtml</template>
+                    </action>
                 </block>
             </block>
         </reference>

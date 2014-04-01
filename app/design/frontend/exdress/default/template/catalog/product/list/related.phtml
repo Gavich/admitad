@@ -49,9 +49,10 @@
                         <h2 class="product-name"><a href="<?php echo $_item->getProductUrl() ?>"><?php echo $this->htmlEscape($_item->getName()) ?></a></h2>
 						<?php echo $this->stripTags($_item->getSku()); ?>
                         <?php echo $this->getPriceHtml($_item, true, '-related') ?>
-                        <?php if ($this->helper('wishlist')->isAllow()) : ?>
+                        <?php // authorization is not allowed, so just comment wishist url ?>
+                        <?php /*if ($this->helper('wishlist')->isAllow()) : ?>
                             <a href="<?php echo $this->getAddToWishlistUrl($_item) ?>" class="link-wishlist"><?php echo $this->__('Add to Wishlist') ?></a>
-                        <?php endif; ?>
+                        <?php endif;*/ ?>
                     </div>
                 </div>
             </li>

@@ -1,38 +1,4 @@
 <?php
-/**
- * Magento
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Academic Free License (AFL 3.0)
- * that is bundled with this package in the file LICENSE_AFL.txt.
- * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/afl-3.0.php
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@magentocommerce.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade Magento to newer
- * versions in the future. If you wish to customize Magento for your
- * needs please refer to http://www.magentocommerce.com for more information.
- *
- * @category    design
- * @package     base_default
- * @copyright   Copyright (c) 2010 Magento Inc. (http://www.magentocommerce.com)
- * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
- */
-?>
-
-<?php
-/**
- * Template for displaying product price in different places (products grid, product view page etc)
- *
- * @see Mage_Catalog_Block_Product_Abstract
- */
-?>
-<?php
     $_coreHelper = $this->helper('core');
     $_weeeHelper = $this->helper('weee');
     $_taxHelper  = $this->helper('tax');
@@ -151,14 +117,14 @@
         <?php else: ?>
             <?php if ($_weeeTaxAmount && $_weeeHelper->typeOfDisplay($_product, 0)): // including ?>
                 <p class="regular-price">
-                <span class="price-label"><?php echo $this->__('&nbsp;') ?></span>
+                <span class="price-label"><?php echo $this->__('Price') ?></span>
                 <span class="regular-price" id="product-price-<?php echo $_id ?><?php echo $this->getIdSuffix() ?>">
                     <?php echo $_coreHelper->currency($_price+$_weeeTaxAmount,true,true) ?>
                 </span>
                 </p>
             <?php elseif ($_weeeTaxAmount && $_weeeHelper->typeOfDisplay($_product, 1)): // incl. + weee ?>
                 <p class="regular-price">
-                <span class="price-label"><?php echo $this->__('&nbsp;') ?></span>
+                <span class="price-label"><?php echo $this->__('Price') ?></span>
                 <span class="regular-price" id="product-price-<?php echo $_id ?><?php echo $this->getIdSuffix() ?>">
                     <?php echo $_coreHelper->currency($_price+$_weeeTaxAmount,true,true) ?>
                 </span>
@@ -172,7 +138,7 @@
                  </p>
             <?php elseif ($_weeeTaxAmount && $_weeeHelper->typeOfDisplay($_product, 4)): // incl. + weee ?>
                 <p class="regular-price">
-                <span class="price-label"><?php echo $this->__('&nbsp;') ?></span>
+                <span class="price-label"><?php echo $this->__('Price') ?></span>
                 <span class="regular-price" id="product-price-<?php echo $_id ?><?php echo $this->getIdSuffix() ?>">
                     <?php echo $_coreHelper->currency($_price+$_weeeTaxAmount,true,true) ?>
                 </span>
@@ -186,7 +152,7 @@
                     </p>
             <?php elseif ($_weeeTaxAmount && $_weeeHelper->typeOfDisplay($_product, 2)): // excl. + weee + final ?>
                 <p class="regular-price">
-                <span class="price-label"><?php echo $this->__('&nbsp;') ?></span>
+                <span class="price-label"><?php echo $this->__('Price') ?></span>
                 <span class="regular-price"><?php echo $_coreHelper->currency($_price,true,true) ?></span><br />
                 <?php foreach ($_weeeTaxAttributes as $_weeeTaxAttribute): ?>
                     <span class="weee">
@@ -195,17 +161,17 @@
                     </p>
                 <?php endforeach; ?>
                 <p class="regular-price">
-                <span class="price-label"><?php echo $this->__('&nbsp;') ?></span>
+                <span class="price-label"><?php echo $this->__('Price') ?></span>
                 <span class="regular-price" id="product-price-<?php echo $_id ?><?php echo $this->getIdSuffix() ?>">
                     <?php echo $_coreHelper->currency($_price+$_weeeTaxAmount,true,true) ?>
                 </span>
                 </p>
             <?php else: ?>
                 <p class="regular-price">
-                <span class="price-label"><?php echo $this->__('&nbsp;') ?></span>
-                <span class="regular-price" id="product-price-<?php echo $_id ?><?php echo $this->getIdSuffix() ?>">
-                    <?php echo $_coreHelper->currency($_price,true,true) ?>
-                </span>
+                    <span class="price-label"><?php echo $this->__('Price') ?></span>
+                    <span class="regular-price" id="product-price-<?php echo $_id ?><?php echo $this->getIdSuffix() ?>">
+                        <?php echo $_coreHelper->currency($_price,true,true) ?>
+                    </span>
                 </p>
             <?php endif; ?>
         <?php endif; ?>
@@ -214,7 +180,7 @@
 
         <?php if ($_weeeTaxAmount && $_weeeHelper->typeOfDisplay($_product, 0)): // including ?>
             <p class="old-price">
-                <span class="price-label"><?php echo $this->__('&nbsp;') ?></span>
+                <span class="price-label"><?php echo $this->__('Price') ?></span>
                 <span class="price" id="old-price-<?php echo $_id ?><?php echo $this->getIdSuffix() ?>">
                     <?php echo $_coreHelper->currency($_regularPrice+$_originalWeeeTaxAmount,true,false) ?>
                 </span>
@@ -222,7 +188,6 @@
 
             <?php if ($_taxHelper->displayBothPrices()): ?>
                 <p class="special-price">
-                    <span class="price-label"><?php echo $this->__('&nbsp;') ?></span>
                     <span class="price-excluding-tax">
                         <span class="label"><?php echo $_taxHelper->__('Excl. Tax:') ?></span>
                         <span class="price" id="price-excluding-tax-<?php echo $_id ?><?php echo $this->getIdSuffix() ?>">
@@ -238,7 +203,6 @@
                 </p>
             <?php else: ?>
             <p class="special-price">
-                <span class="price-label"><?php echo $this->__('&nbsp;') ?></span>
                 <span class="price" id="product-price-<?php echo $_id ?><?php echo $this->getIdSuffix() ?>">
                     <?php echo $_coreHelper->currency($_finalPrice+$_weeeTaxAmount,true,false) ?>
                 </span>
@@ -247,14 +211,13 @@
 
         <?php elseif ($_weeeTaxAmount && $_weeeHelper->typeOfDisplay($_product, 1)): // incl. + weee ?>
             <p class="old-price">
-                <span class="price-label"><?php echo $this->__('&nbsp;') ?></span>
+                <span class="price-label"><?php echo $this->__('Price') ?></span>
                 <span class="price" id="old-price-<?php echo $_id ?><?php echo $this->getIdSuffix() ?>">
                     <?php echo $_coreHelper->currency($_regularPrice+$_originalWeeeTaxAmount,true,false) ?>
                 </span>
             </p>
 
             <p class="special-price">
-                <span class="price-label"><?php echo $this->__('&nbsp;') ?></span>
                 <span class="price-excluding-tax">
                     <span class="label"><?php echo $_taxHelper->__('Excl. Tax:') ?></span>
                     <span class="price" id="price-excluding-tax-<?php echo $_id ?><?php echo $this->getIdSuffix() ?>">
@@ -277,14 +240,13 @@
             </p>
         <?php elseif ($_weeeTaxAmount && $_weeeHelper->typeOfDisplay($_product, 4)): // incl. + weee ?>
             <p class="old-price">
-                <span class="price-label"><?php echo $this->__('&nbsp;') ?></span>
+                <span class="price-label"><?php echo $this->__('Price') ?></span>
                 <span class="price" id="old-price-<?php echo $_id ?><?php echo $this->getIdSuffix() ?>">
                     <?php echo $_coreHelper->currency($_regularPrice+$_originalWeeeTaxAmount,true,false) ?>
                 </span>
             </p>
 
             <p class="special-price">
-                <span class="price-label"><?php echo $this->__('&nbsp;') ?></span>
                 <span class="price-excluding-tax">
                     <span class="label"><?php echo $_taxHelper->__('Excl. Tax:') ?></span>
                     <span class="price" id="price-excluding-tax-<?php echo $_id ?><?php echo $this->getIdSuffix() ?>">
@@ -307,14 +269,13 @@
             </p>
         <?php elseif ($_weeeTaxAmount && $_weeeHelper->typeOfDisplay($_product, 2)): // excl. + weee + final ?>
             <p class="old-price">
-                <span class="price-label"><?php echo $this->__('&nbsp;') ?></span>
+                <span class="price-label"><?php echo $this->__('Price') ?></span>
                 <span class="price" id="old-price-<?php echo $_id ?><?php echo $this->getIdSuffix() ?>">
                     <?php echo $_coreHelper->currency($_regularPrice,true,false) ?>
                 </span>
             </p>
 
             <p class="special-price">
-                <span class="price-label"><?php echo $this->__('&nbsp;') ?></span>
                 <span class="price-excluding-tax">
                     <span class="label"><?php echo $_taxHelper->__('Excl. Tax:') ?></span>
                     <span class="price" id="price-excluding-tax-<?php echo $_id ?><?php echo $this->getIdSuffix() ?>">
@@ -334,8 +295,8 @@
                 </span>
             </p>
         <?php else: // excl. ?>
+            <p class="price-label"><?php echo $this->__('Price') ?></p>
             <p class="old-price">
-                <span class="price-label"><?php echo $this->__('&nbsp;') ?></span>
                 <span class="price" id="old-price-<?php echo $_id ?><?php echo $this->getIdSuffix() ?>">
                     <?php echo $_coreHelper->currency($_regularPrice,true,false) ?>
                 </span>
@@ -343,7 +304,6 @@
 
             <?php if ($_taxHelper->displayBothPrices()): ?>
                 <p class="special-price">
-                    <span class="price-label"><?php echo $this->__('&nbsp;') ?></span>
                     <span class="price-excluding-tax">
                         <span class="label"><?php echo $_taxHelper->__('Excl. Tax:') ?></span>
                         <span class="price" id="price-excluding-tax-<?php echo $_id ?><?php echo $this->getIdSuffix() ?>">
@@ -359,7 +319,6 @@
                 </p>
             <?php else: ?>
             <p class="special-price">
-                <span class="price-label"><?php echo $this->__('&nbsp;') ?></span>
                 <span class="price" id="product-price-<?php echo $_id ?><?php echo $this->getIdSuffix() ?>">
                     <?php echo $_coreHelper->currency($_finalPrice,true,false) ?>
                 </span>

@@ -7,16 +7,15 @@
  */
 ?>
 <?php $_product = $this->getProduct(); ?>
-<?php $buttonTitle = $this->__('Add to Cart'); ?>
+<?php $buttonTitle = $this->__('Buy Product'); ?>
 <?php if($_product->isSaleable()): ?>
     <div class="add-to-cart">
-        <?php if(!$_product->isGrouped()): ?>
+        <?php /*if(!$_product->isGrouped()): ?>
         <label for="qty"><?php //echo $this->__('Quantity:') ?></label>
         <div class="quantity">
             <input type="text" name="qty" id="qty" maxlength="12" value="<?php echo $this->getMinimalQty($_product) ?>" title="<?php echo $this->__('Qty') ?>" class="input-text qty" />
         </div> <!-- /.quantity -->
-        <?php endif; ?>
-
+        <?php endif;*/ ?>
         <button id="addToCart" type="button" title="<?php echo $buttonTitle ?>" class="button btn-cart"
                onclick="productAddToCartForm.submit(this)"><span><span><?php echo $buttonTitle ?></span></span>
         </button>
@@ -27,7 +26,9 @@
 
 <script type="text/javascript">
 //<![CDATA[
+/*
 jQuery("div.quantity").append('<input type="button" value="+" id="add1" class="plus" />').prepend('<input type="button" value="-" id="minus1" class="minus" />');
+*/
 jQuery(".plus").click(function(){
     var currentVal = parseInt(jQuery(this).prev(".qty").val());
     if (!currentVal || currentVal=="" || currentVal == "NaN") currentVal = 0;

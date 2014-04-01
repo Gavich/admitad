@@ -3636,7 +3636,6 @@ tr.summary-details-excluded{
 .products-grid .price-box,
 .cms-home .product-wrapper .price-box{
 	margin:0;
-	padding:5px 0 0;
 }
 .col-main .products-grid .price-box{
 	min-height:15px;
@@ -4023,6 +4022,33 @@ tr.summary-details-excluded{
 	opacity:0.65;
 	margin-right:3px;
 }
+
+.catalog-category-view .price-label {
+    background: none;
+    float: none;
+    margin: 0 2px 0 0;
+    padding:0;
+}
+
+.catalog-category-view .regular-price {
+    width: auto;
+    float: none;
+}
+
+.catalog-category-view .special-price,
+.catalog-category-view .old-price {
+    width: 50%;
+}
+
+.catalog-category-view .special-price .price,
+.catalog-category-view .old-price .price {
+    float: none;
+    font-size: 14px;
+}
+.catalog-category-view .old-price .price {
+    font-size: 12px;
+}
+
 .regular-price .price{
 	color:#FF8A00;
 	font-size:16px;
@@ -4050,9 +4076,7 @@ tr.summary-details-excluded{
 .products-list .old-price{
 	width:49%;
 }
-.cls_wrapper .old-price{
-	width:51% !important;
-}
+
 .old-price .price{
 	color:#FF8A00;
 	text-decoration:line-through;
@@ -4897,8 +4921,7 @@ a.link-produktinfo:hover{
 #product-options-wrapper{
 	margin-top:10px;
 }
-.product-options-bottom,
-#product-options-wrapper{
+.product-options-bottom {
 	border-top:3px solid #FFF;
 	float:left;
 	width:100%;
@@ -4945,11 +4968,16 @@ a.link-produktinfo:hover{
 .product-options-bottom .price-tax{
 	float:left;
 }
-.product-options-bottom .add-to-cart{
-	float:left;
-	padding:15px 0;
-	width:100%;
+.catalog-product-view .add-to-cart {
+    padding: 15px 20px;
+    width: auto;
+    border: none;
 }
+
+.catalog-product-view .add-to-box > .add-to-cart {
+    padding: 5px 20px 15px;
+}
+
 .product-options-bottom .add-to-cart label,
 .review-product-list .add-to-cart label{
 	padding-left:15px;
@@ -6900,10 +6928,12 @@ button.btn-cart span{
 button.btn-cart:hover span{
 	background:#666;
 }
-button.btn-cart	span span{
-	background-position:100% -25px;
-	padding:0 22px 0 6px;
+
+button.btn-cart span span {
+    background-position: 100% -25px;
+    padding: 0 6px;
 }
+
 .product-shop button.btn-cart span span{
 	background:url("../images/cdd_add_cart.png") no-repeat scroll 0 5px transparent;
 	padding:0 6px 0 22px;
@@ -8693,9 +8723,6 @@ a.previous:hover{
 }
 .cms-home .product-wrapper .price-box p{
 	width:55%;
-}
-.cls_wrapper .price-box p{
-	width:49%;
 }
 .cms-home .product-wrapper .price-box p.special-price{
 	float:right;
