@@ -54,10 +54,6 @@
                                     <img src="<?php echo $this->getSkinUrl('images/brands/').$manufacturerimg.".png"; ?>" alt="<?php echo $_product->getAttributeText('manufacturer') ?>" />
                                 <?php endif; ?>
                             </div>
-                        <?php if(!$_product->isSaleable()): ?>
-                            <p class="availability out-of-stock"><span><?php echo $this->__('Out of stock') ?></span></p>
-                        <?php endif; ?>
-
                         <div class="desc std">
                             <?php echo $_helper->productAttribute($_product, $_product->getShortDescription(), 'short_description')?>
                         </div>
@@ -66,9 +62,10 @@
                         <?php endif; ?>
                         <?php echo $this->getPriceHtml($_product, true) ?>
                         <ul class="add-to-links">
-                            <?php if ($this->helper('wishlist')->isAllow()) : ?>
+                            <?php // authorization is not allowed, so just comment wishist url ?>
+                            <?php /*if ($this->helper('wishlist')->isAllow()) : ?>
                                 <li><a href="<?php echo $this->helper('wishlist')->getAddUrl($_product) ?>" class="link-wishlist"><?php echo $this->__('Wishlist') ?></a></li>
-                            <?php endif; ?>
+                            <?php endif;*/ ?>
                             <?php if($_compareUrl=$this->getAddToCompareUrl($_product)): ?>
                                 <li><a href="<?php echo $_compareUrl ?>" class="link-compare"><?php echo $this->__('Compare') ?></a></li>
                             <?php endif; ?>
@@ -127,24 +124,26 @@
                             <?php echo $this->getPriceHtml($_product, true) ?>
 
                             <ul class="add-to-links">
-                                <?php if ($this->helper('wishlist')->isAllow()) : ?>
+                                <?php // authorization is not allowed, so just comment wishist url ?>
+                                <?php /*if ($this->helper('wishlist')->isAllow()) : ?>
                                     <li><a href="<?php echo $this->helper('wishlist')->getAddUrl($_product) ?>" class="link-wishlist"><?php echo $this->__('Wishlist') ?></a></li>
-                                <?php endif; ?>
+                                <?php endif;*/ ?>
                                 <?php if($_compareUrl=$this->getAddToCompareUrl($_product)): ?>
-                                    <li><span class="separator"></span><a href="<?php echo $_compareUrl ?>" class="link-compare"><?php echo $this->__('Compare') ?></a></li>
+                                    <li></span><a href="<?php echo $_compareUrl ?>" class="link-compare"><?php echo $this->__('Compare') ?></a></li>
                                 <?php endif; ?>
+                                <li>
+                                    <?php if($_product->isSaleable()): ?>
+                                        <p>
+                                            <a href="<?php echo $this->getAddToCartUrl($_product) ?>" class="link-addtocart" title="<?php echo $this->__('Add to Cart') ?>"><?php echo $this->__('cart') ?></a>
+                                        </p>
+                                    <?php else: ?>
+                                        <p>
+                                            <span style="color: red;"><?php echo $this->__('Out of stock') ?></span>
+                                        </p>
+                                    <?php endif; ?>
+                                </li>
                             </ul>
-
                             <div style="clear:both;"></div>
-                            <?php if($_product->isSaleable()): ?>
-                                <p>
-                                    <a href="<?php echo $this->getAddToCartUrl($_product) ?>" class="link-addtocart" title="<?php echo $this->__('Add to Cart') ?>"><?php echo $this->__('cart') ?></a>
-                                </p>
-                            <?php else: ?>
-                                <p>
-                                    <span style="color: red;"><?php echo $this->__('Out of stock') ?></span>
-                                </p>
-                            <?php endif; ?>
 
                             <a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $_product->getName();?>" class="cover"></a>
                         </div>

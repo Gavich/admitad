@@ -26,12 +26,13 @@
 ?>
 
 <?php $_product = $this->getProduct(); ?>
-<?php $_wishlistSubmitUrl = $this->helper('wishlist')->getAddUrl($_product); ?>
 
 <ul class="add-to-links">
-<?php if ($this->helper('wishlist')->isAllow()) : ?>
+    <?php // authorization is not allowed, so just comment wishist url ?>
+<?php /*if ($this->helper('wishlist')->isAllow()) : ?>
+    <?php $_wishlistSubmitUrl = $this->helper('wishlist')->getAddUrl($_product); ?>
     <li><a href="<?php echo $_wishlistSubmitUrl ?>" onclick="productAddToCartForm.submitLight(this, '<?php echo $_wishlistSubmitUrl ?>'); return false;" class="link-wishlist"><?php echo $this->__('Wishlist') ?></a></li>
-<?php endif; ?>
+<?php endif; */ ?>
 <?php
     $_compareUrl = $this->helper('catalog/product_compare')->getAddUrl($_product);
 ?>
