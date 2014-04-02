@@ -16,17 +16,14 @@
     $_product = $this->getProduct()
 ?>
 <?php if($_additional = $this->getAdditionalData()): ?>
-    <table class="data-table" id="product-attribute-specs-table">
-        <h2><?php echo $this->__('Описание товара'); ?> <?php echo $_product->getName(); ?></h2>
-        <tbody>
+    <ul class="product-attributes-list">
         <?php foreach ($_additional as $_data): ?>
-            <?php if ($_data['value'] == 'N/A') continue ?>
-            <tr>
-                <?php /*<th class="label"><?php echo $this->htmlEscape($this->__($_data['label'])) ?></th>*/ ?>
-                <td class="data"><?php echo $_helper->productAttribute($_product, $_data['value'], $_data['code']) ?></td>
-            </tr>
+            <?php if ($_data['value'] == 'N/A' || $_data['value'] == 'No') continue ?>
+            <li>
+                <span class="label"><?php echo $this->htmlEscape($this->__($_data['label'])) ?>:</span>
+                <p><?php echo $_helper->productAttribute($_product, $_data['value'], $_data['code']) ?></p>
+                <div class="clearfix"></div>
+            </li>
         <?php endforeach; ?>
-        </tbody>
-    </table>
-    <script type="text/javascript">decorateTable('product-attribute-specs-table')</script>
+    </ul>
 <?php endif;?>
