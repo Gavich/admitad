@@ -73,9 +73,10 @@
                 <?php if ($_product->isSaleable() && $this->hasOptions()):?>
                     <?php echo $this->getChildChildHtml('container2', '', true, true) ?>
                 <?php endif;?>
-<!--                <p class="availability" id="availability-code">-->
-<!--                    --><?php //echo $this->__('Availability code')?><!--: <span></span>-->
-<!--                </p>-->
+                <div class="clearfix"></div>
+                <?php if ($_additional = $this->getLayout()->getBlock('product.attributes')->toHtml()): ?>
+                    <?php echo $_additional; ?>
+                <?php endif; ?>
             </div>
 
             <div class="short-description">
@@ -177,10 +178,6 @@
         <li><a href="#tab-box-description"><span><?php echo $this->__('Product Info') ?></span></a></li>
         <?php endif ?>
 
-        <?php if ($_additional = $this->getChildHtml('additional')):?>
-        <li><a href="#tab-box-additional"><span><?php echo $this->__('Additional Info') ?></span></a></li>
-        <?php endif ?>
-
         <?php if($_product->getDescrBrandtext()): ?>
         <li><a href="#tab-box-brand"><span><?php echo $this->__('Brand') ?></span></a></li>
         <?php endif ?>
@@ -190,15 +187,9 @@
     </ul>
 
     <?php if ($_description):?>
-    <div id="tab-box-description" class="box-collateral">
-       <?php echo $_description ?>
-    </div>
-    <?php endif;?>
-
-    <?php if ($_additional):?>
-    <div id="tab-box-additional" class="box-collateral box-additional">
-        <div class="layout-seo-fixer"></div>
-    </div>
+        <div id="tab-box-description" class="box-collateral">
+           <?php echo $_description ?>
+        </div>
     <?php endif;?>
 
     <div id="tab-box-reviews" class="box-collateral">

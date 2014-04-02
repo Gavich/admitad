@@ -32,9 +32,6 @@
 ?>
 <?php $_description = $this->getProduct()->getDescription(); ?>
 <?php if ($_description): ?>
-	<div class="title-product-view"> 
-    <!--<h2><?php echo $this->__('Product Detailed Info') ?></h2>-->
-    </div>
     <div class="std">
         <?php echo $this->helper('catalog/output')->productAttribute($this->getProduct(), $_description, 'description') ?>
     </div>

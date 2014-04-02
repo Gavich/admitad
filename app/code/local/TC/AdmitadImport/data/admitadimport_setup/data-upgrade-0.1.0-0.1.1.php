@@ -63,3 +63,5 @@ foreach ($attributes as $attributeCode) {
     );
     $attributeModel->setApplyTo(array())->save();
 }
+
+$this->endSetup();

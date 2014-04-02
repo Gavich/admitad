@@ -1,0 +1,30 @@
+<?php /* @var $this Mage_Catalog_Block_Product_View_Options_Type_Select */ ?>
+<?php $_option = $this->getOption() ?>
+
+<?php if ($_option->getTitle() !== $this->__('Size') && $_option->getTitle() !== $this->__('Sizes')):?>
+    <dt>
+        <label<?php if ($_option->getIsRequire()):?> class="required" <?php endif;?>>
+            <?php if ($_option->getIsRequire()):?>
+                <em>*</em>
+            <?php endif;?>
+    <?php echo $this->escapeHtml($_option->getTitle()) ?></label></dt>
+    <dd<?php if ($_option->decoratedIsLast) { ?> class="last"<?php } ?>>
+        <div class="input-box">
+            <?php echo $this->getValuesHtml() ?>
+            <?php if ($_option->getIsRequire()): ?>
+                <?php if ($_option->getType() == Mage_Catalog_Model_Product_Option::OPTION_TYPE_RADIO
+                    || $_option->getType() == Mage_Catalog_Model_Product_Option::OPTION_TYPE_CHECKBOX
+                ): ?>
+                    <span id="options-<?php echo $_option->getId() ?>-container"></span>
+                <?php endif; ?>
+            <?php endif; ?>
+        </div>
+    </dd>
+<?php else: ?>
+    <dt></dt>
+    <dd<?php if ($_option->decoratedIsLast) { ?> class="last"<?php } ?>>
+        <label><?php echo $this->__('Sizes');?>:</label>
+        <?php $values = array_map(function($value){ return $value->getTitle();}, $_option->getValues()); ?>
+        <?php echo implode(', ', $values); ?>
+    </dd>
+<?php endif; ?>
