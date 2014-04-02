@@ -41,7 +41,7 @@ function magejump(targ,selObj,restore){
 //-->
 </script>
 <select name="magestp" id="magestp" onChange="magejump('parent',this,0)">
-<option value=""> -- SELECT --</option>
+<option value=""><?php echo $this->__('-- Select --'); ?></option>
 <?php foreach ($this->getItems() as $_item): ?>
 <option value="<?php echo $this->urlEscape($_item->getUrl()) ?>"><?php echo $_item->getLabel() ?> (<?php echo $_item->getCount() ?>)</option>
 <?php endforeach ?>

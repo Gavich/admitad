@@ -1073,7 +1073,7 @@ p.required{
     float:left;
     nowhitespace:afterproperty;
     margin:2px 0 0;
-    padding: 0 180px 0 0;
+    padding: 0 170px 0 0;
     height:22px;
 }
 .sorter .limiter{
@@ -3492,6 +3492,8 @@ tr.summary-details-excluded{
 .tag-product-list .page-title{
 	padding:6px 20px 7px;
 }
+
+.catalogsearch-result-index .products-list .product-image,
 .catalog-category-view .products-list .product-image{
 	border:1px solid #E5E5E5;
 	padding:10px;
@@ -3538,6 +3540,7 @@ tr.summary-details-excluded{
 	-webkit-box-shadow:0 0 5px #E5E5E5;
 	box-shadow:0 0 5px #E5E5E5;
 	}*/
+.catalogsearch-result-index .products-grid .cls_wrapper,
 .catalog-category-view .products-grid .cls_wrapper,
 .tag-product-list .products-container .cls_wrapper{
 	color:#FF8A00;
@@ -3566,6 +3569,8 @@ tr.summary-details-excluded{
 .catalog-category-view .col3-layout .col-main ul.products-grid{
 	width:442px;
 }
+
+.catalogsearch-result-index .col-main ol.products-list li.item,
 .catalog-category-view .col-main ol.products-list li.item,
 .tag-product-list .col-main .products-list li.item{
 	width:680px;
@@ -4023,6 +4028,7 @@ tr.summary-details-excluded{
 	margin-right:3px;
 }
 
+.catalogsearch-result-index .price-label,
 .catalog-category-view .price-label {
     background: none;
     float: none;
@@ -4030,6 +4036,7 @@ tr.summary-details-excluded{
     padding:0;
 }
 
+.catalogsearch-result-index .regular-price,
 .catalog-category-view .regular-price {
     width: auto;
     float: none;
@@ -4039,12 +4046,20 @@ tr.summary-details-excluded{
 .catalog-category-view .old-price {
     width: 50%;
 }
+.catalogsearch-result-index .products-list .special-price,
+.catalogsearch-result-index .products-list .old-price {
+    width: 47%;
+}
 
+.catalogsearch-result-index .special-price .price,
+.catalogsearch-result-index .old-price .price,
 .catalog-category-view .special-price .price,
 .catalog-category-view .old-price .price {
     float: none;
     font-size: 14px;
 }
+
+.catalogsearch-result-index .old-price .price,
 .catalog-category-view .old-price .price {
     font-size: 12px;
 }
@@ -8363,7 +8378,6 @@ ul.form-list li.inputbox{
 .catalogsearch-result-index .products-list .product-special-price,
 .catalogsearch-result-index .products-grid .product-topproduct,
 .catalogsearch-result-index .products-list .product-topproduct,
-.catalogsearch-result-index .products-grid .add-to-links,
 .col-right #tabs .ui-tabs-panel ul li.item div.ratings,
 /*.catalog-category-view .products-container .add-to-links,*/
 /*.catalog-category-view .products-container .actions,*/
@@ -8686,8 +8700,7 @@ a.previous:hover{
 }
 .cms-home .product-wrapper,
 .cms-home  .std-topproduct .product-wrapper,
-.cms-home  .std-salesproduct .product-wrapper,
-.catalogsearch-result-index .cls_wrapper{
+.cms-home  .std-salesproduct .product-wrapper{
 	clear:both;
 	float:left;
 	margin:8px 0 0;
@@ -8780,14 +8793,6 @@ a.previous:hover{
 }
 .slideshow-box .items{
 	position:relative;
-}
-.catalogsearch-result-index .old-price,
-.catalogsearch-result-index .special-price{
-	display:inline;
-	margin-right:20px;
-}
-.catalogsearch-result-index .special-price{
-	margin-right:0px;
 }
 .catalogsearch-result-index .featured-products-block .product-image{
 	float:left;
