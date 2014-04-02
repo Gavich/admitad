@@ -16,6 +16,14 @@
     $_product = $this->getProduct()
 ?>
 <?php if($_additional = $this->getAdditionalData()): ?>
+    <?php
+        if(isset($_additional['color'])) {
+            $color = $_additional['color'];
+            unset($_additional['color']);
+            array_unshift($_additional, $color);
+        }
+    ?>
+
     <ul class="product-attributes-list">
         <?php foreach ($_additional as $_data): ?>
             <?php if ($_data['value'] == 'N/A' || $_data['value'] == 'No') continue ?>
