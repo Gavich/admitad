@@ -24,7 +24,6 @@
     <dt></dt>
     <dd<?php if ($_option->decoratedIsLast) { ?> class="last"<?php } ?>>
         <label><?php echo $this->__('Sizes');?>:</label>
-        <?php $values = array_map(function($value){ return $value->getTitle();}, $_option->getValues()); ?>
-        <?php echo implode(', ', $values); ?>
+        <?php echo $this->__('All Sizes'); ?>
     </dd>
 <?php endif; ?>
