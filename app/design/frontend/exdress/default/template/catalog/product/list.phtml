@@ -69,9 +69,9 @@
                             <?php if($_compareUrl=$this->getAddToCompareUrl($_product)): ?>
                                 <li><a href="<?php echo $_compareUrl ?>" class="link-compare"><?php echo $this->__('Compare') ?></a></li>
                             <?php endif; ?>
-                            <?php if($_product->isSaleable()): ?>
+                            <?php /*if($_product->isSaleable()): ?>
                                 <li><a href="<?php echo $this->getAddToCartUrl($_product) ?>" class="link-addtocart" title="<?php echo $this->__('Add to Cart') ?>"><?php echo $this->__('cart') ?></a></li>
-                            <?php endif; ?>
+                            <?php endif;*/ ?>
                         </ul>
                     </div>
                 </div>
@@ -131,6 +131,7 @@
                                 <?php if($_compareUrl=$this->getAddToCompareUrl($_product)): ?>
                                     <li></span><a href="<?php echo $_compareUrl ?>" class="link-compare"><?php echo $this->__('Compare') ?></a></li>
                                 <?php endif; ?>
+                                <?php /*
                                 <li>
                                     <?php if($_product->isSaleable()): ?>
                                         <p>
@@ -142,6 +143,7 @@
                                         </p>
                                     <?php endif; ?>
                                 </li>
+                                */ ?>
                             </ul>
                             <div style="clear:both;"></div>
                             <a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $_product->getName();?>" class="cover"></a>
