@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <TC_Seo>
+            <version>0.1.0</version>
+        </TC_Seo>
+    </modules>
+    <global>
+    </global>
+</config>
