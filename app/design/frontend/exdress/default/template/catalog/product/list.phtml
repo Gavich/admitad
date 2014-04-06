@@ -12,6 +12,7 @@
  */
 ?>
 <?php
+    $nofollow = Mage::helper('tc_seo')->isProductLinksNoFollowed() ? 'rel="nofollow"' : '';
     $_productCollection=$this->getLoadedProductCollection();
     $_helper = $this->helper('catalog/output');
 ?>
@@ -32,13 +33,13 @@
             <li class="item<?php if( ++$_iterator == sizeof($_productCollection) ): ?> last<?php endif; ?>">
                 <?php // Product Image ?>
                 <div class="cls_pro_wrap">
-                    <a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" class="product-image"><img src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->resize(178,273); ?>" width="178" height="273" alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" /></a>
+                    <a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" class="product-image" <?php echo $nofollow; ?>><img src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->resize(178,273); ?>" width="178" height="273" alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" /></a>
                 </div>
                 <?php // Product description ?>
                 <div class="product-shop">
                     <div class="f-fix">
                         <?php $_productNameStripped = $this->stripTags($_product->getName(), null, true); ?>
-                        <h2 class="product-name"><a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $_productNameStripped; ?>"><?php echo $_productNameStripped; ?></a></h2>
+                        <h2 class="product-name"><a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $_productNameStripped; ?>" <?php echo $nofollow; ?>><?php echo $_productNameStripped; ?></a></h2>
                         <div class="product-brand">
                             <?php // get manufacturer brand-image
                                 if ($_product->getManufacturer()):?>
@@ -94,7 +95,7 @@
                         <div class="view view-first">
                             <a href="<?php echo $_product->getProductUrl() ?>"
                                title="<?php echo $this->stripTags($_product->getName(), null, true) ?>"
-                               class="product-image"
+                               class="product-image" <?php echo $nofollow; ?>
                             >
                                 <img src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->resize(192, 273); ?>"
                                      width="192" height="273"
@@ -105,7 +106,9 @@
                         </div>
                         <div class="cls_wrapper">
                             <h2 class="product-name">
-                                <a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $_product->getName();?>"><?php echo $_product->getName(); ?></a>
+                                <a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $_product->getName();?>" <?php echo $nofollow; ?>>
+                                    <?php echo $_product->getName(); ?>
+                                </a>
                             </h2>
                             <?php if($_product->getRatingSummary()): ?>
                                 <?php echo $this->getReviewsSummaryHtml($_product, 'short', false) ?>
@@ -146,7 +149,7 @@
                                 */ ?>
                             </ul>
                             <div style="clear:both;"></div>
-                            <a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $_product->getName();?>" class="cover"></a>
+                            <a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $_product->getName();?>" class="cover" <?php echo $nofollow; ?>></a>
                         </div>
                     </div>
                 </li>

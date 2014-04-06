@@ -65,7 +65,7 @@
                     </action>
                 </block>
             </block>
-            <block type="tccatalog/robots" name="catalog.robots" />
+            <block type="tc_seo/robots" name="tc_seo.robots" />
         </reference>
     </catalog_category_default>
 
@@ -121,7 +121,7 @@
                 </block>
             </block>
         </reference>
-        <block type="tccatalog/robots" name="catalog.robots" />
+        <block type="tc_seo/robots" name="tc_seo.robots" />
     </catalog_category_layered>
 
     <catalog_product_compare_index translate="label">
@@ -165,7 +165,7 @@ Product view
             <action method="addItem"><type>js</type><name>calendar/calendar-setup.js</name><!--<params/><if/><condition>can_load_calendar_js</condition>--></action>
         </reference>
         <reference name="content">
-            <block type="tccatalog/robots" name="catalog.robots" />
+            <block type="tc_seo/robots" name="tc_seo.robots" />
             <block type="catalog/product_view" name="product.info" template="catalog/product/view.phtml">
                 <!--
                 <action method="addReviewSummaryTemplate"><type>default</type><template>review/helper/summary.phtml</template></action>
@@ -278,8 +278,7 @@ Additional block dependant on product type
             </block>
         </reference>
         <reference name="product.info.options.wrapper">
-            <!--block type="catalog/product_view_type_configurable" name="product.info.options.configurable" as="options_configurable" before="-" template="catalog/product/view/type/options/configurable.phtml"/-->
-            <block type="tccatalog/configurable" name="product.info.options.configurable" as="options_configurable" before="-" template="catalog/product/view/type/options/configurable.phtml"/>
+            <block type="catalog/product_view_type_configurable" name="product.info.options.configurable" as="options_configurable" before="-" template="catalog/product/view/type/options/configurable.phtml"/>
         </reference>
     </PRODUCT_TYPE_configurable>
     <PRODUCT_TYPE_grouped translate="label" module="catalog">

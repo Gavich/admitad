@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <TC_Seo>
+            <active>true</active>
+            <codePool>local</codePool>
+        </TC_Seo>
+    </modules>
+</config>

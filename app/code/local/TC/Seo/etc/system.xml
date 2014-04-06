@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+
+<config>
+    <sections>
+        <catalog>
+            <groups>
+                <seo>
+                    <fields>
+                        <close_category_wo_desc_pages translate="label">
+                            <label>Close category without description pages</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>31</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </close_category_wo_desc_pages>
+                        <close_category_pages translate="label">
+                            <label>Close category pages</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>32</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </close_category_pages>
+                        <category_pagination_pages translate="label">
+                            <label>Close category pagination pages</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>34</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </category_pagination_pages>
+                        <close_product_pages translate="label">
+                            <label>Close product pages</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>35</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </close_product_pages>
+                            <nofollow_attribute translate="label">
+                            <label>Enable NOFOLLOW on product links</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>36</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </nofollow_attribute>
+                    </fields>
+                </seo>
+            </groups>
+        </catalog>
+    </sections>
+</config>
