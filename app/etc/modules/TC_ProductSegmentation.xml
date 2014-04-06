@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <TC_ProductSegmentation>
+            <active>true</active>
+            <codePool>local</codePool>
+        </TC_ProductSegmentation>
+    </modules>
+</config>
