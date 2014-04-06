@@ -1,6 +1,11 @@
 <?php
 
-class TC_Catalog_Model_Observer
+/**
+ * @category   TC
+ * @package    TC_Seo
+ * @author     Alexandr Smaga <smagaan@gmail.com>
+ */
+class TC_Seo_Model_Observer
 {
     /**
      * Process redirect if p=1 found in request, event catalog_controller_category_init_after

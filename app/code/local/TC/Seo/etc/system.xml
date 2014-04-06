@@ -6,16 +6,7 @@
             <groups>
                 <seo>
                     <fields>
-                        <close_product_pages translate="label">
-                            <label>Close product pages</label>
-                            <frontend_type>select</frontend_type>
-                            <source_model>adminhtml/system_config_source_yesno</source_model>
-                            <sort_order>30</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                        </close_product_pages>
-                        <close_categry_wo_desc_pages translate="label">
+                        <close_category_wo_desc_pages translate="label">
                             <label>Close category without description pages</label>
                             <frontend_type>select</frontend_type>
                             <source_model>adminhtml/system_config_source_yesno</source_model>
@@ -23,7 +14,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                        </close_categry_wo_desc_pages>
+                        </close_category_wo_desc_pages>
                         <close_category_pages translate="label">
                             <label>Close category pages</label>
                             <frontend_type>select</frontend_type>
@@ -51,7 +42,7 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                         </close_product_pages>
-                        <nofollow_attribute translate="label">
+                            <nofollow_attribute translate="label">
                             <label>Enable NOFOLLOW on product links</label>
                             <frontend_type>select</frontend_type>
                             <source_model>adminhtml/system_config_source_yesno</source_model>
