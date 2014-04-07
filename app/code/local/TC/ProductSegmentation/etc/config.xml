@@ -45,4 +45,13 @@
             </translate>
         </adminhtml>
     </global>
+    <adminhtml>
+        <layout>
+            <updates>
+                <tc_productsegmentation>
+                    <file>tc_product_segmentation.xml</file>
+                </tc_productsegmentation>
+            </updates>
+        </layout>
+    </adminhtml>
 </config>

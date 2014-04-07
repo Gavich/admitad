@@ -19,8 +19,8 @@ class TC_ProductSegmentation_Block_Adminhtml_Catalog_Category_Tab_Product
             ->setData(
                 array(
                      'label'   => Mage::helper('adminhtml')->__('Segmentation'),
-                     'onclick' => $this->getJsObjectName() . '.doSegment()',
-                     'class'   => 'go'
+                     'onclick' => $this->_getBuilderJsObjectName() . '.build()',
+                     'class'   => 'go segmentation-btn'
                 )
             );
 
@@ -50,5 +50,27 @@ class TC_ProductSegmentation_Block_Adminhtml_Catalog_Category_Tab_Product
         $html .= parent::getMainButtonsHtml();
 
         return $html;
+    }
+
+    /**
+     * Returns JS for segmentation builder
+     *
+     * @return string
+     */
+    public function getAdditionalJavaScript()
+    {
+        $options = array();
+
+        return sprintf('var %s = new SegmentationBuilder(%s)', $this->_getBuilderJsObjectName(), json_encode($options));
+    }
+
+    /**
+     * Returns unique js object name for segmentation builder
+     *
+     * @return string
+     */
+    protected function _getBuilderJsObjectName()
+    {
+        return $this->getId() . 'segmentation';
     }
 }
