@@ -27,6 +27,13 @@
                 </observers>
             </catalog_controller_category_init_after>
         </events>
+        <models>
+            <catalog>
+                <rewrite>
+                    <url>TC_Seo_Model_Catalog_Url</url>
+                </rewrite>
+            </catalog>
+        </models>
     </global>
     <adminhtml>
         <translate>
