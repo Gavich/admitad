@@ -30,22 +30,21 @@
             <tc_productsegmentation_setup>
                 <setup>
                     <module>TC_ProductSegmentation</module>
+                    <class>Mage_Eav_Model_Entity_Setup</class>
                 </setup>
             </tc_productsegmentation_setup>
         </resources>
-        <adminhtml>
-            <translate>
-                <modules>
-                    <TC_ProductSegmentation>
-                        <files>
-                            <default>TC_ProductSegmentation.csv</default>
-                        </files>
-                    </TC_ProductSegmentation>
-                </modules>
-            </translate>
-        </adminhtml>
     </global>
     <adminhtml>
+        <translate>
+            <modules>
+                <TC_ProductSegmentation>
+                    <files>
+                        <default>TC_ProductSegmentation.csv</default>
+                    </files>
+                </TC_ProductSegmentation>
+            </modules>
+        </translate>
         <layout>
             <updates>
                 <tc_productsegmentation>

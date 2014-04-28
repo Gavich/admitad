@@ -1,0 +1,36 @@
+<?php $element = $this->getElement() ?>
+<style type="text/css">
+    #segmentation-rules-tree {
+        padding: 20px;
+    }
+
+    #segmentation-rules-tree h4 {
+        margin-bottom: 15px;
+        padding-bottom: 5px;
+        border-bottom: 2px solid #dfdfdf;
+    }
+</style>
+<div id="segmentation-rules-tree-wrap" style="display: none;">
+    <div class="rule-tree" id="segmentation-rules-tree">
+        <div class="entry-edit-head">
+            <h4 class="icon-head head-edit-form fieldset-legend"><?php echo $element->getLegend() ?></h4>
+        </div>
+        <form id="<?php echo $element->getHtmlId() ?>" >
+            <fieldset   <?php echo $element->serialize(array('class')) ?>>
+                <?php if ($element->getComment()): ?>
+                    <p class="comment"><?php echo $this->escapeHtml($element->getComment()) ?></p>
+                <?php endif; ?>
+                <?php echo $element->getChildrenHtml() ?>
+            </fieldset>
+        </form>
+    </div>
+    <script type="text/javascript">
+        var TC = TC || {};
+        TC.segmentation = {
+            formHTMLId: '<?php echo $element->getHtmlId() ?>',
+            rulesNewChildURL: '<?php echo $this->getNewChildUrl() ?>',
+            wrapHTMLId: 'segmentation-rules-tree-wrap',
+            HTMLId: 'segmentation-rules-tree'
+        };
+    </script>
+</div>
