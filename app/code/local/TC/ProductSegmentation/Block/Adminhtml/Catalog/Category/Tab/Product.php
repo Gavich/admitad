@@ -20,6 +20,7 @@ class TC_ProductSegmentation_Block_Adminhtml_Catalog_Category_Tab_Product
      */
     protected function _prepareLayout()
     {
+        parent::_prepareLayout();
         $button = $this->getLayout()->createBlock('adminhtml/widget_button')
             ->setData(
                 array(
@@ -31,9 +32,30 @@ class TC_ProductSegmentation_Block_Adminhtml_Catalog_Category_Tab_Product
 
         $this->setChild('segmentation_button', $button);
 
+        $helper = Mage::helper('tc_productsegmentation');
+        $select = new Varien_Data_Form_Element_Select();
+        $select
+            ->setForm(new Varien_Data_Form())
+            ->setName('use_segment')
+            ->setValues(array(
+                 TC_ProductSegmentation_Helper_Data::ACTION_NONE         => $helper->__('Nothing'),
+                 TC_ProductSegmentation_Helper_Data::ACTION_INTERSECTION => $helper->__('Intersection with segment'),
+                 TC_ProductSegmentation_Helper_Data::ACTION_DIFFERENCE   => $helper->__('Difference with segment'),
+            ));
+        $this->setData('use_segment', $select);
+
+        $resetButton  = $this->getChild('reset_filter_button');
+        $resetButton->setData(
+            'onclick', sprintf('%s.resetFilter(%s)', $this->_getBuilderJsObjectName(), $this->getJsObjectName())
+        );
+        $filterButton = $this->getChild('search_button');
+        $filterButton->setData(
+            'onclick', sprintf('%s.doFilter(%s)', $this->_getBuilderJsObjectName(), $this->getJsObjectName())
+        );
+
         $this->_prepareForm();
 
-        return parent::_prepareLayout();
+        return $this;
     }
 
     /**
@@ -69,7 +91,7 @@ class TC_ProductSegmentation_Block_Adminhtml_Catalog_Category_Tab_Product
         $data = $this->getCategory()->getData(self::SEGMENT_DATA_ATTRIBUTE_CODE);
         $rule = array();
         parse_str($data, $rule);
-        $model->loadPost($rule && isset($rule['rule']) ?$rule['rule'] : array());
+        $model->loadPost($rule && isset($rule['rule']) ? $rule['rule'] : array());
         $form = new Varien_Data_Form();
 
         $form->setHtmlIdPrefix('rule_');
@@ -80,18 +102,18 @@ class TC_ProductSegmentation_Block_Adminhtml_Catalog_Category_Tab_Product
 
         $fieldSet = $form->addFieldset(
             'conditions_fieldset', array(
-                'legend' => Mage::helper('catalogrule')->__(
-                    'Conditions (leave blank for all products)'
-                ))
+            'legend' => Mage::helper('catalogrule')->__(
+                'Conditions (leave blank for all products)'
+            ))
         )->setRenderer($renderer);
 
         $fieldSet->addField(
             'conditions', 'text', array(
-               'name'     => 'conditions',
-               'label'    => Mage::helper('catalogrule')->__('Conditions'),
-               'title'    => Mage::helper('catalogrule')->__('Conditions'),
-               'required' => true,
-          )
+                   'name'     => 'conditions',
+                   'label'    => Mage::helper('catalogrule')->__('Conditions'),
+                   'title'    => Mage::helper('catalogrule')->__('Conditions'),
+                   'required' => true,
+              )
         )
             ->setData('rule', $model)
             ->setRenderer(Mage::getBlockSingleton('rule/conditions'));
@@ -118,7 +140,9 @@ class TC_ProductSegmentation_Block_Adminhtml_Catalog_Category_Tab_Product
      */
     public function getMainButtonsHtml()
     {
-        $html = $this->geSegmentationButtonHtml();
+        $html = sprintf('<label>%s:&nbsp</label>', Mage::helper('tc_productsegmentation')->__('Filter using segment'));
+        $html .= $this->getData('use_segment')->getElementHtml();
+        $html .= $this->geSegmentationButtonHtml();
         $html .= parent::getMainButtonsHtml();
 
         return $html;

@@ -1,6 +1,8 @@
 var SegmentationBuilder = new Class.create();
 
 SegmentationBuilder.prototype = {
+    definitionElSelector: 'input[name="general[segment_data]"]',
+    segmentFilterElSelector: 'select[name="use_segment"]',
 
     initialize: function () {
     },
@@ -11,7 +13,7 @@ SegmentationBuilder.prototype = {
     build: function () {
         var wrapEl = document.getElementById(TC.segmentation.wrapHTMLId),
             el = document.getElementById(TC.segmentation.HTMLId),
-            $hiddenValueEl = $$('input[name="general[segment_data]"]')[0];
+            $hiddenValueEl = $$(this.definitionElSelector)[0];
 
         Dialog.info('', {
             draggable: true,
@@ -40,6 +42,27 @@ SegmentationBuilder.prototype = {
         if (!el.ruleObject) {
             // create rules object once
             el.ruleObject = new VarienRulesForm(TC.segmentation.formHTMLId, TC.segmentation.rulesNewChildURL);
+        }
+    },
+
+    resetFilter: function (gridObj) {
+        gridObj.reload(gridObj.addVarToUrl(gridObj.filterVar, ''));
+        $$(this.segmentFilterElSelector)[0].setValue('none');
+    },
+
+    doFilter: function (gridObj) {
+        var filters = $$(
+            '#' + gridObj.containerId + ' .filter input',
+            '#' + gridObj.containerId + ' .filter select',
+            this.definitionElSelector,
+            this.segmentFilterElSelector
+        );
+        var elements = [];
+        for (var i in filters) {
+            if (filters[i].value && filters[i].value.length) elements.push(filters[i]);
+        }
+        if (!gridObj.doFilterCallback || (gridObj.doFilterCallback && gridObj.doFilterCallback())) {
+            gridObj.reload(gridObj.addVarToUrl(gridObj.filterVar, encode_base64(Form.serializeElements(elements))));
         }
     }
 };

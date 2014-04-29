@@ -1,2 +1,6 @@
 "Segmentation", "Сегментация"
 "Segmentation builder", "Создание сегмента"
+"Nothing", "Нет"
+"Intersection with segment", "Попадают в сегмент"
+"Difference with segment", "Не попадают в сегмент"
+"Filter using segment", "Фильтровать используя сегмент"
