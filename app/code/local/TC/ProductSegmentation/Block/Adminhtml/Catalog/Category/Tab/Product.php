@@ -30,7 +30,7 @@ class TC_ProductSegmentation_Block_Adminhtml_Catalog_Category_Tab_Product
 
         $this->setChild('segmentation_button', $button);
 
-        $helper = Mage::helper('tc_productsegmentation');
+        $helper = $this->_getHelper();
         $select = new Varien_Data_Form_Element_Select();
         $select
             ->setForm(new Varien_Data_Form())
@@ -40,8 +40,9 @@ class TC_ProductSegmentation_Block_Adminhtml_Catalog_Category_Tab_Product
                  TC_ProductSegmentation_Helper_Data::ACTION_INTERSECTION => $helper->__('Intersection with segment'),
                  TC_ProductSegmentation_Helper_Data::ACTION_DIFFERENCE   => $helper->__('Difference with segment'),
             ));
-        $this->setData('use_segment', $select);
+        $this->setData('use_segment_selector', $select);
 
+        // override buttons onclick in order to handle grid actions inside segmentation object
         $resetButton  = $this->getChild('reset_filter_button');
         $resetButton->setData(
             'onclick', sprintf('%s.resetFilter(%s)', $this->_getBuilderJsObjectName(), $this->getJsObjectName())
@@ -70,8 +71,9 @@ class TC_ProductSegmentation_Block_Adminhtml_Catalog_Category_Tab_Product
         $useSegmentValue = isset($data['use_segment'])
             ? $data['use_segment']
             : TC_ProductSegmentation_Helper_Data::ACTION_NONE;
-        $this->getData('use_segment')->setValue($useSegmentValue);
 
+        // populate selector value
+        $this->getData('use_segment_selector')->setValue($useSegmentValue);
         if (isset($data['general'], $data['general']['segment_data'])
             && $useSegmentValue !== TC_ProductSegmentation_Helper_Data::ACTION_NONE
         ) {
@@ -134,14 +136,12 @@ class TC_ProductSegmentation_Block_Adminhtml_Catalog_Category_Tab_Product
             ))
         )->setRenderer($renderer);
 
-        $fieldSet->addField(
-            'conditions', 'text', array(
-                   'name'     => 'conditions',
-                   'label'    => Mage::helper('catalogrule')->__('Conditions'),
-                   'title'    => Mage::helper('catalogrule')->__('Conditions'),
-                   'required' => true,
-              )
-        )
+        $fieldSet->addField('conditions', 'text', array(
+               'name'     => 'conditions',
+               'label'    => Mage::helper('catalogrule')->__('Conditions'),
+               'title'    => Mage::helper('catalogrule')->__('Conditions'),
+               'required' => true,
+          ))
             ->setData('rule', $model)
             ->setRenderer(Mage::getBlockSingleton('rule/conditions'));
 
@@ -200,7 +200,7 @@ class TC_ProductSegmentation_Block_Adminhtml_Catalog_Category_Tab_Product
     protected function _getSegmentFilterHtml()
     {
         $html = sprintf('<label>%s:&nbsp</label>', Mage::helper('tc_productsegmentation')->__('Filter using segment'));
-        $html .= $this->getData('use_segment')->getElementHtml();
+        $html .= $this->getData('use_segment_selector')->getElementHtml();
 
         return $html;
     }

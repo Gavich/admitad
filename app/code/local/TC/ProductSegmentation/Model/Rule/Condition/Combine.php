@@ -17,7 +17,7 @@ class TC_ProductSegmentation_Model_Rule_Condition_Combine extends Mage_Rule_Mode
     }
 
     /**
-     * Returns options needed to build "New child" in connditions
+     * Returns options needed to build "New child" in conditions
      *
      * @return array
      */
@@ -48,7 +48,7 @@ class TC_ProductSegmentation_Model_Rule_Condition_Combine extends Mage_Rule_Mode
     }
 
     /**
-     * Prepare sql where by condition
+     * Prepare sql where by condition, override to encapsulate TRUE or FALSE value logic inside condition
      *
      * @return string
      */
