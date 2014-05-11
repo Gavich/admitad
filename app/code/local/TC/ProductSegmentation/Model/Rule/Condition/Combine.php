@@ -34,17 +34,31 @@ class TC_ProductSegmentation_Model_Rule_Condition_Combine extends Mage_Rule_Mode
         }
         $conditions = parent::getNewChildSelectOptions();
         $conditions = array_merge_recursive($conditions, array(
-                  array(
-                      'value' => 'tc_productsegmentation/rule_condition_combine',
-                      'label' => Mage::helper('catalogrule')->__('Conditions Combination')
-                  ),
-                  array(
-                      'value' => $attributes,
-                      'label' => Mage::helper('catalogrule')->__('Product Attribute')
-                  ),
-             )
-        );
+              array(
+                  'value' => 'tc_productsegmentation/rule_condition_combine',
+                  'label' => Mage::helper('catalogrule')->__('Conditions Combination')
+              ),
+              array(
+                  'value' => $attributes,
+                  'label' => Mage::helper('catalogrule')->__('Product Attribute')
+              ),
+         ));
 
         return $conditions;
+    }
+
+    /**
+     * Prepare sql where by condition
+     *
+     * @return string
+     */
+    public function prepareConditionSql()
+    {
+        $where = parent::prepareConditionSql();
+        if (!empty($where) && !(bool)$this->getValue()) {
+            return 'NOT ' . $where;
+        }
+
+        return $where;
     }
 }

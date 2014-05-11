@@ -10,7 +10,7 @@ $this->startSetup();
 
 $this->addAttribute(
     Mage_Catalog_Model_Category::ENTITY,
-    TC_ProductSegmentation_Block_Adminhtml_Catalog_Category_Tab_Product::SEGMENT_DATA_ATTRIBUTE_CODE,
+    TC_ProductSegmentation_Helper_Data::SEGMENT_DATA_ATTRIBUTE_CODE,
     array(
          'type'       => 'text',
          'label'      => 'Segment data',

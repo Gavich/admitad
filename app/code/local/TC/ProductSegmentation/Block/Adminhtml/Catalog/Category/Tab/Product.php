@@ -8,8 +8,6 @@
 class TC_ProductSegmentation_Block_Adminhtml_Catalog_Category_Tab_Product
     extends Mage_Adminhtml_Block_Catalog_Category_Tab_Product
 {
-    const SEGMENT_DATA_ATTRIBUTE_CODE = 'segment_data';
-
     /** @var Varien_Data_Form */
     protected $_form;
 
@@ -24,7 +22,7 @@ class TC_ProductSegmentation_Block_Adminhtml_Catalog_Category_Tab_Product
         $button = $this->getLayout()->createBlock('adminhtml/widget_button')
             ->setData(
                 array(
-                     'label'   => Mage::helper('adminhtml')->__('Segmentation'),
+                     'label'   => Mage::helper('adminhtml')->__('Configure segment'),
                      'onclick' => $this->_getBuilderJsObjectName() . '.build()',
                      'class'   => 'go segmentation-btn'
                 )
@@ -59,6 +57,37 @@ class TC_ProductSegmentation_Block_Adminhtml_Catalog_Category_Tab_Product
     }
 
     /**
+     * Override to do additional work with filters
+     *
+     * @param array $data
+     *
+     * @return void
+     */
+    protected function _setFilterValues($data)
+    {
+        parent::_setFilterValues($data);
+
+        $useSegmentValue = isset($data['use_segment'])
+            ? $data['use_segment']
+            : TC_ProductSegmentation_Helper_Data::ACTION_NONE;
+        $this->getData('use_segment')->setValue($useSegmentValue);
+
+        if (isset($data['general'], $data['general']['segment_data'])
+            && $useSegmentValue !== TC_ProductSegmentation_Helper_Data::ACTION_NONE
+        ) {
+            /** @var $model TC_ProductSegmentation_Model_Rule */
+            $model = Mage::getModel('tc_productsegmentation/rule');
+            /** @var Mage_Catalog_Model_Category $tmpCategory */
+            $tmpCategory = Mage::getModel('catalog/category')->setData(
+                TC_ProductSegmentation_Helper_Data::SEGMENT_DATA_ATTRIBUTE_CODE,
+                $data['general']['segment_data']
+            );
+            $model->loadPost($this->_getHelper()->getCategorySegmentData($tmpCategory));
+            $this->_getHelper()->applyConditions($this->getCollection(), $model, $useSegmentValue);
+        }
+    }
+
+    /**
      * Append form html to the end of output
      *
      * @param string $html
@@ -86,15 +115,13 @@ class TC_ProductSegmentation_Block_Adminhtml_Catalog_Category_Tab_Product
         $head->setCanLoadRulesJs(true);
         /** @var $model TC_ProductSegmentation_Model_Rule */
         $model = Mage::getModel('tc_productsegmentation/rule');
+        $model->loadPost($this->_getHelper()->getCategorySegmentData($this->getCategory()));
         $model->getConditions()->setJsFormObject('rule_conditions_fieldset');
+        $model->setJsFormObject('rule_conditions_fieldset');
 
-        $data = $this->getCategory()->getData(self::SEGMENT_DATA_ATTRIBUTE_CODE);
-        $rule = array();
-        parse_str($data, $rule);
-        $model->loadPost($rule && isset($rule['rule']) ? $rule['rule'] : array());
         $form = new Varien_Data_Form();
-
         $form->setHtmlIdPrefix('rule_');
+        $form->setBaseUrl(Mage::getBaseUrl());
 
         $renderer = Mage::getBlockSingleton('adminhtml/widget_form_renderer_fieldset')
             ->setTemplate('tc/productsegmentation/renderer/fieldset.phtml')
@@ -118,8 +145,6 @@ class TC_ProductSegmentation_Block_Adminhtml_Catalog_Category_Tab_Product
             ->setData('rule', $model)
             ->setRenderer(Mage::getBlockSingleton('rule/conditions'));
 
-        $form->setBaseUrl(Mage::getBaseUrl());
-
         $this->_form = $form;
     }
 
@@ -140,8 +165,7 @@ class TC_ProductSegmentation_Block_Adminhtml_Catalog_Category_Tab_Product
      */
     public function getMainButtonsHtml()
     {
-        $html = sprintf('<label>%s:&nbsp</label>', Mage::helper('tc_productsegmentation')->__('Filter using segment'));
-        $html .= $this->getData('use_segment')->getElementHtml();
+        $html = $this->_getSegmentFilterHtml();
         $html .= $this->geSegmentationButtonHtml();
         $html .= parent::getMainButtonsHtml();
 
@@ -166,5 +190,28 @@ class TC_ProductSegmentation_Block_Adminhtml_Catalog_Category_Tab_Product
     protected function _getBuilderJsObjectName()
     {
         return $this->getId() . '_segmentation';
+    }
+
+    /**
+     * Returns segment filter HTML
+     *
+     * @return string
+     */
+    protected function _getSegmentFilterHtml()
+    {
+        $html = sprintf('<label>%s:&nbsp</label>', Mage::helper('tc_productsegmentation')->__('Filter using segment'));
+        $html .= $this->getData('use_segment')->getElementHtml();
+
+        return $html;
+    }
+
+    /**
+     * Getter for helper object
+     *
+     * @return TC_ProductSegmentation_Helper_Data
+     */
+    protected function _getHelper()
+    {
+        return Mage::helper('tc_productsegmentation');
     }
 }

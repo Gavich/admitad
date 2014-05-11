@@ -1,6 +1,8 @@
 var SegmentationBuilder = new Class.create();
 
 SegmentationBuilder.prototype = {
+    SEGMENT_FILTER_VALUE_NONE: 'none',
+
     definitionElSelector: 'input[name="general[segment_data]"]',
     segmentFilterElSelector: 'select[name="use_segment"]',
 
@@ -38,18 +40,27 @@ SegmentationBuilder.prototype = {
 
         // move HTML elements from wrapper to window (full DOM tree with events)
         document.getElementById('modal_dialog_message').appendChild(el);
-        console.log(el.ruleObject);
         if (!el.ruleObject) {
-            // create rules object once
-            el.ruleObject = new VarienRulesForm(TC.segmentation.formHTMLId, TC.segmentation.rulesNewChildURL);
+            // create rules object once, USE GLOBAL VARIABLE HERE FOR SELECT CHOOSERS
+            el.ruleObject = rule_conditions_fieldset = new VarienRulesForm(TC.segmentation.formHTMLId, TC.segmentation.rulesNewChildURL);
         }
     },
 
+    /**
+     * Use this method instead of origin to reset segment fitler
+     *
+     * @param {object} gridObj
+     */
     resetFilter: function (gridObj) {
         gridObj.reload(gridObj.addVarToUrl(gridObj.filterVar, ''));
-        $$(this.segmentFilterElSelector)[0].setValue('none');
+        $$(this.segmentFilterElSelector)[0].setValue(this.SEGMENT_FILTER_VALUE_NONE);
     },
 
+    /**
+     * Use this method instead of origin to add segment definition to filters
+     *
+     * @param {object} gridObj
+     */
     doFilter: function (gridObj) {
         var filters = $$(
             '#' + gridObj.containerId + ' .filter input',
