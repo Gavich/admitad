@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+
+<layout>
+    <adminhtml_catalog_category_edit>
+        <reference name="head">
+            <action method="addJs">
+                <script>tc/product.segmentation.js</script>
+            </action>
+        </reference>
+    </adminhtml_catalog_category_edit>
+</layout>

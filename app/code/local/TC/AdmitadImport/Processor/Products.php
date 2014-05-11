@@ -303,7 +303,6 @@ class TC_AdmitadImport_Processor_Products extends TC_AdmitadImport_Processor_Abs
         $this->_getResourceUtilityModel()->updateStatusAttributeValue(
             $this->_processedSKUs, Mage_Catalog_Model_Product_Status::STATUS_ENABLED
         );
-        Mage::dispatchEvent('stock_changed');
     }
 
     /**
@@ -317,7 +316,7 @@ class TC_AdmitadImport_Processor_Products extends TC_AdmitadImport_Processor_Abs
     }
 
     /**
-     * Returns default product type~
+     * Returns default product type
      *
      * @return string
      */

@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<jstranslator>
+    <!-- /js/tc/product.segmentation.js -->
+    <segmentation-builder-widget-title translate="message" module="widget">
+        <message>Segmentation builder</message>
+    </segmentation-builder-widget-title>
+    <!-- end /js/tc/product.segmentation.js -->
+</jstranslator>
