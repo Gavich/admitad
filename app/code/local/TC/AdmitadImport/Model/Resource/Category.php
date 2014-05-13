@@ -31,6 +31,7 @@ class TC_AdmitadImport_Model_Resource_Category extends Mage_Catalog_Model_Resour
             array('a' => $_originAttribute->getBackendTable()), 'a.entity_id=cc.entity_id', array('a.value')
         );
         $select->where('a.attribute_id =?', $_originAttribute->getId());
+        $select->where('a.value IS NOT NULL');
 
         $result = $coreConnection->fetchPairs($select);
 
