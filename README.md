@@ -14,4 +14,3 @@ Overview
  * Tracker http://track.drug.kiev.ua/projects/admitad/issues
 
 To create commit referenced to issue you have to add commit message that contains `refs #ISSUE_NUMER_HERE`
-
