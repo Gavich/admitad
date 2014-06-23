@@ -55,9 +55,6 @@ class TC_AdmitadImport_Helper_Images extends Mage_Core_Helper_Abstract
         /** @var Mage_Catalog_Model_Product_Attribute_Backend_Media $backendModel */
         $backendModel = $productModel->getResource()->getAttribute('media_gallery')->getBackend();
         $importDir    = Mage::getBaseDir('media') . DS . 'import' . DS;
-        if (!is_dir($importDir)) {
-            mkdir($importDir, 0777);
-        }
 
         foreach ($this->_collectedData as $productId => $imageUrls) {
             $this->_logger->log(sprintf('Process images for product ID: %d', $productId));
@@ -76,6 +73,9 @@ class TC_AdmitadImport_Helper_Images extends Mage_Core_Helper_Abstract
                 try {
                     $response = $this->_getHttpClient()->setUri($imageUrl)->request();
                     if (200 === $response->getStatus()) {
+                        if (!is_dir($importDir)) {
+                            mkdir($importDir, 0777);
+                        }
                         file_put_contents($path, $response->getBody());
 
                         if (empty($massAdd)) {
