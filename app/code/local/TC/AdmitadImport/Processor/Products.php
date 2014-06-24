@@ -101,6 +101,7 @@ class TC_AdmitadImport_Processor_Products extends TC_AdmitadImport_Processor_Abs
                     if (0 === $persisted % self::BATCH_SIZE) {
                         $this->_getResourceUtilityModel()->commit();
                         $this->_getResourceUtilityModel()->beginTransaction();
+                        $helperImages->processImages();
                     }
                     $product->clearInstance();
                 } else {
@@ -122,6 +123,7 @@ class TC_AdmitadImport_Processor_Products extends TC_AdmitadImport_Processor_Abs
         }
 
         $this->_getResourceUtilityModel()->commit();
+        $helperImages->processImages(true);
     }
 
     /**
@@ -289,11 +291,6 @@ class TC_AdmitadImport_Processor_Products extends TC_AdmitadImport_Processor_Abs
      */
     protected function _afterProcess()
     {
-        $this->_getLogger()->log('Image processing started');
-        /* @var $helper TC_AdmitadImport_Helper_Images */
-        $helper = Mage::helper('tc_admitadimport/images');
-        $helper->processImages();
-
         $toDisable = array_diff(array_keys($this->_existSKUs), $this->_processedSKUs);
 
         $this->_getLogger()->log('Update status process started');

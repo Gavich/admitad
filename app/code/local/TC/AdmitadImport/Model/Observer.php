@@ -53,6 +53,8 @@ class TC_AdmitadImport_Model_Observer
         $helperImages->setAsync(false);
         $helperImages->processImages();
 
-        unlink($filename);
+        if (is_file($filename)) {
+            unlink($filename);
+        }
     }
 } 
