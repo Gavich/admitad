@@ -83,6 +83,8 @@ abstract class Mage_Shell_Abstract
     {
         if ($this->_includeMage) {
             require_once $this->_getRootPath() . 'app' . DIRECTORY_SEPARATOR . 'Mage.php';
+            require_once $this->_getRootPath() . 'lib' . DS . 'vendor' . DS . 'autoload.php';
+
             Mage::app($this->_appCode, $this->_appType);
         }
         $this->_factory = new Mage_Core_Model_Factory();

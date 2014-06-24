@@ -34,4 +34,27 @@ class TC_AdmitadImport_Model_Observer
             $defaultLogger->log($e->getMessage(), Zend_Log::CRIT);
         }
     }
+
+    /**
+     * Process image import async task
+     *
+     * @param string $filename
+     */
+    public function importImages($filename)
+    {
+        /** @var TC_AdmitadImport_Helper_Data $helper */
+        $helper        = Mage::helper('tc_admitadimport');
+        $defaultLogger = $helper->getDefaultLogger();
+        /** @var TC_AdmitadImport_Helper_Images $helperImages */
+        $helperImages = Mage::helper('tc_admitadimport/images');
+        $helperImages->setLogger($defaultLogger);
+
+        $helperImages->initFromFile($filename);
+        $helperImages->setAsync(false);
+        $helperImages->processImages();
+
+        if (is_file($filename)) {
+            unlink($filename);
+        }
+    }
 } 
