@@ -177,8 +177,7 @@ class TC_AdmitadImport_Helper_Images extends Mage_Core_Helper_Abstract
     {
         $logger   = $this->_logger;
         $filename = uniqid('imagesData') . time();
-        $content
-                   = <<<PHP
+        $content  = <<<PHP
 <?php
 return %s;
 PHP;
@@ -244,7 +243,7 @@ PHP;
     }
 
     /**
-     * Is async mdoe enabled
+     * Is async mode enabled
      *
      * @return bool
      */
