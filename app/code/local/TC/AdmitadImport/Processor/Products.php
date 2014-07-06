@@ -31,6 +31,9 @@ class TC_AdmitadImport_Processor_Products extends TC_AdmitadImport_Processor_Abs
     /** @var TC_AdmitadImport_Helper_Currency */
     private $_currencyHelper;
 
+    /** @var TC_AdmitadImport_Helper_Images */
+    private $_helperImages;
+
     /**
      * Performs import
      *
@@ -75,9 +78,6 @@ class TC_AdmitadImport_Processor_Products extends TC_AdmitadImport_Processor_Abs
     {
         /* @var $helper TC_AdmitadImport_Helper_Attributes */
         $helper = Mage::helper('tc_admitadimport/attributes');
-        /* @var $helperImages TC_AdmitadImport_Helper_Images */
-        $helperImages = Mage::helper('tc_admitadimport/images');
-        $helperImages->setLogger($this->_getLogger());
         $persisted    = 0;
 
         $this->_getResourceUtilityModel()->beginTransaction();
@@ -92,7 +92,7 @@ class TC_AdmitadImport_Processor_Products extends TC_AdmitadImport_Processor_Abs
                     $product->getResource()->save($product);
                     $this->_saveStockItem($product);
                     $helper->processCustomOptions($product);
-                    $helperImages->collectData($product, $productData);
+                    $this->_helperImages->collectData($product, $productData);
 
                     $this->_getLogger()->log(sprintf('Product with SKU: %s processed', $sku));
 
@@ -101,7 +101,7 @@ class TC_AdmitadImport_Processor_Products extends TC_AdmitadImport_Processor_Abs
                     if (0 === $persisted % self::BATCH_SIZE) {
                         $this->_getResourceUtilityModel()->commit();
                         $this->_getResourceUtilityModel()->beginTransaction();
-                        $helperImages->processImages();
+                        $this->_helperImages->processImages();
                     }
                     $product->clearInstance();
                 } else {
@@ -123,7 +123,7 @@ class TC_AdmitadImport_Processor_Products extends TC_AdmitadImport_Processor_Abs
         }
 
         $this->_getResourceUtilityModel()->commit();
-        $helperImages->processImages(true);
+        $this->_helperImages->processImages();
     }
 
     /**
@@ -284,6 +284,9 @@ class TC_AdmitadImport_Processor_Products extends TC_AdmitadImport_Processor_Abs
     {
         $this->_existSKUs      = $this->_getResourceUtilityModel()->getSKUs();
         $this->_currencyHelper = Mage::helper('tc_admitadimport/currency');
+        $this->_helperImages = Mage::helper('tc_admitadimport/images');
+        $this->_helperImages->setLogger($this->_getLogger());
+        $this->_helperImages->init();
     }
 
     /**
@@ -291,6 +294,7 @@ class TC_AdmitadImport_Processor_Products extends TC_AdmitadImport_Processor_Abs
      */
     protected function _afterProcess()
     {
+        $this->_helperImages->terminate();
         $toDisable = array_diff(array_keys($this->_existSKUs), $this->_processedSKUs);
 
         $this->_getLogger()->log('Update status process started');

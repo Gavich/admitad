@@ -49,12 +49,28 @@ class TC_AdmitadImport_Model_Observer
         $helperImages = Mage::helper('tc_admitadimport/images');
         $helperImages->setLogger($defaultLogger);
 
-        $helperImages->initFromFile($filename);
+        $filename = $helperImages->initFromFile($filename);
         $helperImages->setAsync(false);
         $helperImages->processImages();
 
         if (is_file($filename)) {
             unlink($filename);
         }
+    }
+
+    /**
+     * Run process management tool
+     */
+    public function runImagesProcessesPool()
+    {
+        /** @var TC_AdmitadImport_Helper_Data $importHelper */
+        $importHelper  = Mage::helper('tc_admitadimport');
+        $defaultLogger = $importHelper->getDefaultLogger();
+        /* @var $helper TC_AdmitadImport_Helper_ProcessPool */
+        $helper = Mage::helper('tc_admitadimport/processPool');
+        if ($helper instanceof TC_AdmitadImport_Logger_LoggerAwareInterface) {
+            $helper->setLogger($defaultLogger);
+        }
+        $helper->run();
     }
 } 

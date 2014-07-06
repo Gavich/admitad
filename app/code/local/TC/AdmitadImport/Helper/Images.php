@@ -8,6 +8,9 @@
 class TC_AdmitadImport_Helper_Images extends Mage_Core_Helper_Abstract
     implements TC_AdmitadImport_Logger_LoggerAwareInterface
 {
+    const STATUS_PENDING = 1;
+    const STATUS_WORKING = 2;
+
     /**
      * @var array [PRODUCT_ID => URL]
      */
@@ -22,11 +25,8 @@ class TC_AdmitadImport_Helper_Images extends Mage_Core_Helper_Abstract
     /** @var bool */
     private $_isAsyncMode = true;
 
-    /** @var string */
-    private $_php = null;
-
-    /** @var array */
-    private $_runningTasks = array();
+    /** @var null|\Symfony\Component\Process\Process */
+    private $_poolProcess;
 
     /**
      * Inject the logger
@@ -51,9 +51,35 @@ class TC_AdmitadImport_Helper_Images extends Mage_Core_Helper_Abstract
     }
 
     /**
+     * Initialize helper, if async mode then run process pool
+     */
+    public function init()
+    {
+        if ($this->_isAsyncMode()) {
+            /* @var $helper TC_AdmitadImport_Helper_ProcessPool */
+            $helper = Mage::helper('tc_admitadimport/processPool');
+            if ($helper instanceof TC_AdmitadImport_Logger_LoggerAwareInterface && null !== $this->_logger) {
+                $helper->setLogger($this->_logger);
+            }
+
+            $this->_poolProcess = $helper->startProcessPool();
+        }
+    }
+
+    /**
+     * Do  needed work when all imports done
+     */
+    public function terminate()
+    {
+        $this->_wait();
+    }
+
+    /**
      * Init helper state from state file
      *
      * @param string $filename
+     *
+     * @return string Filename changed to working
      */
     public function initFromFile($filename)
     {
@@ -62,6 +88,11 @@ class TC_AdmitadImport_Helper_Images extends Mage_Core_Helper_Abstract
         }
 
         $this->_collectedData = require $filename;
+
+        $newFilename = substr($filename, 0, -2) . '.' . self::STATUS_WORKING;
+        rename($filename, $newFilename);
+
+        return $newFilename;
     }
 
     /**
@@ -80,19 +111,13 @@ class TC_AdmitadImport_Helper_Images extends Mage_Core_Helper_Abstract
     /**
      * Process save images from remote CDN
      *
-     * @param bool $waitUnitAllTasksFinished
-     *
      * @throws Mage_Core_Exception
      */
-    public function processImages($waitUnitAllTasksFinished = false)
+    public function processImages()
     {
         if ($this->_isAsyncMode()) {
-            $this->_runAsyncTask($this->_collectedData);
+            $this->_prepareAsyncData($this->_collectedData);
             $this->_collectedData = array();
-
-            if ($waitUnitAllTasksFinished) {
-                $this->_wait();
-            }
 
             return;
         }
@@ -150,7 +175,8 @@ class TC_AdmitadImport_Helper_Images extends Mage_Core_Helper_Abstract
                     } else {
                         $this->_logger->log(
                             sprintf(
-                                'Failed to download image, response code: %d', $response->getStatus(), Zend_Log::ERR
+                                'Failed to download image %s, response code: %d', $imageUrl, $response->getStatus(),
+                                Zend_Log::ERR
                             )
                         );
                     }
@@ -169,14 +195,13 @@ class TC_AdmitadImport_Helper_Images extends Mage_Core_Helper_Abstract
     }
 
     /**
-     * Run image import task in async process
+     * Prepare data file for async task
      *
      * @param array $data
      */
-    private function _runAsyncTask($data)
+    private function _prepareAsyncData($data)
     {
-        $logger   = $this->_logger;
-        $filename = uniqid('imagesData') . time();
+        $filename = uniqid('imagesData') . time() . '.' . self::STATUS_PENDING;
         $content  = <<<PHP
 <?php
 return %s;
@@ -189,24 +214,6 @@ PHP;
         $filename = $importDir . $filename;
 
         file_put_contents($filename, $content);
-        $command = sprintf(
-            '%s %s%sshell%simport.php -- images --filename "%s"',
-            $this->_getPhp(),
-            rtrim(Mage::getBaseDir('base'), DS),
-            DS,
-            DS,
-            $filename
-        );
-
-        $process = new \Symfony\Component\Process\Process($command);
-        $process->start(
-            function ($type, $data) use ($logger) {
-                /** @var TC_AdmitadImport_Logger_LoggerInterface $logger */
-                $logger->log($data, \Symfony\Component\Process\Process::ERR == $type ? Zend_Log::ERR : Zend_Log::INFO);
-            }
-        );
-
-        $this->_runningTasks[] = $process;
     }
 
     /**
@@ -216,13 +223,12 @@ PHP;
      */
     private function _wait()
     {
-        while (count($this->_runningTasks) > 0) {
-            $this->_runningTasks = array_filter(
-                $this->_runningTasks,
-                function (\Symfony\Component\Process\Process $task) {
-                    return $task->isRunning();
-                }
-            );
+        if (!($this->_isAsyncMode() && null !== $this->_poolProcess)) {
+            return $this;
+        }
+
+        while ($this->_poolProcess->isRunning()) {
+            sleep(10);
         }
 
         return $this;
@@ -250,20 +256,5 @@ PHP;
     private function _isAsyncMode()
     {
         return $this->_isAsyncMode;
-    }
-
-    /**
-     * Finds PHP executable command
-     *
-     * @return string
-     */
-    private function _getPhp()
-    {
-        if ($this->_php === null) {
-            $finder     = new \Symfony\Component\Process\PhpExecutableFinder();
-            $this->_php = $finder->find();
-        }
-
-        return $this->_php;
     }
 }
