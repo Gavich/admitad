@@ -57,4 +57,20 @@ class TC_AdmitadImport_Model_Observer
             unlink($filename);
         }
     }
+
+    /**
+     * Run process management tool
+     */
+    public function runImagesProcessesPool()
+    {
+        /** @var TC_AdmitadImport_Helper_Data $importHelper */
+        $importHelper  = Mage::helper('tc_admitadimport');
+        $defaultLogger = $importHelper->getDefaultLogger();
+        /* @var $helper TC_AdmitadImport_Helper_ProcessPool */
+        $helper = Mage::helper('tc_admitadimport/processPool');
+        if ($helper instanceof TC_AdmitadImport_Logger_LoggerAwareInterface) {
+            $helper->setLogger($defaultLogger);
+        }
+        $helper->run();
+    }
 } 

@@ -28,6 +28,7 @@
 chdir(dirname(__FILE__));
 
 require 'app/Mage.php';
+require_once 'lib' . DS . 'vendor' . DS . 'autoload.php';
 
 if (!Mage::isInstalled()) {
     echo "Application is not installed yet, please complete install wizard first.";
