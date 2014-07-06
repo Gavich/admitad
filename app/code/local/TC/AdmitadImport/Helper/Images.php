@@ -78,6 +78,8 @@ class TC_AdmitadImport_Helper_Images extends Mage_Core_Helper_Abstract
      * Init helper state from state file
      *
      * @param string $filename
+     *
+     * @return string Filename changed to working
      */
     public function initFromFile($filename)
     {
@@ -86,7 +88,11 @@ class TC_AdmitadImport_Helper_Images extends Mage_Core_Helper_Abstract
         }
 
         $this->_collectedData = require $filename;
-        rename($filename, substr($filename, 0, -2) . '.' . self::STATUS_WORKING);
+
+        $newFilename = substr($filename, 0, -2) . '.' . self::STATUS_WORKING;
+        rename($filename, $newFilename);
+
+        return $newFilename;
     }
 
     /**

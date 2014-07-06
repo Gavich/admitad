@@ -49,7 +49,7 @@ class TC_AdmitadImport_Model_Observer
         $helperImages = Mage::helper('tc_admitadimport/images');
         $helperImages->setLogger($defaultLogger);
 
-        $helperImages->initFromFile($filename);
+        $filename = $helperImages->initFromFile($filename);
         $helperImages->setAsync(false);
         $helperImages->processImages();
 
