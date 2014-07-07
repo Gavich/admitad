@@ -124,7 +124,7 @@ class TC_AdmitadImport_Helper_ProcessPool extends Mage_Core_Helper_Abstract
         $command = sprintf('%s -- image --filename "%s"', $this->_getImportBinary(), $filename);
         $process = $this->_runProcess($command);
         $this->_getLogger()->log(
-            sprintf('Task PID: %d. Started  for filenname', $task->getPid(), $filename)
+            sprintf('Task PID: %d. Started  for filename', $process->getPid(), $filename)
         );
 
         $this->_runningTasks[] = array(
