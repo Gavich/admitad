@@ -8957,3 +8957,7 @@ p#availability-code{
     position: relative;
     /*z-index: 50;*/
 }
+div.category-description-seo  li:before { 
+    background: url("http://moda-spb.ru/media/wysiwyg/index.gif") no-repeat scroll 12px 2px transparent;
+
+}
