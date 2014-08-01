@@ -8957,10 +8957,3 @@ p#availability-code{
     position: relative;
     /*z-index: 50;*/
 }
-.category-description  li:before {
-    content: " " !important;
-   
-    background: url('data: image/gif;base64,R0lGODlhCwALAMQAAP+aN/+ZNv+yZv+GEP+GD/+OIP/9/P/kyf/7+P/9+//q1v99AP/q1f+PIf+xZf/27f/jyP////9+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAAAAAAALAAAAAALAAsAAAVCYBQlj3IojyFGCCQ0ROFAyAgBkrTkAEQ6uWDOUWoIgwXGYaDL7SSEk/EoST6AVKIBEhAuAhBV6xWb1USGh5LxSIhCADs=') no-repeat scroll 12px 2px transparent;
-
-    padding: 0px 0px 0px 21px;
-}
