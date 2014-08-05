@@ -8974,3 +8974,13 @@ margin-top: 5px;
 {
 display: inline;
 }
+.like-contein
+{
+display: inline-block;
+}
+.like-div
+{
+float: left;
+margin-left: 25px;
+display: block;
+}
