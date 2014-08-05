@@ -1936,12 +1936,13 @@ tr.summary-details-excluded{
 	overflow:hidden;
 }
 .header .quick-access{
-	width:900px;
+	width:600px;
 	padding:6px 0 0 0;
 	height:30px;
 	position:relative;
 	z-index:11;
 	vertical-align:top;
+	float:left;
 }
 .col-inner .my-wishlist p{
 	padding:10px 0 0 20px;
@@ -8958,3 +8959,18 @@ p#availability-code{
     /*z-index: 50;*/
 }
 div.category-description-seo  li:before { content: " " !important; padding: 0px 0px 0px 30px; background: url("http://moda-spb.ru/media/wysiwyg/index.gif") no-repeat scroll 10px 2px transparent;}
+.uptolike-buttons {
+float: left;
+margin-top: 5px;
+}
+.like-span
+{
+float: left;
+font: bold 16px/1.55 Arial,Helvetica,sans-serif;
+color: #1D4C95;
+margin-top: 5px;
+}
+.like-parent
+{
+display: inline;
+}
