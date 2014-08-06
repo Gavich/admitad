@@ -8983,4 +8983,6 @@ display: inline-block;
 float: left;
 margin-left: 25px;
 display: block;
+overflow:visible;
+height: 35px;
 }
