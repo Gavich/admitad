@@ -8962,6 +8962,7 @@ div.category-description-seo  li:before { content: " " !important; padding: 0px 
 .uptolike-buttons {
 float: left;
 margin-top: 5px;
+overflow:visible;
 }
 .like-span
 {
@@ -8983,6 +8984,6 @@ display: inline-block;
 float: left;
 margin-left: 25px;
 display: block;
-overflow:visible;
-height: 35px;
+
+
 }
