@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Jain_Categoryreview>
+            <active>true</active>
+            <codePool>local</codePool>
+        </Jain_Categoryreview>
+    </modules>
+</config>
