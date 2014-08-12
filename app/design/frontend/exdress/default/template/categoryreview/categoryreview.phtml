@@ -1,0 +1,240 @@
+<style>
+    #rating_star {
+        clear: left;
+        float: left;
+    }
+
+    #rating_star:not(:checked) > label.rating-star-lable {
+        float:right;
+        width:1em;
+        padding:0 .1em;
+        overflow:hidden;
+        white-space:nowrap;
+        cursor:pointer;
+        font-size:30px;
+        line-height:1.2;
+        color:#ddd;
+        text-shadow:1px 1px #bbb, 2px 2px #666, .1em .1em .2em rgba(0,0,0,.5);
+    }
+
+    #rating_star:not(:checked) > label.rating-star-lable:before {
+        content: '★ ';
+    }
+
+    #rating_star > input.rating-star-radio:checked ~ label.rating-star-lable {
+        color: gold;
+        text-shadow:1px 1px goldenrod, 2px 2px #B57340, .1em .1em .2em rgba(0,0,0,.5);
+    }
+
+    #rating_star > input.rating-star-radio:checked + label.rating-star-lable:hover,
+    #rating_star > input.rating-star-radio:checked + label.rating-star-lable:hover ~ label.rating-star-lable,
+    #rating_star > input.rating-star-radio:checked ~ label.rating-star-lable:hover,
+    #rating_star > input.rating-star-radio:checked ~ label.rating-star-lable:hover ~ label.rating-star-lable,
+    #rating_star > label.rating-star-lable:hover ~ input.rating-star-radio:checked ~ label.rating-star-lable,
+    #rating_star:not(:checked) > label.rating-star-lable:hover,
+    #rating_star:not(:checked) > label.rating-star-lable:hover ~ label.rating-star-lable{
+        color: #ea0;
+        text-shadow:1px 1px goldenrod, 2px 2px #B57340, .1em .1em .2em rgba(0,0,0,.5);
+    }
+
+    #star1, #star2, #star3, #star4, #star5{
+        display: none;
+    }
+    #more_review_block, #block_form_review{
+        position: fixed;
+        z-index: 9999;
+    }
+    #more_review, #form_review{
+        background-color: #fff;
+        height: 400px;
+        position: fixed;
+        top: 100px;
+        left: 40%;
+        width: 600px;
+        overflow: auto;
+        border: 1px solid #E5E5E5;
+        box-shadow: 5px 5px 20px 15px #aaa;
+        padding: 10px;
+    }
+    .close{
+        float: right;
+        border: 1px solid #333;
+    }
+    .close:hover{
+        background: none repeat scroll 0% 0% #666;
+        transition-delay: 0.2s;
+    }
+    .close_block{
+        margin-right: -10px;
+        margin-top: -10px;
+        width: 100%;
+        float: right;
+    }
+    .categoryreview{
+        padding: 20px;
+    }
+    .nickname_date_hreview{
+        padding: 10px;
+        border: 1px solid #E0E0E0;
+        display: block;
+        height: 20px;
+        border-radius: 15px;
+        box-shadow: 0px 0px 5px #E5E5E5;
+        margin: 10px 0px;
+    }
+    .nickname_date_hreview > span, .nickname_date_hreview > abbr{
+        float: left;
+        font-weight: bold;
+        font-size: 1.1em;
+    }
+    .nickname_date_hreview > abbr{
+        float: right;
+    }
+    .nickname_date_hreview + span, .nickname_date_hreview + span + span, .nickname_date_hreview + span + span + h4, .nickname_date_hreview + span + span + h4 + div{
+        display: block;
+        padding: 0 10px;
+    }
+    .description_text{
+        text-align: justify;
+    }
+</style>
+<div class="categoryreview">
+    <?php if($reviews_count){ ?>
+        <div class="block-title">
+            <strong>
+                <span>
+                    (<?php echo $reviews_count;?>)Отзывы на категорию: <?php echo $_category_name ?>
+                    <a href="javascript:void(0)" style="display: inline; float: right;" onclick="display_on('block_form_review')" title="Оставить отзыв на категорию: <?php echo $_category_name ?>">Оставить отзыв на категорию: <?php echo $_category_name ?></a>
+                </span>
+            </strong>
+        </div>
+    <div class="review-category-list">
+            <ol style="margin-top:15px;">
+                <?php	$i=1; $more = null; shuffle($reviews);
+            foreach($reviews as $val) {
+                    if($i == ($cou+1) ){ ?>
+                        <li>
+                            <div class="block-title">
+                                <strong>
+                                    <span>
+                                        <a href="javascript:void(0)" onclick="display_on('more_review_block')" title="Еще отзывы на категорию: <?php echo $_category_name ?>">Еще отзывы на категорию: <?php echo $_category_name ?></a>
+                                    </span>
+                                </strong>
+                            </div>
+                            <div id="more_review_block" style="display: none">
+                               <ol id="more_review" >
+                                   <div class="close_block">
+                                       <p class="back-link close">
+                                           <a class="back-link" href="javascript:void(0)" onclick="document.getElementById('more_review_block').style.display='none'" title="Закрить">X</a>
+                                       </p>
+                                   </div>
+                                   <div class="page-title" style="margin-top: -10px; position: unset;">
+                                       <h1>Отзывы на категорию: <?php echo $_category_name ?></h1>
+                                   </div>
+                    <?php } ?>
+                        <li >
+                            <div class="hreview">
+                                <span class="reviewer vcard nickname_date_hreview"><span class="nickname"><?php echo $val['nickname'];?></span>
+                                    <abbr class="dtreviewed" title="<?php echo Mage::app()->getLocale()->date($val['created_at'], "YY-M-d")->toString('YYYY-MM-dd'); ?>"><?php echo Mage::app()->getLocale()->date($val['created_at'], "d MMM Y")->toString('d MMMM Y') ?></abbr>
+                                </span>
+                                <span>
+                                    <span class="rating" style="display: none"><?php echo $val['rating_value'] ?></span>
+                                    <div class="rating-box">
+                                        <div class="rating" style="width: <?php echo $val['rating_value']*20;?>%;"></div>
+                                    </div>
+                                </span>
+                                <span class="item"> <a class="url fn" href="<?php echo $catUrl; ?>"></a></span>
+                                <h4 class="summary"><?php echo $val['title'];?></h4>
+
+                                <div class="description">
+                                    <p class="description_text"><?php echo $val['detail'];?></p>
+                                </div>
+                            </div>
+                        </li>
+                <?php $i++; }
+                if($cou < $reviews_count){ ?>
+                            </ol>
+                         </div>
+                       </li>
+                <?php } ?>
+           </ol>
+    </div>
+     <?php }
+     else {?>
+         <div class="block-title" style="border-top: 1px solid #E0E0E0;">
+             <strong>
+                <span>
+                    Пока нет отзывов на категорию: <?php echo $_category_name; ?>
+                    <a href="javascript:void(0)" style="display: inline; float: right;" onclick="display_on('block_form_review')" title="Оставить отзыв на категорию: <?php echo $_category_name ?>">Оставить отзыв на категорию: <?php echo $_category_name ?></a>
+                </span>
+             </strong>
+         </div>
+        <?php } ?>
+
+<div id="block_form_review" style="display: none">
+    <div id="form_review">
+        <div class="close_block">
+            <p class="back-link close">
+                <a class="back-link" href="javascript:void(0)" onclick="document.getElementById('block_form_review').style.display='none'" title="Закрыть">X</a>
+            </p>
+        </div>
+        <div class="page-title" style="margin-top: -10px; position: unset;">
+            <h1>Оставить отзыв на категорию: <?php echo $_category_name ?></h1>
+        </div>
+         <form action="<?php echo $obj->getUrl('categoryreview/index/catpost/id/'.$catId.'/') ?>" method="post" id="review-form">
+
+                <input type="hidden" name="catid" value="<?php echo $catId;?>" />
+                <input type="hidden" name="custid" value="<?php  echo (isset($customer_data)) ? $customer_data['id'] : '';?>" />
+                 <ul class="form-list" style="float: left;">
+                     <li>
+                         <label for="rating_star" class="required">Оценка категории<em>*</em></label>
+                         <div id="rating_star" class="radio-box">
+                             <input type="radio" id="star5" name="rating_value" value="5" class="rating-star-radio" checked="checked"/><label for="star5" title="5" class="rating-star-lable"></label>
+                             <input type="radio" id="star4" name="rating_value" value="4" class="rating-star-radio"/><label for="star4" title="4" class="rating-star-lable"></label>
+                             <input type="radio" id="star3" name="rating_value" value="3" class="rating-star-radio"/><label for="star3" title="3" class="rating-star-lable"></label>
+                             <input type="radio" id="star2" name="rating_value" value="2" class="rating-star-radio"/><label for="star2" title="2" class="rating-star-lable"></label>
+                             <input type="radio" id="star1" name="rating_value" value="1" class="rating-star-radio"/><label for="star1" title="1" class="rating-star-lable"></label>
+                         </div>
+                     </li>
+                     <li>
+                         <label for="summary_field" class="required"><?php echo $this->__('Summary of Your Review') ?><em>*</em></label>
+                         <div class="input-box">
+                             <input name="title" class="input-text  required-entry" id="summary_field"  type="text" title="<?php echo $this->__('Summary of Your Review') ?>" value="" />
+                         </div>
+                     </li>
+                 </ul>
+                 <ul class="form-list" style="float: right">
+                      <li>
+                         <label for="nickname_field" class="required" ><?php echo $this->__('Nickname') ?><em>*</em></label>
+                         <div class="input-box">
+                             <input  style="margin-top: 10px;" class="input-text required-entry"  name="nickname" id="nickname_field"  type="text" title="<?php echo $this->__('Nickname') ?>" <?php if(isset($customer_data)){ echo "value='".$customer_data['fullname']."' readonly"; }?> />
+                         </div>
+                     </li>
+                     <li style="margin-top: 16px;">
+                         <label for="email_field" class="required" ><?php echo $this->__('Email') ?><em>*</em></label>
+                         <div class="input-box">
+                             <input class="input-text required-entry validate-email" name="email" id="email_field"  type="text" title="<?php echo $this->__('Email') ?>" <?php if(isset($customer_data)){ echo "value='".$customer_data['email']."' readonly";} ?> />
+                         </div>
+                     </li>
+                 </ul>
+                <ul class="form_list" style="clear: both">
+                    <li>
+                        <label for="review_field" class="required">Ваш отзыв<em>*</em></label>
+                        <div class="input-box">
+                            <textarea style="width: 98%; height: 100px;" class="input-textarea required-entry" name="detail" id="review_field"title="Ваш отзы"></textarea>
+                        </div>
+                    </li>
+                </ul>
+                <div class="buttons-set">
+                    <button style="margin: 28px 0px 0px -20px" type="submit" class="button" title="Отправить" name="send" id="send2"><span><span>Отправить</span></span></button>
+                </div>
+        </form>
+    </div>
+</div>
+    <script type="text/javascript">
+        function display_on(Id) { var o=document.getElementById(Id);
+            o.style.display == 'none' ? o.style.display = 'block' : o.style.display = 'none';
+           }
+    </script>
+ 
+</div>
