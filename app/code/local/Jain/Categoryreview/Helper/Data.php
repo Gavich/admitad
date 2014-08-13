@@ -24,6 +24,7 @@ class Jain_Categoryreview_Helper_Data extends Mage_Core_Helper_Abstract
         $catId	=	$_category->getId();
         $catUrl = $_category->getUrl();
         $reviews = Mage::helper('categoryreview')->getCatreview($catId);
+        $average_rating = $this->getAverageRating($reviews);
         $reviews_count = count($reviews);
         if (Mage::getSingleton('customer/session')->isLoggedIn()) {
             $customer = Mage::getSingleton('customer/session')->getCustomer();
@@ -34,4 +35,15 @@ class Jain_Categoryreview_Helper_Data extends Mage_Core_Helper_Abstract
         require Mage::getBaseDir('design').DS.$obj->setTemplate('categoryreview'.DS.'categoryreview.phtml')->getTemplateFile();
     }
 
+
+    private function getAverageRating($reviews)
+    {
+       $count_reviews = count($reviews);
+        $summary = null;
+        foreach($reviews as $val){
+            $summary += $val['rating_value'];
+        }
+        return ($summary/$count_reviews);
+
+    }
 }
