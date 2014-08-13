@@ -38,12 +38,15 @@ class Jain_Categoryreview_Helper_Data extends Mage_Core_Helper_Abstract
 
     private function getAverageRating($reviews)
     {
+
        $count_reviews = count($reviews);
-        $summary = null;
-        foreach($reviews as $val){
-            $summary += $val['rating_value'];
+        if($count_reviews){
+            $summary = null;
+            foreach($reviews as $val){
+                $summary += $val['rating_value'];
+            }
+            return ($summary/$count_reviews);
         }
-        return ($summary/$count_reviews);
 
     }
 }
