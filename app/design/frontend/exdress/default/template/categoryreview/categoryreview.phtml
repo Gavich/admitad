@@ -106,8 +106,14 @@
 <div class="categoryreview">
     <?php if($reviews_count){ ?>
         <div class="block-title">
+            <div style="display: none">
+                <div class="item fn" style="display: none"><?php echo $_category_name ?></div>
+                <a class="url" href="<?php echo $catUrl; ?>" style="display: none"><?php echo $_category_name ?></a>
+                <div class="rating" style="display: none"><?php echo $average_rating ?></div>
+                <div class="count" style="display: none"><?php echo $reviews_count;?></div>
+            </div>
             <strong>
-                <span>
+                <span class>
                     (<?php echo $reviews_count;?>)Отзывы на категорию: <?php echo $_category_name ?>
                     <a href="javascript:void(0)" style="display: inline; float: right;" onclick="display_on('block_form_review')" title="Оставить отзыв на категорию: <?php echo $_category_name ?>">Оставить отзыв на категорию: <?php echo $_category_name ?></a>
                 </span>
