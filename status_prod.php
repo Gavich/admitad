@@ -14,7 +14,7 @@ if ($session->getUser()){
                 ->setStoreId($storeid)
                 ->addAttributeToSelect('id')
                 ->addAttributeToFilter('status', array('eq' => (int)$search))
-                ->setPageSize(10000)
+                ->setPageSize(3000)
                 ->setCurPage(1);
 
         $i = (isset($_POST['store']))? $_POST['store'] : 0;
@@ -26,7 +26,7 @@ if ($session->getUser()){
         }
     }
     ?>
-    <form action="enable.php" method="post">
+    <form action="status_prod.php" method="post">
        <fieldset style="width: 200px">
            <legend>Change status product</legend>
            <?php if(isset($i)){ ?>
