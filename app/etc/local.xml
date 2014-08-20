@@ -28,10 +28,10 @@
 <config>
     <global>
         <install>
-            <date><![CDATA[Sun, 16 Feb 2014 16:25:32 +0000]]></date>
+            <date><![CDATA[Mon, 17 Feb 2014 00:32:00 +0000]]></date>
         </install>
         <crypt>
-            <key><![CDATA[3528af3fb004b34c37cbbe891b58f96a]]></key>
+            <key><![CDATA[83770718d41b61730b7e845a72f83aa4]]></key>
         </crypt>
         <disable_local_modules>false</disable_local_modules>
         <resources>
@@ -40,10 +40,10 @@
             </db>
             <default_setup>
                 <connection>
-                    <host><![CDATA[admitad.lxc]]></host>
+                    <host><![CDATA[localhost]]></host>
                     <username><![CDATA[root]]></username>
-                    <password><![CDATA[]]></password>
-                    <dbname><![CDATA[admitad]]></dbname>
+                    <password><![CDATA[AwnQtG]]></password>
+                    <dbname><![CDATA[moda_spb]]></dbname>
                     <initStatements><![CDATA[SET NAMES utf8]]></initStatements>
                     <model><![CDATA[mysql4]]></model>
                     <type><![CDATA[pdo_mysql]]></type>
