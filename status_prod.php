@@ -1,11 +1,8 @@
 <?php
-
 include './app/Mage.php';
 Mage::app();
 Mage::getSingleton('core/session', array('name'=>'adminhtml'));
-
 $session = Mage::getSingleton('admin/session');;
-
 if ($session->getUser()){
 
     if(isset($_POST['change'])){
