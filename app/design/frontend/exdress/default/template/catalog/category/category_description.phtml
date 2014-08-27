@@ -28,6 +28,7 @@
     <?php endif; ?>
 </div>
 <script type="text/javascript">
+  function seoDescription(){
     jQuery(function () {
         var fixerBlock = jQuery('.layout-seo-fixer'),
             textBlock = jQuery('.category-description-seo');
@@ -48,4 +49,6 @@
             textBlock.find('img').load(fixHeight);
         }
     });
+  }
+    seoDescription();
 </script>
