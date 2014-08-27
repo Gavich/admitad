@@ -8,11 +8,11 @@
         <div id="div_hide_option" onclick="clickHideOption()">
             <?php echo $this->__('Hide') ?>
         </div>
-        <a onclick="clickHideOption()" id="id_page_arrow" href="#" class="page_arrow" title="">&nbsp;</a>
+        <a onclick="clickHideOption()" id="id_page_arrow" href="javascript:void(0)" class="page_arrow" title="">&nbsp;</a>
     </div>
 </div>
 
-
+<div class="amshopby-page-container">
 <?php if ($this->isContentMode()): ?>
     <?php echo $this->getCmsBlockHtml() ?>
 <?php elseif ($this->isMixedMode()): ?>
@@ -21,6 +21,13 @@
 <?php else: ?>
     <?php echo $this->getProductListHtml() ?>
 <?php endif; ?>
+      <div style="display:none" class="amshopby-overlay"><img src="<?php echo $this->getSkinUrl('images/amshopby-overlay.gif')?>" width="32" height="32"/></div>
+</div>
+<div class="like-div">
+    <span class="like-span">Лайкнуть: </span>
+    <div data-share-size="40" data-like-text-enable="false" data-background-alpha="0.0" data-pid="1280536" data-mode="like" data-background-color="ededed" data-share-shape="rectangle" data-icon-color="ffffff" data-share-counter-size="11" data-text-color="000000" data-counter-background-color="ffffff" data-share-counter-type="disable" data-orientation="horizontal" data-following-enable="false" data-sn-ids="vk.fb.ok.gp.mr." data-selection-enable="true" data-share-style="1" data-counter-background-alpha="1.0" data-top-button="false" class="uptolike-buttons" >
+    </div>
+</div>
 <div class="layout-seo-fixer clearfix"></div>
 
 <script>
