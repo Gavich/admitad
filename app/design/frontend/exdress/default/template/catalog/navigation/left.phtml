@@ -14,7 +14,7 @@
                     <ol>
                     <?php foreach ($_categories as $_category): ?>
                         <?php if($_category->getIsActive()): ?>
-                        <li>
+                        <li class="amshopby-cat">
                             <a href="<?php echo $this->getCategoryUrl($_category) ?>"<?php if ($this->isCategoryActive($_category)): ?> class="current"<?php endif; ?>><?php echo $this->htmlEscape($_category->getName()) ?></a> <?php /*(<?php echo $_category->getProductCount() ?>)*/ ?><br/>
                         </li>
                         <?php endif; ?>
