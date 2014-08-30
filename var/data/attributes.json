@@ -23,7 +23,11 @@
         "ad_redirect_url": "url",
         "local_delivery_cost": "local_delivery_cost",
         "size": "Размер",
-        "sizes": "Размеры"
+        "sizes": "Размеры",
+        "size_filter": "Размер",
+        "color_filter": "Цвет",
+        "brand_filter": "Бренд",
+        "season_filter": "Сезонность"
     },
     "custom_options": {
         "size": {
