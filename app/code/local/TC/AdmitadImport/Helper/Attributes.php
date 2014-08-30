@@ -28,6 +28,162 @@ class TC_AdmitadImport_Helper_Attributes extends Mage_Core_Helper_Abstract
     /** @var array Attribute options runtime cache */
     private $_attributeOptionsRuntimeCache;
 
+    private $_colorMap;
+
+    public function checkAttributeCreated($code)
+    {
+        $objCatalogEavSetup = Mage::getResourceModel('catalog/eav_mysql4_setup', 'core_setup');
+        $attrId = $objCatalogEavSetup->getAttributeId(Mage_Catalog_Model_Product::ENTITY, $code);
+
+        if($attrId){
+            return $attrId;
+        }else{
+            return false;
+        }
+
+    }
+    public function createAttribute($code, $label)
+    {
+
+        switch($code){
+            case 'brand_filter':
+                $position = 2;
+                break;
+            case 'color_filter':
+                $position = 3;
+                break;
+            case 'size_filter':
+                $position = 4;
+                break;
+            case 'season_filter':
+                $position = 5;
+                break;
+            default:
+                $position = 0;
+                break;
+        }
+
+            $data = array(
+                'attribute_code' => $code,
+                'is_global' => 0,
+                'frontend_input' => 'select',
+                'default_value_text' => '',
+                'default_value_yesno' => 0,
+                'default_value_date' => '',
+                'default_value_textarea' => '',
+                'is_unique' => 0,
+                'is_required' => 0,
+                'frontend_class' => '',
+                'is_configurable' => 0,
+                'is_searchable' => 0,
+                'is_visible_in_advanced_search' => 0,
+                'is_comparable' => 0,
+                'is_filterable' => 1,
+                'is_filterable_in_search' => 1,
+                'is_used_for_promo_rules' => 0,
+                'position' => $position,
+                'is_html_allowed_on_front' => 1,
+                'is_visible_on_front' => 0,
+                'used_in_product_listing' => 0,
+                'frontend_label' => array(
+                    '0' => ucfirst($label),
+                    '1' => ucfirst($label)),
+            );
+
+            /* @var $helper Mage_Catalog_Helper_Product */
+            $helper = Mage::helper('catalog/product');
+            /* @var $model Mage_Catalog_Model_Entity_Attribute */
+            $model = Mage::getModel('catalog/resource_eav_attribute');
+
+            $entityTypeId = Mage::getModel('eav/entity')->setType(Mage_Catalog_Model_Product::ENTITY)->getTypeId();
+
+            $data['backend_type'] = $model->getBackendTypeByInput($data['frontend_input']);
+            $data['source_model'] = $helper->getAttributeSourceModelByInputType($data['frontend_input']);
+            $data['backend_model'] = $helper->getAttributeBackendModelByInputType($data['frontend_input']);
+            $model->addData($data);
+
+            $modelGroup = Mage::getModel('eav/entity_setup','core_setup');
+            $setid = $modelGroup->getAttributeSetId('catalog_product','Default');
+
+            $group = Mage::getModel('eav/entity_attribute_group')
+                ->getCollection()
+                ->addFieldToFilter('attribute_set_id', $setid)
+                ->setOrder('attribute_group_id','ASC')
+                ->getFirstItem();
+            $groupId = $group->getId();
+
+
+
+            $model->setAttributeSetId($setid);
+            $model->setAttributeGroupId($groupId);
+
+            $model->setEntityTypeId($entityTypeId);
+            $model->setIsUserDefined(1);
+            try{
+                $model->save();
+            }catch (Exception $e){}
+
+    }
+
+    public function addToFilter($attributeCode)
+    {
+       $idFilterAttr = Mage::getResourceModel('amshopby/filter')->addFilterAttribute($this->checkAttributeCreated($attributeCode));
+        Mage::helper('amshopby')->_cleanCache(array('amshopby'));
+        return $idFilterAttr;
+    }
+
+    public function saveFilter($filter_id, $attributeCode)
+    {
+        $display_type = '4';
+        $max_options = '20';
+
+        switch ($attributeCode){
+            case 'color_filter':
+                $display_type = '1';
+                break;
+            case 'brand_filter':
+                $display_type = '3';
+                $max_options = '0';
+                break;
+            default:
+                break;
+        }
+
+        $data = array(
+            'block_pos' => 'left',
+            'display_type' => $display_type,
+            'show_search' => '0',
+            'max_options' => $max_options,
+            'hide_counts' => '0',
+            'sort_by' => '0',
+            'collapsed' => '0',
+            'comment' => '',
+            'show_on_list' => '0',
+            'show_on_view' => '0',
+            'seo_nofollow' => '0',
+            'seo_noindex' => '0',
+            'seo_rel' => '0',
+            'include_in' => '',
+            'exclude_from' => '',
+            'single_choice' => '0',
+            'depend_on' => '',
+            'depend_on_attribute' => '',
+            'page' => '1',
+            'limit' => '20',
+            'option_id' => '',
+            'title' => '',
+            'url_alias' => '',
+        );
+
+        $model  = Mage::getModel('amshopby/filter');
+        $model->setData($data);
+        $model->setId($filter_id);
+        try{
+            $model->save();
+        }catch (Exception $e){}
+        Mage::helper('amshopby')->_cleanCache(array('amshopby'));
+    }
+
     /**
      * Maps given data to correct attributes
      *
@@ -35,6 +191,7 @@ class TC_AdmitadImport_Helper_Attributes extends Mage_Core_Helper_Abstract
      *
      * @return array
      */
+
     public function getMappedValues(array $data)
     {
         $this->_init();
@@ -42,6 +199,11 @@ class TC_AdmitadImport_Helper_Attributes extends Mage_Core_Helper_Abstract
         $attributes           = array();
         $attributesSourceData = array_merge($data, $data['param']);
         foreach ($this->_map as $attributeCode => $sourceCode) {
+            if(!$this->checkAttributeCreated($attributeCode) && $attributeCode != 'size' && $attributeCode != 'sizes'){
+                $this->createAttribute($attributeCode,$sourceCode);
+                $filter_id = $this->addToFilter($attributeCode);
+                $this->saveFilter($filter_id, $attributeCode);
+            }
             if (!empty($attributesSourceData[$sourceCode])) {
                 $attributes[$attributeCode] = $this->_prepareAttributeValue(
                     $attributeCode, $attributesSourceData[$sourceCode]
@@ -156,6 +318,67 @@ class TC_AdmitadImport_Helper_Attributes extends Mage_Core_Helper_Abstract
         }
     }
 
+    public function addColorImage($color )
+    {
+        if (!$this->_colorMap) {
+            $file    = Mage::getBaseDir('var') . DS . 'data' . DS . 'color.json';
+            $content = file_get_contents($file);
+
+            if (false === $content) {
+                throw new RuntimeException('Could not read attributes map from data folder');
+            }
+
+            $data = Zend_Json::decode($content);
+
+            $this->_colorMap  = $data['color'];
+        }
+
+        $model  = Mage::getModel('amshopby/value');
+        $collection = $model->getCollection()->addFilter('title', $color)->load();
+        $id = null;
+        foreach($collection as $_item){
+            $id = $_item->getId();
+        }
+        $value = $model->load($id);
+
+        $data = array(
+            'is_featured' => '0',
+            'featured_order' => '0',
+            'title' => $color,
+            'url_alias' => '',
+            'descr' => '',
+            'cms_block' => '',
+            'meta_title' => $color,
+            'meta_descr' => '',
+            'meta_kw' => '',
+
+        );
+
+        if(isset($this->_colorMap[mb_strtolower($color, 'UTF-8')])){
+            $path = Mage::getBaseDir('media') . DS . 'amshopby' . DS;
+            if(!file_exists($path)){
+                mkdir($path);
+            }
+            $field = 'img_small';
+            $name = 'small'.$id.'.jpg';
+            $rgb = explode(' ',$this->_colorMap[mb_strtolower($color, 'UTF-8')]);
+            $img = imagecreate(20,20);
+            $r = $rgb[0];
+            $g = $rgb[1];
+            $b = $rgb[2];
+            imagecolorallocate($img, $r,$g,$b);
+            imagejpeg($img,$path.$name);
+
+            $data[$field] = $name;
+        }
+
+       $value->setData($data)->setId($id);
+         try{
+             $value->save();
+        }catch (Exception $e){}
+        Mage::helper('amshopby')->_cleanCache(array('amshopby'));
+    }
+
     /**
      * Prepare attribute value based on it's type
      *
@@ -171,8 +394,10 @@ class TC_AdmitadImport_Helper_Attributes extends Mage_Core_Helper_Abstract
         if (is_object($attribute)) {
             switch ($attribute->getData('frontend_input')) {
                 case 'multiselect':
+                    $newValue = array();
+                    break;
                 case 'select':
-                    $this->_prepareAttributeOptions($attribute, is_array($value) ? $value : explode(',', $value));
+                    /*$this->_prepareAttributeOptions($attribute, is_array($value) ? $value : explode(',', $value));*/
                     $newValue = array();
                     break;
                 case 'decimal':
@@ -186,6 +411,13 @@ class TC_AdmitadImport_Helper_Attributes extends Mage_Core_Helper_Abstract
                     break;
             }
             if ($attribute->usesSource()) {
+                if(!$this->attributeValueExists($attributeCode, $value)){
+                    $this->addAttributeValue($attributeCode, $value);
+                    $this->addToFilter($attributeCode);
+                    if($attributeCode == 'color_filter'){
+                        $this->addColorImage($value);
+                    }
+                }
                 $optionCollection = $this->_getAttributeOptionCollection($attribute);
                 $options          = $optionCollection->toOptionArray();
 
@@ -215,6 +447,39 @@ class TC_AdmitadImport_Helper_Attributes extends Mage_Core_Helper_Abstract
         return $newValue;
     }
 
+    public function addAttributeValue($arg_attribute, $arg_value)
+    {
+        $attribute_model        = Mage::getModel('eav/entity_attribute');
+        $attribute_code         = $attribute_model->getIdByCode('catalog_product', $arg_attribute);
+        $attribute              = $attribute_model->load($attribute_code);
+
+        $value['option'] = array($arg_value,$arg_value);
+        $result = array('value' => $value);
+        $attribute->setData('option',$result);
+        $attribute->save();
+        $id = $attribute->getId();
+        return $id;
+    }
+
+    function attributeValueExists($arg_attribute, $arg_value)
+    {
+        $attribute_model        = Mage::getModel('eav/entity_attribute');
+        $attribute_options_model= Mage::getModel('eav/entity_attribute_source_table') ;
+
+        $attribute_code         = $attribute_model->getIdByCode('catalog_product', $arg_attribute);
+        $attribute              = $attribute_model->load($attribute_code);
+        $options                = $attribute_options_model->setAttribute($attribute)->getAllOptions(false);
+
+        foreach($options as $option)
+        {
+            if ($option['label'] == $arg_value)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
     /**
      * Prepare attribute options and adds if not exist
      *
