@@ -66,7 +66,7 @@ class TC_AdmitadImport_Helper_Attributes extends Mage_Core_Helper_Abstract
             $data = array(
                 'attribute_code' => $code,
                 'is_global' => 0,
-                'frontend_input' => 'select',
+                'frontend_input' => 'multiselect',
                 'default_value_text' => '',
                 'default_value_yesno' => 0,
                 'default_value_date' => '',
@@ -123,19 +123,21 @@ class TC_AdmitadImport_Helper_Attributes extends Mage_Core_Helper_Abstract
                 $model->save();
             }catch (Exception $e){}
 
+
+
     }
 
     public function addToFilter($attributeCode)
     {
        $idFilterAttr = Mage::getResourceModel('amshopby/filter')->addFilterAttribute($this->checkAttributeCreated($attributeCode));
-        Mage::helper('amshopby')->_cleanCache(array('amshopby'));
+        Mage::app()->cleanCache(array('amshopby'));
         return $idFilterAttr;
     }
 
     public function saveFilter($filter_id, $attributeCode)
     {
         $display_type = '4';
-        $max_options = '20';
+        $max_options = '18';
 
         switch ($attributeCode){
             case 'color_filter':
@@ -144,6 +146,9 @@ class TC_AdmitadImport_Helper_Attributes extends Mage_Core_Helper_Abstract
             case 'brand_filter':
                 $display_type = '3';
                 $max_options = '0';
+                break;
+            case 'size_filter':
+                $max_options = '6';
                 break;
             default:
                 break;
@@ -181,7 +186,7 @@ class TC_AdmitadImport_Helper_Attributes extends Mage_Core_Helper_Abstract
         try{
             $model->save();
         }catch (Exception $e){}
-        Mage::helper('amshopby')->_cleanCache(array('amshopby'));
+        Mage::app()->cleanCache(array('amshopby'));
     }
 
     /**
@@ -318,7 +323,7 @@ class TC_AdmitadImport_Helper_Attributes extends Mage_Core_Helper_Abstract
         }
     }
 
-    public function addColorImage($color )
+    public function addColorImage($color)
     {
         if (!$this->_colorMap) {
             $file    = Mage::getBaseDir('var') . DS . 'data' . DS . 'color.json';
@@ -354,29 +359,34 @@ class TC_AdmitadImport_Helper_Attributes extends Mage_Core_Helper_Abstract
 
         );
 
+        $field = 'img_small';
         if(isset($this->_colorMap[mb_strtolower($color, 'UTF-8')])){
             $path = Mage::getBaseDir('media') . DS . 'amshopby' . DS;
             if(!file_exists($path)){
                 mkdir($path);
             }
-            $field = 'img_small';
-            $name = 'small'.$id.'.jpg';
+            $name = 'small'.$id.'.png';
             $rgb = explode(' ',$this->_colorMap[mb_strtolower($color, 'UTF-8')]);
-            $img = imagecreate(20,20);
             $r = $rgb[0];
             $g = $rgb[1];
             $b = $rgb[2];
-            imagecolorallocate($img, $r,$g,$b);
-            imagejpeg($img,$path.$name);
-
-            $data[$field] = $name;
+            $img = imagecreate(20,20);
+            $border = imagecolorallocate($img, 0,0,0);
+            $body = imagecolorallocate($img, $r,$g,$b);
+            imagefilledrectangle($img,1,1,18,18,$body);
+            imagefilltoborder($img, 0, 0, $border, $body);
+            imagepng($img,$path.$name);
+            imagedestroy($img);
+        }else{
+            $name = "multi-color.png";
         }
+        $data[$field] = $name;
 
-       $value->setData($data)->setId($id);
+        $value->setData($data)->setId($id);
          try{
              $value->save();
         }catch (Exception $e){}
-        Mage::helper('amshopby')->_cleanCache(array('amshopby'));
+        Mage::app()->cleanCache(array('amshopby'));
     }
 
     /**
@@ -394,6 +404,8 @@ class TC_AdmitadImport_Helper_Attributes extends Mage_Core_Helper_Abstract
         if (is_object($attribute)) {
             switch ($attribute->getData('frontend_input')) {
                 case 'multiselect':
+                    $value = $this->prepareAttributeOptions($attributeCode, $value);
+                    $attribute = $this->_getAttribute($attributeCode);
                     $newValue = array();
                     break;
                 case 'select':
@@ -411,20 +423,11 @@ class TC_AdmitadImport_Helper_Attributes extends Mage_Core_Helper_Abstract
                     break;
             }
             if ($attribute->usesSource()) {
-                if(!$this->attributeValueExists($attributeCode, $value)){
-                    $this->addAttributeValue($attributeCode, $value);
-                    $this->addToFilter($attributeCode);
-                    if($attributeCode == 'color_filter'){
-                        $this->addColorImage($value);
-                    }
-                }
+
                 $optionCollection = $this->_getAttributeOptionCollection($attribute);
                 $options          = $optionCollection->toOptionArray();
 
                 if ('multiselect' === $attribute->getData('frontend_input')) {
-                    if (!is_array($value)) {
-                        $value = explode(',', $value);
-                    }
                     foreach ($options as $item) {
                         if (in_array($item['label'], $value)) {
                             $newValue[] = $item['value'];
@@ -447,6 +450,32 @@ class TC_AdmitadImport_Helper_Attributes extends Mage_Core_Helper_Abstract
         return $newValue;
     }
 
+
+    public function prepareAttributeOptions($attributeCode, $value)
+    {
+        $prepareValue = array();
+        if(!is_array($value)){
+            $value = explode(',',$value);
+        }
+        foreach($value as $options){
+            $prepareValue[] = $options = ($attributeCode == 'color_filter')?
+                mb_strtolower(trim($options), 'UTF-8'):
+                trim($options);
+
+            if(!$this->attributeValueExists($attributeCode, $options)){
+                $this->addAttributeValue($attributeCode, $options);
+                $this->addToFilter($attributeCode);
+            }
+            if($attributeCode == 'color_filter'){
+                $this->addColorImage($options);
+            }
+
+        }
+        Mage::app()->cleanCache(array('amshopby'));
+        unset($this->_attributes[$attributeCode]);
+        return $prepareValue;
+    }
+
     public function addAttributeValue($arg_attribute, $arg_value)
     {
         $attribute_model        = Mage::getModel('eav/entity_attribute');
@@ -457,8 +486,7 @@ class TC_AdmitadImport_Helper_Attributes extends Mage_Core_Helper_Abstract
         $result = array('value' => $value);
         $attribute->setData('option',$result);
         $attribute->save();
-        $id = $attribute->getId();
-        return $id;
+        unset($this->_attributeOptionCollection[$attribute->getId()]);
     }
 
     function attributeValueExists($arg_attribute, $arg_value)

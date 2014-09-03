@@ -26,7 +26,7 @@
         "sizes": "Размеры",
         "size_filter": "Размер",
         "color_filter": "Цвет",
-        "brand_filter": "Бренд",
+        "brand_filter": "vendor",
         "season_filter": "Сезонность"
     },
     "custom_options": {
