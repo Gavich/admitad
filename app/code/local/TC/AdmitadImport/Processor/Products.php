@@ -85,11 +85,11 @@ class TC_AdmitadImport_Processor_Products extends TC_AdmitadImport_Processor_Abs
     {
        $sizeFilter = $product->getSizeFilter();
        $colorFilter = $product->getColorFilter();
-       $color = explode(', ',$product->getColor());
+       $color = ($product->getColor())? explode(', ',$product->getColor()): 0;
        $updateProduct = Mage::getModel('catalog/product')->loadByAttribute('sku', $sku);
-       $updateSizeFilter = explode(',',$updateProduct->getSizeFilter());
-       $updateColorFilter = explode(',',$updateProduct->getColorFilter());
-       $updateColor = explode(', ',$updateProduct->getColor());
+       $updateSizeFilter = ($updateProduct->getSizeFilter())? explode(',',$updateProduct->getSizeFilter()): array();
+       $updateColorFilter = ($updateProduct->getColorFilter())? explode(',',$updateProduct->getColorFilter()): array();
+       $updateColor = ($updateProduct->getColor())? explode(', ',$updateProduct->getColor()): array();
 
        $arrayOptions = array(
            'size_filter' => array($sizeFilter, $updateSizeFilter ),
@@ -98,7 +98,9 @@ class TC_AdmitadImport_Processor_Products extends TC_AdmitadImport_Processor_Abs
        );
 
       foreach($arrayOptions as $key => $arrays){
-
+          if(!is_array($arrays[0])){
+              continue;
+          }
           $difference = array_diff($arrays[0],$arrays[1]);
           $merge = array_merge($arrays[1], $difference);
           if($key == 'color'){
