@@ -21,6 +21,22 @@ class TC_AdmitadImport_Model_Resource_Product extends Mage_Catalog_Model_Resourc
 
         return $this->_getReadAdapter()->fetchPairs($select);
     }
+    /**
+     * Get Urls for all existed products
+     *
+     * @return array
+     */
+    public function getURLs()
+    {
+        $eavAttribute = new Mage_Eav_Model_Mysql4_Entity_Attribute();
+        $codeAttribute = $eavAttribute->getIdByCode('catalog_product', 'ad_redirect_url');
+        $select = $this->_getReadAdapter()->select()
+            ->from(array('t2'=>'catalog_product_entity_varchar'), array('value') )
+            ->join(array('t1'=>$this->getTable('catalog/product')),'t1.entity_id=t2.entity_id',array('sku'))
+            ->where('t2.attribute_id = ?',$codeAttribute);
+
+        return  $this->_getReadAdapter()->fetchPairs($select);
+    }
 
     /**
      * Update status for given SKUs

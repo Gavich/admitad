@@ -35,7 +35,7 @@ class TC_AdmitadImport_Processor_Products extends TC_AdmitadImport_Processor_Abs
     private $_helperImages;
 
     /** @var array */
-    private $_existURL = array();
+    private $_existURLs = array();
 
     /**
      * Performs import
@@ -65,18 +65,18 @@ class TC_AdmitadImport_Processor_Products extends TC_AdmitadImport_Processor_Abs
         // process product import
         $this->_processProducts($products, $defaultStore);
 
-        $this->_afterProcess();
+         $this->_afterProcess();
         $this->_getLogger()->log('Products import ended');
     }
 
     public function  existURL($product)
     {
         $url =  trim($product->getAdRedirectUrl());
-        if(isset($this->_existURL[$url])){
-            $this->updateProduct($product, $this->_existURL[$url]);
+        if(isset($this->_existURLs[$url])){
+            $this->updateProduct($product, $this->_existURLs[$url]);
             return true;
         }
-        $this->_existURL[$url] = $product->getSku();
+        $this->_existURLs[$url] = $product->getSku();
         return false;
     }
 
@@ -150,8 +150,11 @@ class TC_AdmitadImport_Processor_Products extends TC_AdmitadImport_Processor_Abs
                             $this->_helperImages->processImages();
                         }
 
+                        $product->clearInstance();
+                    }else{
+                        $product->clearInstance();
+                        continue;
                     }
-                    $product->clearInstance();
                 } else {
                     $this->_getLogger()->log(sprintf('Product with SKU: %s already exist, skipping..', $sku));
                 }
@@ -331,6 +334,7 @@ class TC_AdmitadImport_Processor_Products extends TC_AdmitadImport_Processor_Abs
     protected function _beforeProcess()
     {
         $this->_existSKUs      = $this->_getResourceUtilityModel()->getSKUs();
+        $this->_existURLs       = $this->_getResourceUtilityModel()->getURLs();
         $this->_currencyHelper = Mage::helper('tc_admitadimport/currency');
         $this->_helperImages = Mage::helper('tc_admitadimport/images');
         $this->_helperImages->setLogger($this->_getLogger());
