@@ -8,7 +8,7 @@
 class TC_AdmitadImport_Processor_Products extends TC_AdmitadImport_Processor_AbstractProcessor
 {
     const CUSTOM_CATEGORY_LEVEL = 2;
-    const BATCH_SIZE            = 200;
+    const BATCH_SIZE            = 100;
 
     /** @var array */
     private $_processedSKUs = array();
@@ -33,6 +33,9 @@ class TC_AdmitadImport_Processor_Products extends TC_AdmitadImport_Processor_Abs
 
     /** @var TC_AdmitadImport_Helper_Images */
     private $_helperImages;
+
+    /** @var array */
+    private $_existURLs = array();
 
     /**
      * Performs import
@@ -62,8 +65,50 @@ class TC_AdmitadImport_Processor_Products extends TC_AdmitadImport_Processor_Abs
         // process product import
         $this->_processProducts($products, $defaultStore);
 
-        $this->_afterProcess();
+         $this->_afterProcess();
         $this->_getLogger()->log('Products import ended');
+    }
+
+    public function  existURL($product)
+    {
+        $url =  trim($product->getAdRedirectUrl());
+        if(isset($this->_existURLs[$url])){
+            $this->updateProduct($product, $this->_existURLs[$url]);
+            return true;
+        }
+        $this->_existURLs[$url] = $product->getSku();
+        return false;
+    }
+
+
+    public function updateProduct($product, $sku)
+    {
+       $sizeFilter = $product->getSizeFilter();
+       $colorFilter = $product->getColorFilter();
+       $color = ($product->getColor())? explode(', ',$product->getColor()): 0;
+       $updateProduct = Mage::getModel('catalog/product')->loadByAttribute('sku', $sku);
+       $updateSizeFilter = ($updateProduct->getSizeFilter())? explode(',',$updateProduct->getSizeFilter()): array();
+       $updateColorFilter = ($updateProduct->getColorFilter())? explode(',',$updateProduct->getColorFilter()): array();
+       $updateColor = ($updateProduct->getColor())? explode(', ',$updateProduct->getColor()): array();
+
+       $arrayOptions = array(
+           'size_filter' => array($sizeFilter, $updateSizeFilter ),
+           'color_filter' => array($colorFilter,$updateColorFilter),
+           'color' => array($color,$updateColor),
+       );
+
+      foreach($arrayOptions as $key => $arrays){
+          if(!is_array($arrays[0])){
+              continue;
+          }
+          $difference = array_diff($arrays[0],$arrays[1]);
+          $merge = array_merge($arrays[1], $difference);
+          if($key == 'color'){
+              $merge = implode(', ',$merge);
+          }
+          $updateProduct->setData($key, $merge);
+      }
+        $updateProduct->save();
     }
 
     /**
@@ -85,25 +130,31 @@ class TC_AdmitadImport_Processor_Products extends TC_AdmitadImport_Processor_Abs
             try {
                 if (!array_key_exists($sku, $this->_existSKUs) && !in_array($sku, $this->_processedSKUs)) {
                     $product = $this->_prepareProduct($productData, $store);
-
                     $product->setData('sku', $sku);
-                    $product->setData('name', ucfirst($product->getData('name'))); // enforce first capital letter
+                    if(!$this->existURL($product)){
 
-                    $product->getResource()->save($product);
-                    $this->_saveStockItem($product);
-                    $helper->processCustomOptions($product);
-                    $this->_helperImages->collectData($product, $productData);
+                        $product->setData('name', ucfirst($product->getData('name'))); // enforce first capital letter
 
-                    $this->_getLogger()->log(sprintf('Product with SKU: %s processed', $sku));
+                        $product->getResource()->save($product);
+                        $this->_saveStockItem($product);
+                        $helper->processCustomOptions($product);
+                        $this->_helperImages->collectData($product, $productData);
 
-                    $persisted++;
+                        $this->_getLogger()->log(sprintf('Product with SKU: %s processed', $sku));
 
-                    if (0 === $persisted % self::BATCH_SIZE) {
-                        $this->_getResourceUtilityModel()->commit();
-                        $this->_getResourceUtilityModel()->beginTransaction();
-                        $this->_helperImages->processImages();
+                        $persisted++;
+
+                        if (0 === $persisted % self::BATCH_SIZE) {
+                            $this->_getResourceUtilityModel()->commit();
+                            $this->_getResourceUtilityModel()->beginTransaction();
+                            $this->_helperImages->processImages();
+                        }
+
+                        $product->clearInstance();
+                    }else{
+                        $product->clearInstance();
+                        continue;
                     }
-                    $product->clearInstance();
                 } else {
                     $this->_getLogger()->log(sprintf('Product with SKU: %s already exist, skipping..', $sku));
                 }
@@ -283,6 +334,7 @@ class TC_AdmitadImport_Processor_Products extends TC_AdmitadImport_Processor_Abs
     protected function _beforeProcess()
     {
         $this->_existSKUs      = $this->_getResourceUtilityModel()->getSKUs();
+        $this->_existURLs       = $this->_getResourceUtilityModel()->getURLs();
         $this->_currencyHelper = Mage::helper('tc_admitadimport/currency');
         $this->_helperImages = Mage::helper('tc_admitadimport/images');
         $this->_helperImages->setLogger($this->_getLogger());
