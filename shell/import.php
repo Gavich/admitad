@@ -24,6 +24,27 @@ class TC_Shell_Import extends Mage_Shell_Abstract
             Mage::getModel('tc_admitadimport/observer')->importImages($this->getArg('filename'));
         } elseif ($this->getArg('pool')) {
             Mage::getModel('tc_admitadimport/observer')->runImagesProcessesPool();
+        }elseif ($this->getArg('delete')) {
+            $productsIssetImage = Mage::getResourceModel('catalog/product_collection')
+                ->addAttributeToSelect(array('image'))
+                ->addAttributeToFilter('status', array('eq' => 1))
+                ->addAttributeToFilter('image', array('notnull' => true))
+                ->load()
+                ->getLoadedIds();
+
+            $productsAll = Mage::getResourceModel('catalog/product_collection')
+                ->addAttributeToFilter('status', array('eq' => 1))
+                ->load()
+                ->getLoadedIds();
+
+            $productsEmptyImage = array_diff($productsAll,$productsIssetImage);
+
+            $storeId = Mage::app()->getStore()->getId();
+
+            Mage::getSingleton('catalog/product_action')
+                ->updateAttributes($productsEmptyImage, array('status' => 2), $storeId);
+
+            Mage::getResourceModel('tc_cleanup/cleanup')->cleanUpProducts();
         } else {
             echo $this->usageHelp() . PHP_EOL;
         }
@@ -50,3 +71,4 @@ USAGE;
 
 $shell = new TC_Shell_Import();
 $shell->run();
+
