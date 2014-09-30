@@ -72,11 +72,11 @@ require_once rtrim(__DIR__, DS) . DS . 'lib' . DS . 'vendor' . DS . 'autoload.ph
 
 #Varien_Profiler::enable();
 
-#if (isset($_SERVER['MAGE_IS_DEVELOPER_MODE'])) {
+if (isset($_SERVER['MAGE_IS_DEVELOPER_MODE'])) {
     Mage::setIsDeveloperMode(true);
-#}
+}
 
-ini_set('display_errors', 1);
+#ini_set('display_errors', 1);
 
 umask(0);
 
