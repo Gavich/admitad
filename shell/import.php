@@ -24,7 +24,7 @@ class TC_Shell_Import extends Mage_Shell_Abstract
             Mage::getModel('tc_admitadimport/observer')->importImages($this->getArg('filename'));
         } elseif ($this->getArg('pool')) {
             Mage::getModel('tc_admitadimport/observer')->runImagesProcessesPool();
-        }elseif ($this->getArg('delete')) {
+        } elseif ($this->getArg('delete')) {
             $productsIssetImage = Mage::getResourceModel('catalog/product_collection')
                 ->addAttributeToSelect(array('image'))
                 ->addAttributeToFilter('status', array('eq' => 1))
@@ -37,7 +37,7 @@ class TC_Shell_Import extends Mage_Shell_Abstract
                 ->load()
                 ->getLoadedIds();
 
-            $productsEmptyImage = array_diff($productsAll,$productsIssetImage);
+            $productsEmptyImage = array_diff($productsAll, $productsIssetImage);
 
             $storeId = Mage::app()->getStore()->getId();
 
@@ -45,7 +45,19 @@ class TC_Shell_Import extends Mage_Shell_Abstract
                 ->updateAttributes($productsEmptyImage, array('status' => 2), $storeId);
 
             Mage::getResourceModel('tc_cleanup/cleanup')->cleanUpProducts();
-        } else {
+
+        } elseif($this->getArg('disable') || $this->getArg('enable')){
+            $storeId = Mage::app()->getStore()->getId();
+            $status = ($this->getArg('disable'))? 2 : 1;
+            $search = ($status == 1)? 2 : 1;
+            $products = Mage::getResourceModel('catalog/product_collection')
+                ->addAttributeToFilter('status', array('eq' => (int)$search))
+                ->load()
+                ->getLoadedIds();
+
+            Mage::getSingleton('catalog/product_action')
+                ->updateAttributes($products, array('status' => $status), $storeId);
+        }else {
             echo $this->usageHelp() . PHP_EOL;
         }
     }
