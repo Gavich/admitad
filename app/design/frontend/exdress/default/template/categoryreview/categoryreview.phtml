@@ -122,27 +122,7 @@
     <div class="review-category-list">
             <ol style="margin-top:15px;">
                 <?php	$i=1; $more = null; shuffle($reviews);
-            foreach($reviews as $val) {
-                    if($i == ($cou+1) ){ ?>
-                        <li>
-                            <div class="block-title">
-                                <strong>
-                                    <span>
-                                        <a href="javascript:void(0)" onclick="display_on('more_review_block')" title="Еще отзывы на категорию: <?php echo $_category_name ?>">Еще отзывы на категорию: <?php echo $_category_name ?></a>
-                                    </span>
-                                </strong>
-                            </div>
-                            <div id="more_review_block" style="display: none">
-                               <ol id="more_review" >
-                                   <div class="close_block">
-                                       <p class="back-link close">
-                                           <a class="back-link" href="javascript:void(0)" onclick="document.getElementById('more_review_block').style.display='none'" title="Закрить">X</a>
-                                       </p>
-                                   </div>
-                                   <div class="page-title" style="margin-top: -10px; position: unset;">
-                                       <h1>Отзывы на категорию: <?php echo $_category_name ?></h1>
-                                   </div>
-                    <?php } ?>
+            foreach($reviews as $val) { ?>
                         <li >
                             <div class="hreview">
                                 <span class="reviewer vcard nickname_date_hreview"><span class="fn"><?php echo $val['nickname'];?></span>
@@ -162,11 +142,6 @@
                                 </div>
                             </div>
                         </li>
-                <?php $i++; }
-                if($cou < $reviews_count){ ?>
-                            </ol>
-                         </div>
-                       </li>
                 <?php } ?>
            </ol>
     </div>
