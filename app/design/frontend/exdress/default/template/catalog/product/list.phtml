@@ -68,7 +68,7 @@
                                 <li><a href="<?php echo $this->helper('wishlist')->getAddUrl($_product) ?>" class="link-wishlist"><?php echo $this->__('Wishlist') ?></a></li>
                             <?php endif;*/ ?>
                             <?php if($_compareUrl=$this->getAddToCompareUrl($_product)): ?>
-                                <li><a href="<?php echo $_compareUrl ?>" class="link-compare"><?php echo $this->__('Compare') ?></a></li>
+                                <li><div onclick="window.location='<?php echo $_compareUrl ?>'" class="link-compare" style="cursor: pointer"><?php echo $this->__('Compare') ?></div></li>
                             <?php endif; ?>
                             <?php /*if($_product->isSaleable()): ?>
                                 <li><a href="<?php echo $this->getAddToCartUrl($_product) ?>" class="link-addtocart" title="<?php echo $this->__('Add to Cart') ?>"><?php echo $this->__('cart') ?></a></li>
@@ -132,7 +132,7 @@
                                     <li><a href="<?php echo $this->helper('wishlist')->getAddUrl($_product) ?>" class="link-wishlist"><?php echo $this->__('Wishlist') ?></a></li>
                                 <?php endif;*/ ?>
                                 <?php if($_compareUrl=$this->getAddToCompareUrl($_product)): ?>
-                                    <li></span><a href="<?php echo $_compareUrl ?>" class="link-compare"><?php echo $this->__('Compare') ?></a></li>
+                                    <li><div onclick="window.location='<?php echo $_compareUrl ?>'" class="link-compare" style="cursor: pointer"><?php echo $this->__('Compare') ?></div></li>
                                 <?php endif; ?>
                                 <?php /*
                                 <li>
