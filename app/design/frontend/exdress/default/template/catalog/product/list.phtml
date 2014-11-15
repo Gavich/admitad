@@ -131,9 +131,9 @@
                                 <?php /*if ($this->helper('wishlist')->isAllow()) : ?>
                                     <li><a href="<?php echo $this->helper('wishlist')->getAddUrl($_product) ?>" class="link-wishlist"><?php echo $this->__('Wishlist') ?></a></li>
                                 <?php endif;*/ ?>
-                                <?php if($_compareUrl=$this->getAddToCompareUrl($_product)): ?>
-                                    <li><div onclick="window.location='<?php echo $_compareUrl ?>'" class="link-compare" style="cursor: pointer"><?php echo $this->__('Compare') ?></div></li>
-                                <?php endif; ?>
+                                <?php /*if($_compareUrl=$this->getAddToCompareUrl($_product)): */?><!--
+                                    <li><div onclick="window.location='<?php /*echo $_compareUrl */?>'" class="link-compare" style="cursor: pointer"><?php /*echo $this->__('Compare') */?></div></li>
+                                --><?php /*endif; */?>
                                 <?php /*
                                 <li>
                                     <?php if($_product->isSaleable()): ?>
