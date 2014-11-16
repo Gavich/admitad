@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<layout>
+    <metadata_adminhtml_index_index>
+        <reference name="content">
+            <block type="metadata/adminhtml_metadata" name="metadatalist"/>
+        </reference>
+    </metadata_adminhtml_index_index>
+     <metadata_adminhtml_index_edit>
+     <reference name="content">
+      <block type="metadata/adminhtml_metadata_edit" name="edit"/>
+     </reference>
+          <reference name="left">
+
+            <block type="metadata/adminhtml_metadata_edit_tabs" name="metadata_tabs"/>
+     </reference>
+    </metadata_adminhtml_index_edit>
+   <metadata_adminhtml_index_new>
+     <reference name="content">
+      <block type="metadata/adminhtml_metadata_edit" name="new"/>
+     </reference>
+     <reference name="left">
+            <block type="metadata/adminhtml_metadata_edit_tabs" name="metadata_tabs"/>
+     </reference>
+   </metadata_adminhtml_index_new>
+
+</layout>

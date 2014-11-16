@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+ <menu>
+       <catalog>
+             <children>
+                    <seo_metadata>
+                        <title>Seo metadata</title> 
+                        <action>metadata/adminhtml_index</action>
+                    </seo_metadata>
+                </children>
+            </catalog>
+        </menu>     
+    <acl>
+        <resources>
+            <admin>
+                <children>
+                    <!-- Same as above, but instead of referencing the config/menu node, you reference the acl/resources node of adminhtml.xml -->
+                    <category>
+                        <children>
+                            <!-- Keep the same naming convention as above -->
+                            <seo_metadata>
+                                <!-- This is how the ACL text will be displayed on System > Permissions > Roles > Role > Role Resources -->
+                                <title>Seo metadata</title>
+                            </seo_metadata>
+                        </children>
+                    </category>
+                </children>
+            </admin>
+        </resources>
+    </acl>
+</config>
