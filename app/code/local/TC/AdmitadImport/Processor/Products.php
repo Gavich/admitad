@@ -8,7 +8,7 @@
 class TC_AdmitadImport_Processor_Products extends TC_AdmitadImport_Processor_AbstractProcessor
 {
     const CUSTOM_CATEGORY_LEVEL = 2;
-    const BATCH_SIZE            = 100;
+    const BATCH_SIZE            = 50;
 
     /** @var array */
     private $_processedSKUs = array();
