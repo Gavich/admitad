@@ -9014,17 +9014,16 @@ div.vertical_banner
 /* Base Columns */
 .col-left{
 	width:159px;
-	padding:0;
+
 }
 .col-main{
 	width:479px;
-	padding:0;
+	
 }
 .col-right{
-	float:right;
+	
 	width:157px;
-	padding:0;
-	overflow:hidden;
+
 }
 
 .col2-right-layout .col-main{
@@ -9035,8 +9034,33 @@ div.vertical_banner
 	width:482px;
 }
 .col3-layout .col-wrapper{
-	float:left;
+
 	width:321px;
 }		
+
+.nav-container{
+
+	width:640px;
+}
+
+.wrapper{
+	min-width:640px;
+}
+.page{
+	width:640px;
+}
+
+.nav-container{
+
+	width:640px;
+}
+#nav{
+	width:612px;
+
+}
+.container{
+	width:640px;
+
+}
 }
 
