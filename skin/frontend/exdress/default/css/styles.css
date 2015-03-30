@@ -9067,30 +9067,33 @@ div.vertical_banner
 
 	width:132px;
 }
-#amshopby-price-slider-bar
+span#amshopby-price-slider-bar
 {
-	width:131px; !important;
+	width:131px !important;
 
 }
 .catalog-category-view .products-grid .cls_wrapper,
 .tag-product-list .products-container .cls_wrapper{
-	clear:both;
-	float:left;
-	margin:8px 0 0;
-	min-height:117px;
+
 	width:118px;
 }
 .catalog-category-view .products-grid .cls_wrapper{
     width:128px;
-    position: relative;
-}
 
+}
+product-image img
+{
+max-width:118px;
+}
 .catalog-category-view .products-grid .cls_wrapper .cover{
     width: 128px;
-    position: absolute;
-    z-index: 100;
-    top: 0;
-    display: block;
+
+}
+
+.category-description-seo {
+ 
+    width: 480px;
+
 }
 }
 
