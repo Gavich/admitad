@@ -8987,3 +8987,56 @@ display: block;
 
 
 }
+
+@media screen and (max-width: 1010px){
+div.vertical_banner
+		{
+		display:none;
+		}
+.main{
+	width:640px;
+	min-height:400px;
+	text-align:left;
+	border:1px solid #E5E5E5;
+	margin:0 auto 10px;
+}		
+		
+.col-categories{
+	background:url("../images/home_3col.gif") repeat-y scroll 0 0 transparent;
+	width:639px;
+	text-align:left;
+	border:1px solid #E5E5E5;
+	margin:0 auto 10px;
+}
+.catalog-product-view .main{
+	width:639px;
+}
+/* Base Columns */
+.col-left{
+	width:159px;
+	padding:0;
+}
+.col-main{
+	width:479px;
+	padding:0;
+}
+.col-right{
+	float:right;
+	width:157px;
+	padding:0;
+	overflow:hidden;
+}
+
+.col2-right-layout .col-main{
+}
+/* 3 Columns Layout */
+.col3-layout .col-main{
+	/*width:475px;*/
+	width:482px;
+}
+.col3-layout .col-wrapper{
+	float:left;
+	width:321px;
+}		
+}
+
