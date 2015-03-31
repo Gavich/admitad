@@ -9102,8 +9102,14 @@ height:auto !important;
 	width:118px;
 }
 
+.multiple-checkout .gift-messages-form .item .details .form-list .input-box{
+	width:143px;
+}
+.products-grid li.item{
 
+    width: 143px;
 
+}
 
 }
 
