@@ -9083,7 +9083,8 @@ span#amshopby-price-slider-bar
 }
 .product-image img
 {
-max-width:118px;
+width:118px !important;
+height:auto !important;
 }
 .catalog-category-view .products-grid .cls_wrapper .cover{
     width: 128px;
@@ -9095,6 +9096,14 @@ max-width:118px;
     width: 480px;
 
 }
+
+.item-box{
 	
+	width:118px;
+}
+
+
+
+
 }
 
