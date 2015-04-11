@@ -9098,7 +9098,7 @@ height:auto !important;
 }
 
 .item-box{
-	
+	min-height:100px;
 	width:118px;
 }
 
@@ -9108,6 +9108,31 @@ height:auto !important;
 .products-grid li.item{
 
     width: 143px;
+
+}
+
+div.handle
+{
+width:127px !important;
+}
+p.special-price, p.old-price
+{
+width:100%;
+}
+.view{
+	height:auto;
+}
+.catalog-category-view ul.products-grid,
+.tag-product-list ul.products-grid{
+	margin:5px 5px 5px 5px;
+
+}
+.footer-container{
+	width:640px;
+
+}
+.footer{
+	width:640px;
 
 }
 
