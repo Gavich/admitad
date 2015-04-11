@@ -9117,7 +9117,7 @@ width:127px !important;
 }
 p.special-price, p.old-price
 {
-width:100%;
+width:100% !important;
 }
 .view{
 	height:auto;
@@ -9135,6 +9135,10 @@ width:100%;
 	width:640px;
 
 }
+.col2-left-layout .main{
+	background:url("../images/cdd_bg_2left_640.gif") repeat-y scroll 0 0 transparent;
+}
+
 
 }
 
