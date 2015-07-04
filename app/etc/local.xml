@@ -42,7 +42,7 @@
                 <connection>
                     <host><![CDATA[localhost]]></host>
                     <username><![CDATA[root]]></username>
-                    <password><![CDATA[AwnQtG]]></password>
+                    <password><![CDATA[Get#1forLM]]></password>
                     <dbname><![CDATA[moda_spb]]></dbname>
                     <initStatements><![CDATA[SET NAMES utf8]]></initStatements>
                     <model><![CDATA[mysql4]]></model>
@@ -53,6 +53,23 @@
             </default_setup>
         </resources>
         <session_save><![CDATA[files]]></session_save>
+    <cache>
+        <backend>memcached</backend>
+        <memcached>
+            <servers>
+                <server>
+                    <host><![CDATA[127.0.0.1]]></host>
+                    <port><![CDATA[11211]]></port>
+                    <persistent><![CDATA[1]]></persistent>
+                </server>
+            </servers>
+            <compression><![CDATA[0]]></compression>
+            <cache_dir><![CDATA[]]></cache_dir>
+            <hashed_directory_level><![CDATA[]]></hashed_directory_level>
+            <hashed_directory_umask><![CDATA[]]></hashed_directory_umask>
+            <file_name_prefix><![CDATA[]]></file_name_prefix>
+        </memcached>
+    </cache>
     </global>
     <admin>
         <routers>
