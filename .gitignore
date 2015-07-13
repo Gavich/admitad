@@ -8,7 +8,7 @@
 *.iml
 magicento.phpstorm.meta.php
 nbproject/
-
+/js/*
 .htaccess
 app/etc/local.xml
 media/*

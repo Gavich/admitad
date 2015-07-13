@@ -82,7 +82,7 @@ class TC_AdmitadImport_Reader_Xml implements TC_AdmitadImport_Reader_ReaderInter
      */
     private function _getProductSKU(array $product)
     {
-        $skuParts = array_intersect_key($product, array_flip(array('id', 'original_id')));
+        $skuParts = array_intersect_key($product, array_flip(array('id', 'vendorCode')));
 
         if (empty($skuParts)) {
             throw new Exception(sprintf(
