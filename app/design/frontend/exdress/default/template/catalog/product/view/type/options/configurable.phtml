@@ -13,23 +13,7 @@ $_attributes = Mage::helper('core')->decorateArray($this->getAllowAttributes());
 ?>
 <?php if ($_product->isSaleable() && count($_attributes)):?>
 
-<dl>
-<?php foreach($_attributes as $_attribute): ?>
-    <?php /*dt><label class="required"><?php echo $_attribute->getLabel() ?><em>*</em></label></dt*/ ?>
-    <dd<?php if ($_attribute->decoratedIsLast){?> class="last"<?php }?>>
-        <div class="input-box">
-            <?php if ($_attribute->getLabel() == $this->__('Цвет')): ?>
-                <span><?php echo $this->__('Цвет'); ?></span><br />
-            <?php elseif ($_attribute->getLabel() == $this->__('Размер')): ?>
-                <span><?php echo $this->__('Размер'); ?></span><br />
-            <?php endif; ?>
-            <select name="super_attribute[<?php echo $_attribute->getAttributeId() ?>]" id="attribute<?php echo $_attribute->getAttributeId() ?>" class="required-entry super-attribute-select">
-                <option><?php echo $this->__('Choose an Option...') ?></option>
-            </select>
-        </div>
-    </dd>
-<?php endforeach; ?>
-</dl>
+
 
 <script type="text/javascript">
 //<![CDATA[
