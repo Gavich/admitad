@@ -40,11 +40,14 @@
  Disallow: /apc.php
  Disallow: /memcache.php
  Disallow: /phpinfo.php
+Disallow: /lamod/
 ## Gavich
  Disallow: /wishlist/
 
 User-agent: Yandex
 Disallow: CVS
+Disallow: /lamod/
+
  Disallow: .svn
  Disallow: .idea
  Disallow: .sql
