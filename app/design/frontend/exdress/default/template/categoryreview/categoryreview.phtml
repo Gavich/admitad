@@ -109,12 +109,12 @@
             <strong>
                 <span >
                     <a href="javascript:void(0)" style="display: inline; float: right;" onclick="display_on('block_form_review')" title="Оставить отзыв на категорию: <?php echo $_category_name ?>">Оставить отзыв на категорию: <?php echo $_category_name ?></a>
-                   <div class="hreview-aggregate">
-                       Отзывы на категорию: <a class="item fn url" href="<?php echo $catUrl; ?>"><?php echo $_category_name ?></a>
-                       <div class="rating-box">
-                            <div class="rating" style="width: <?php echo $average_rating*20;?>%;"><?php echo $average_rating ?></div>
+                   <div class="h-aggrega">
+                       Отзывы на категорию: <a class="url" href="<?php echo $catUrl; ?>"><?php echo $_category_name ?></a>
+                       <div class="ratin-box">
+                            <div class="ratin" style="width: <?php echo $average_rating*20;?>%;"><?php echo $average_rating ?></div>
                        </div>
-                       <div>Всего отзывов: <span class="count" ><?php echo $reviews_count;?></span></div>
+                       <div>Всего отзывов: <span class="countt" ><?php echo $reviews_count;?></span></div>
                    </div>
                 </span>
             </strong>
@@ -124,21 +124,21 @@
                 <?php	$i=1; $more = null; shuffle($reviews);
             foreach($reviews as $val) { ?>
                         <li >
-                            <div class="hreview">
-                                <span class="reviewer vcard nickname_date_hreview"><span class="fn"><?php echo $val['nickname'];?></span>
-                                    <abbr class="dtreviewed" title="<?php echo Mage::app()->getLocale()->date($val['created_at'], "YY-M-d")->toString('YYYY-MM-dd'); ?>"><?php echo Mage::app()->getLocale()->date($val['created_at'], "d MMM Y")->toString('d MMMM Y') ?></abbr>
+                            <div class="revi">
+                                <span class="nickname_date_hreview"><span class="fn"><?php echo $val['nickname'];?></span>
+                                    <abbr class="datereview" title="<?php echo Mage::app()->getLocale()->date($val['created_at'], "YY-M-d")->toString('YYYY-MM-dd'); ?>"><?php echo Mage::app()->getLocale()->date($val['created_at'], "d MMM Y")->toString('d MMMM Y') ?></abbr>
                                 </span>
                                 <span>
-                                    <span class="rating" style="display: none"><?php echo $val['rating_value'] ?></span>
-                                    <div class="rating-box">
-                                        <div class="rating" style="width: <?php echo $val['rating_value']*20;?>%;"></div>
+                                    <span class="ratin" style="display: none"><?php echo $val['rating_value'] ?></span>
+                                    <div class="ratin-box">
+                                        <div class="rat" style="width: <?php echo $val['rating_value']*20;?>%;"></div>
                                     </div>
                                 </span>
-                                <span class="item"> <a class="url fn" href="<?php echo $catUrl; ?>"></a></span>
-                                <h4 class="summary"><?php echo $val['title'];?></h4>
+                                <span class="itemm"> <a class="url fn" href="<?php echo $catUrl; ?>"></a></span>
+                                <h4 class="summar"><?php echo $val['title'];?></h4>
 
-                                <div class="description">
-                                    <p class="description_text"><?php echo $val['detail'];?></p>
+                                <div class="descript">
+                                    <p class="descript_text"><?php echo $val['detail'];?></p>
                                 </div>
                             </div>
                         </li>
